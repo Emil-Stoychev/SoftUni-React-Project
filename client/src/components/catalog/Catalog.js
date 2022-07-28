@@ -98,6 +98,5 @@ export const CatalogSection = () => {
                         : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" }}>Loading...</h2>
             }
         </>
-
     );
 };

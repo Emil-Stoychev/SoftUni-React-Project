@@ -14,7 +14,7 @@ import { RegisterSection } from './components/user/register/Register'
 import { ProfileSection } from './components/user/profile/Profile'
 import { OwnProducts } from "./components/catalog/own-products/OwnProducts";
 import { LikedProducts } from "./components/catalog/liked-products/LikedProducts";
-import { PurchasedProducts } from "./components/catalog/purchased-products/PurchasedProducts";
+import { Messages } from "./components/catalog/purchased-products/PurchasedProducts";
 
 import { ErrorSection } from './components/error/Error'
 import getCookie from "./components/cookies/getCookie";
@@ -24,11 +24,11 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [cookies, setCookies] = useState('')
-  
+
   useEffect(() => {
     let cookie = getCookie('sessionStorage')
 
-    if(cookie._id) {
+    if (cookie._id) {
       setCookies(cookie)
     }
 
@@ -36,14 +36,14 @@ function App() {
 
   return (
     <div className="App">
-      <Navigation cookies={cookies} setCookies={setCookies}/>
+      <Navigation cookies={cookies} setCookies={setCookies} />
 
       <Routes>
 
         <Route path="/catalog" element={<CatalogSection />} />
 
-        <Route path="/catalog/details/:productId" element={<DetailsSection />} />
-        
+        <Route path="/catalog/details/:productId" element={<DetailsSection setCookies={setCookies} />} />
+
         {cookies._id
           ?
           <>
@@ -55,7 +55,7 @@ function App() {
 
             <Route path="/likedProducts" element={<LikedProducts />} />
 
-            <Route path="/purchasedProducts" element={<PurchasedProducts />} />
+            <Route path="/messages" element={<Messages />} />
 
             <Route path="/profile" element={<ProfileSection />} />
           </>
@@ -63,7 +63,7 @@ function App() {
           <>
             <Route path="/" element={<WelcomeSection />} />
 
-            <Route path="/user/login" element={<LoginSection setCookies={setCookies}/>} />
+            <Route path="/user/login" element={<LoginSection setCookies={setCookies} />} />
 
             <Route path="/user/register" element={<RegisterSection />} />
           </>
