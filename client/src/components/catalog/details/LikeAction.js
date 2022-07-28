@@ -33,11 +33,6 @@ export const LikeAction = ({ product, user, setProduct }) => {
             })
     }
 
-    return ( <
-        button type = "button"
-        className = "btn btn-primary"
-        style = {
-            { margin: "0 1% 0 0" } }
-        onClick = { onClickLikeHandler } > Like < /button>
+    return ( <button type = "button" className = "btn btn-primary" style = { { margin: "0 1% 0 0" } } onClick = { onClickLikeHandler } > Like </button>
     )
 }
