@@ -48,11 +48,13 @@ export const CatalogSection = () => {
             let isEmpty = products.filter(x => x.title.toLowerCase().includes(searchValue.toLowerCase()))
 
             if (isEmpty.length === 0) {
-                setError({ message: 'Search not found' })
+                if (!error.message) {
+                    setError({ message: 'Search not found' })
 
-                setTimeout(() => {
-                    setError('')
-                }, 2000);
+                    setTimeout(() => {
+                        setError('')
+                    }, 2000);
+                }
             } else {
                 setError('')
                 setProducts(isEmpty)

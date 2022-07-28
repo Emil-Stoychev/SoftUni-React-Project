@@ -48,11 +48,13 @@ export const DetailsSection = () => {
 
     const onBuyClickHandler = (type, action) => {
         if (user?.money < product.price) {
-            setErrors('Not enough money')
-
-            let time = setTimeout(() => {
-                setErrors('')
-            }, 2000);
+            if(errors !== 'Not enough money') {
+                setErrors('Not enough money')
+    
+                setTimeout(() => {
+                    setErrors('')
+                }, 2000);
+            }
         } else {
             setOptions(({
                 type,
