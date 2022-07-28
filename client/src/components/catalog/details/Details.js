@@ -12,7 +12,7 @@ import { LikeAction } from './LikeAction'
 import { UnlikeAction } from './UnlikeAction'
 import { TextError } from '../../error/TextError'
 
-export const DetailsSection = () => {
+export const DetailsSection = ({setCookies}) => {
     const [product, setProduct] = useState([])
     const [user, setUser] = useState([])
     const [options, setOptions] = useState({ type: '', action: false })
@@ -48,9 +48,18 @@ export const DetailsSection = () => {
 
     const onBuyClickHandler = (type, action) => {
         if (user?.money < product.price) {
-            if(errors !== 'Not enough money') {
+            if (user._id === product.author) {
+                if (errors !== 'You cannot buy this item!') {
+                    setErrors('You cannot buy this item!')
+
+                    setTimeout(() => {
+                        setErrors('')
+                    }, 2000);
+                }
+            }
+            if (errors !== 'Not enough money') {
                 setErrors('Not enough money')
-    
+
                 setTimeout(() => {
                     setErrors('')
                 }, 2000);
@@ -61,6 +70,22 @@ export const DetailsSection = () => {
                 action
             }))
         }
+    }
+
+    const changeStatusHandler = () => {
+        let cookie = getCookie('sessionStorage')
+
+        productService.updateStatus(product._id, cookie)
+            .then(result => {
+                if(result.message) {
+
+                } else {
+                    setProduct(state => ({
+                        ...state,
+                        ['visible']: !state.visible
+                    }))
+                }
+            })
     }
 
     return (
@@ -81,10 +106,10 @@ export const DetailsSection = () => {
                             {errors && <TextError message={errors} />}
 
                             {options.action
-                                ? <DeleteOrBuyAction onDeleteClickHandler={onDeleteClickHandler} product={product} options={options} />
+                                ? <DeleteOrBuyAction onDeleteClickHandler={onDeleteClickHandler} product={product} options={options} setProduct={setProduct} setOptions={setOptions} setCookies={setCookies}/>
                                 : !user.message
                                     ? user?._id == product?.author
-                                        ? <EditAndDelete onDeleteClickHandler={onDeleteClickHandler} product={product} />
+                                        ? <EditAndDelete onDeleteClickHandler={onDeleteClickHandler} product={product} changeStatusHandler={changeStatusHandler} />
                                         :
                                         <>
                                             {!product?.author != user?._id &&
