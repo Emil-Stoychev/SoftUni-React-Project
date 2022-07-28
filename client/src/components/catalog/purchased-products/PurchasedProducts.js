@@ -5,7 +5,7 @@ import * as authService from '../../../services/user/authService'
 import getCookie from "../../cookies/getCookie";
 import { Product } from "../ProductTemplate";
 
-export const PurchasedProducts = () => {
+export const Messages = () => {
     const [products, setProducts] = useState([])
     const cookie = getCookie('sessionStorage')
     const navigate = useNavigate()
@@ -17,7 +17,7 @@ export const PurchasedProducts = () => {
 
     return (
         <>
-            <h1 style={{ textAlign: "center", margin: "2% 0 0 0" }}>Purchased products</h1>
+            <h1 style={{ textAlign: "center", margin: "2% 0 0 0" }}>All messages</h1>
 
             {products.length > 0
                 ?
@@ -28,8 +28,7 @@ export const PurchasedProducts = () => {
                 products.message
                     ?
                     <>
-                        <h2 style={{ textAlign: "center", margin: "12% 0 0 0" }}>You don't have purchased products yet!</h2>
-                        <button className="btn btn-primary" style={{ margin: "1% 46%" }} onClick={() => navigate('/catalog')}>Go to Catalog</button>
+                        <h2 style={{ textAlign: "center", margin: "12% 0 0 0" }}>You don't have messages yet!</h2>
                     </>
                     : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" }}>Loading...</h2>
             }
