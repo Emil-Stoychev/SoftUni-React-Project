@@ -14,7 +14,7 @@ import { RegisterSection } from './components/user/register/Register'
 import { ProfileSection } from './components/user/profile/Profile'
 import { OwnProducts } from "./components/catalog/own-products/OwnProducts";
 import { LikedProducts } from "./components/catalog/liked-products/LikedProducts";
-import { Messages } from "./components/catalog/purchased-products/PurchasedProducts";
+import { Messages } from "./components/catalog/messages/Messages";
 
 import { ErrorSection } from './components/error/Error'
 import getCookie from "./components/cookies/getCookie";
