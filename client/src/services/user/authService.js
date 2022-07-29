@@ -13,8 +13,8 @@ export const getLikedProducts = (ownerId) => {
         .then(res => res.json())
 }
 
-export const getPurchasedProducts = (ownerId) => {
-    return fetch(`${URL}/purchasedProducts/${ownerId}`)
+export const getMessages = (ownerId) => {
+    return fetch(`${URL}/messages/${ownerId}`)
         .then(res => res.json())
 }
 

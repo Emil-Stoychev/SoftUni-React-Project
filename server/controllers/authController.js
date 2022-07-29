@@ -128,13 +128,11 @@ router.get('/likedProducts/:userId', async(req, res) => {
     }
 })
 
-router.get('/purchasedProducts/:userId', async(req, res) => {
+router.get('/messages/:userId', async(req, res) => {
     try {
-        let user = await authService.getUserById(req.params.userId)
+        let messages = await authService.getAllMessages(req.params.userId)
 
-        let purchasedProducts = await getAllFilteredByIds(user.purchasedProducts)
-
-        purchasedProducts.length > 0 ? res.json(purchasedProducts) : res.json({message: "Empty!"})
+        messages.length > 0 ? res.json(messages) : res.json({message: "Empty!"})
     } catch (error) {
         res.json({message: `User doesn't exist!`})
     }
