@@ -28,8 +28,8 @@ export const ProfileSection = () => {
                     <li className="list-group-item"> Own products: {user?.ownProducts?.length}{" "}
                         <button type="submit" className="btn btn-primary" style={{ marginLeft: "52%" }} onClick={() => navigate('/ownProducts')}> Click to see </button>
                     </li>
-                    <li className="list-group-item"> Purchased products: {user?.purchasedProducts?.length}{" "}
-                        <button type="submit" className="btn btn-primary" style={{ marginLeft: "43.6%" }} onClick={() => navigate('/purchasedProducts')}> Click to see </button>
+                    <li className="list-group-item"> Messages: 0{user?.messages?.length}{" "}
+                        <button type="submit" className="btn btn-primary" style={{ marginLeft: "58.3%" }} onClick={() => navigate('/messages')}> Click to see </button>
                     </li>
                     <li className="list-group-item"> Liked products: {user?.likedProducts?.length}{" "}
                         <button type="submit" className="btn btn-primary" style={{ marginLeft: "51%" }} onClick={() => navigate('/likedProducts')}> Click to see </button>
