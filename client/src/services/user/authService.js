@@ -18,6 +18,22 @@ export const getPurchasedProducts = (ownerId) => {
         .then(res => res.json())
 }
 
+export const updateUserAfterBuy = (cookie, product) => {
+    let data = {
+        cookie,
+        product
+    }
+
+    return fetch(`${URL}/changeUserAfterBuyProduct/${cookie._id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+        .then(res => res.json())
+}
+
 export const register = (data) => {
     return fetch(`${URL}/register`, {
         method: "POST",
