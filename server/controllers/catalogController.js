@@ -34,6 +34,18 @@ router.put('/removeProductLikes/:productId', async(req, res) => {
     res.json(editedProduct)
 })
 
+router.put('/changeProductAuthor/:productId', async(req, res) => {
+    let editedProduct = await productService.changeProductAuthor(req.params.productId, req.body) || { message: "404 Not found!" }
+
+    res.json(editedProduct)
+})
+
+router.put('/changeProductStatus/:productId', async(req, res) => {
+    let editedProduct = await productService.changeProductStatus(req.params.productId, req.body) || { message: "404 Not found!" }
+
+    res.json(editedProduct)
+})
+
 router.delete('/delete/:productId', async(req, res) => {
     let deletedProduct = await productService.delete(req.params.productId, req.body) || { message: "404 Not found!" }
 

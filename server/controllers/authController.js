@@ -28,6 +28,15 @@ router.put('/deleteItem/:userId', async(req, res) => {
     }
 })
 
+router.put('/changeUserAfterBuyProduct/:userId', async(req, res) => {
+    try {
+        res.json(await authService.updateUserAfterBuyNewProduct(req.params.userId, req.body))
+    } catch (error) {
+        console.error(error)
+        return error
+    }
+})
+
 router.put('/addItem/:userId', async(req, res) => {
     try {
         if(req.body.token.message) {
