@@ -24,6 +24,7 @@ const productSchema = new mongoose.Schema({
     author: String,
     likes: Array,
     comments: Array,
+    visible: Boolean
 })
 
 const Product = mongoose.model('Product', productSchema)
