@@ -35,6 +35,7 @@ const productValidator = (data) => {
 
     if (author) {
         product.author = author
+        product.visible = true
     }
 
     return product

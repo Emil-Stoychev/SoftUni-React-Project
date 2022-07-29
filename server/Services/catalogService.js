@@ -4,7 +4,7 @@ const { productValidator } = require('../utils/productValidator')
 
 const getAll = async() => {
     try {
-        return await Product.find().lean()
+        return await Product.find({visible: true}).lean()
     } catch (error) {
         console.error(error)
         return error
@@ -16,6 +16,61 @@ const getById = async(productId) => {
         let product = await Product.findById(productId).lean() || { message: "404 Not found!" }
 
         return product
+    } catch (error) {
+        return error
+    }
+}
+
+const changeProductAuthor = async(productId, user) => {
+    try {
+        if (user.token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let token = await authMiddleware(user.token)
+
+        if (token.message) {
+            return token
+        }
+
+        let product = await Product.findById(productId).lean()
+
+        if(!product) {
+            return {message: "Product not found"}
+        }
+
+        product.author = user._id
+        product.likes = product.likes.filter(x => x != user._id)
+        product.visible = false
+
+        let updatedProduct = await Product.findByIdAndUpdate(productId, product)
+
+        if(!updatedProduct) {
+            return {message: "Error"}
+        }
+
+        return product
+    } catch (error) {
+        console.error(error)
+        return error
+    }
+}
+
+const changeProductStatus = async(productId, data) => {
+    try {
+        if (!data.token) {
+            return { message: "User doesn't exist!" }
+        }
+
+        let token = await authMiddleware(data.token)
+
+        if (token.message) {
+            return token
+        }
+
+        let product = await Product.findById(productId).lean()
+
+        return await Product.findByIdAndUpdate(productId, {visible: !product.visible})
     } catch (error) {
         return error
     }
@@ -176,7 +231,7 @@ const getAllFilteredByIds = async(ids) => {
     try {
         let allProducts = await Product.find().lean()
 
-        return allProducts.filter(x => ids.includes(x._id.toString()))
+        return allProducts.filter(x => ids?.includes(x._id.toString()))
     } catch (error) {
         console.error(error)
         return error
@@ -191,5 +246,7 @@ module.exports = {
     delete: del,
     getAllFilteredByIds,
     addLikes,
-    removeLikes
+    removeLikes,
+    changeProductAuthor,
+    changeProductStatus
 }
