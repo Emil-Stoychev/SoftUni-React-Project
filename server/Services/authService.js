@@ -99,6 +99,20 @@ const updateUserAfterBuyNewProduct = async (userId, data) => {
     }
 }
 
+const getAllMessages = async(userId) => {
+    try {
+        let user = await User.findById(userId).lean()
+
+        if(!user) {
+            return {message: "User not found!"}
+        }
+
+        return user.messages
+    } catch (error) {
+        return error
+    }
+}
+
 const removeLikesFromUserAfterDeleteItem = async (productId) => {
     try {
         let allUsers = await User.find().lean()
@@ -172,5 +186,6 @@ module.exports = {
     addNewLikeToUser,
     removeLikesFromUserAfterDeleteItem,
     removeLikeFromUser,
-    updateUserAfterBuyNewProduct
+    updateUserAfterBuyNewProduct,
+    getAllMessages
 }
