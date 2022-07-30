@@ -1,10 +1,12 @@
 const bcrypt = require('bcrypt')
+const { authMiddleware } = require('../Middlewares/authMiddleware')
 
 const { User } = require('../Models/User')
+const { messageToOwner, messageToBuyer } = require('../utils/MessageEngine')
 const { userValidator } = require('../utils/userValidator')
 
-const getUserById = async(userId) => {
-    let user = await User.findOne({_id: userId}).lean()
+const getUserById = async (userId) => {
+    let user = await User.findOne({ _id: userId }).lean()
 
     if (!user) {
         return { message: "User doesn't exist!" }
@@ -13,8 +15,8 @@ const getUserById = async(userId) => {
     return user
 }
 
-const addNewItemToUser = async(userId, productId) => {
-    let user = await User.findOne({_id: userId})
+const addNewItemToUser = async (userId, productId) => {
+    let user = await User.findOne({ _id: userId })
 
     if (!user) {
         return { message: "User doesn't exist!" }
@@ -22,35 +24,35 @@ const addNewItemToUser = async(userId, productId) => {
 
     user.ownProducts.push(productId)
 
-    return await User.findByIdAndUpdate(userId, {ownProducts: user.ownProducts})
+    return await User.findByIdAndUpdate(userId, { ownProducts: user.ownProducts })
 }
 
-const addNewLikeToUser = async({userId, token, productId}) => {
+const addNewLikeToUser = async ({ userId, token, productId }) => {
     let user = await User.findById(userId).lean()
 
-    if(!user) {
-        return { message: "User doesn't exist!" } 
+    if (!user) {
+        return { message: "User doesn't exist!" }
     }
 
     user.likedProducts.push(productId)
 
-    return await User.findByIdAndUpdate(userId, {likedProducts: user.likedProducts})
+    return await User.findByIdAndUpdate(userId, { likedProducts: user.likedProducts })
 }
 
-const removeLikeFromUser = async({userId, token, productId}) => {
+const removeLikeFromUser = async ({ userId, token, productId }) => {
     let user = await User.findById(userId).lean()
 
-    if(!user) {
-        return { message: "User doesn't exist!" } 
+    if (!user) {
+        return { message: "User doesn't exist!" }
     }
 
     user.likedProducts = user.likedProducts.filter(x => x != productId)
 
-    return await User.findByIdAndUpdate(userId, {likedProducts: user.likedProducts})
+    return await User.findByIdAndUpdate(userId, { likedProducts: user.likedProducts })
 }
 
-const removeItemFromUser = async(userId, productId) => {
-    let user = await User.findOne({_id: userId})
+const removeItemFromUser = async (userId, productId) => {
+    let user = await User.findOne({ _id: userId })
 
     if (!user) {
         return { message: "User doesn't exist!" }
@@ -59,10 +61,10 @@ const removeItemFromUser = async(userId, productId) => {
     let newOwnProducts = user.ownProducts.filter(x => x != productId)
     let newLikedProducts = user.likedProducts.filter(x => x != productId)
 
-    let updatedUser = await User.findByIdAndUpdate(userId, {ownProducts: newOwnProducts, likedProducts: newLikedProducts})
+    let updatedUser = await User.findByIdAndUpdate(userId, { ownProducts: newOwnProducts, likedProducts: newLikedProducts })
 
-    if(!updatedUser.email) {
-        return {message: "Error with update, please try again later!"}
+    if (!updatedUser.email) {
+        return { message: "Error with update, please try again later!" }
     }
 
     await removeLikesFromUserAfterDeleteItem(productId)
@@ -83,31 +85,73 @@ const updateUserAfterBuyNewProduct = async (userId, data) => {
         if (!userFromProduct) {
             return { message: "Product owner doesn't exist!" }
         }
-        
+
         userFromProduct.money = Number(userFromProduct.money) + Number(data.product.price)
         userFromProduct.ownProducts = userFromProduct.ownProducts.filter(x => x != data.product._id)
+        userFromProduct.messages.push(messageToOwner(data.product._id, data.product.title, data.product.price, user.email))
+
 
         await User.findByIdAndUpdate(userFromProduct._id, userFromProduct)
 
         user.likedProducts = user.likedProducts.filter(x => x != data.product._id)
         user.money = Number(user.money) - Number(data.product.price)
         user.ownProducts.push(data.product._id)
+        user.messages.push(messageToBuyer(data.product._id, data.product.title, data.product.price, userFromProduct.email))
 
-        return await User.findByIdAndUpdate(user._id, {ownProducts: user.ownProducts, likedProducts: user.likedProducts, money: user.money})
+
+        return await User.findByIdAndUpdate(user._id, { ownProducts: user.ownProducts, likedProducts: user.likedProducts, money: user.money, messages: user.messages })
     } catch (error) {
         return error
     }
 }
 
-const getAllMessages = async(userId) => {
+const getAllMessages = async (userId) => {
     try {
         let user = await User.findById(userId).lean()
 
-        if(!user) {
-            return {message: "User not found!"}
+        if (!user) {
+            return { message: "User not found!" }
         }
 
+        user.messages.reverse()
+
         return user.messages
+    } catch (error) {
+        return error
+    }
+}
+
+const changeMessageStatus = async (userId, data) => {
+    try {
+        let { messageId, token } = data
+
+        if (token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let isValidToken = await authMiddleware(token)
+
+        if (isValidToken.message) {
+            return token
+        }
+
+        let user = await User.findById(userId).lean()
+
+        if (!user) {
+            return { message: "User not found!" }
+        }
+
+        let messages = user.messages.map(x => {
+            if (x._id === messageId) {
+                x.read = !x.read
+
+                return x
+            } else {
+                return x
+            }
+        })
+
+        return await User.findByIdAndUpdate(userId, { messages })
     } catch (error) {
         return error
     }
@@ -117,17 +161,17 @@ const removeLikesFromUserAfterDeleteItem = async (productId) => {
     try {
         let allUsers = await User.find().lean()
 
-        if(allUsers.length == 0) {
-            return {message: "No users found!"}
+        if (allUsers.length == 0) {
+            return { message: "No users found!" }
         }
 
         allUsers.forEach(async (x) => {
-            if(x.likedProducts.includes(productId)) {
+            if (x.likedProducts.includes(productId)) {
                 let currUser = await User.findById(x._id).lean()
 
                 let updatedLikes = currUser.likedProducts.filter(x => x != productId)
 
-                await User.findByIdAndUpdate(x._id, {likedProducts: updatedLikes})
+                await User.findByIdAndUpdate(x._id, { likedProducts: updatedLikes })
             }
         })
 
@@ -136,11 +180,11 @@ const removeLikesFromUserAfterDeleteItem = async (productId) => {
     }
 }
 
-const getAll = async() => {
+const getAll = async () => {
     return await User.find()
 }
 
-const login = async(data) => {
+const login = async (data) => {
     let { email, password } = data
 
     let user = await User.findOne({ email }).lean()
@@ -158,7 +202,7 @@ const login = async(data) => {
     return user
 }
 
-const register = async(data) => {
+const register = async (data) => {
     let user = userValidator(data)
 
     if (user.message) {
@@ -187,5 +231,6 @@ module.exports = {
     removeLikesFromUserAfterDeleteItem,
     removeLikeFromUser,
     updateUserAfterBuyNewProduct,
-    getAllMessages
+    getAllMessages,
+    changeMessageStatus
 }

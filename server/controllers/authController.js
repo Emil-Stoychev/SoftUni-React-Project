@@ -138,6 +138,16 @@ router.get('/messages/:userId', async(req, res) => {
     }
 })
 
+router.put('/messages/:userId/changeStatus', async(req, res) => {
+    try {
+        let editedMessage = await authService.changeMessageStatus(req.params.userId, req.body)
+
+        editedMessage.length > 0 ? res.json(editedMessage) : res.json({message: "Empty!"})
+    } catch (error) {
+        res.json({message: `User doesn't exist!`})
+    }
+})
+
 router.post('/login', async(req, res) => {
     let loggedUser = await authService.login(req.body)
 
