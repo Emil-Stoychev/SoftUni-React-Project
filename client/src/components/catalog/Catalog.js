@@ -78,7 +78,7 @@ export const CatalogSection = () => {
                                 <label className="form-label" htmlFor="form1"></label>
                             </div>
                             <div>
-                                <button type="submit" className="btn btn-primary" onClick={sortByName}> Search </button>
+                                <button type="submit" className="btn btn-primary" onClick={sortByName}>🔍 Search </button>
                             </div>
                         </div>
 
@@ -89,7 +89,7 @@ export const CatalogSection = () => {
                         </div>
                     </>
                     :
-                    products.message || products.length === 0
+                    products.message
                         ?
                         <>
                             <h2 style={{ textAlign: "center", margin: "12% 0 0 0" }}>No products yet!</h2>

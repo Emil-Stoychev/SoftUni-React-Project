@@ -12,7 +12,7 @@ export const Messages = () => {
 
     useEffect(() => {
         authService.getMessages(cookie?._id)
-            .then(result => setMessages(['1', '2', '3', '1', '2', '3']))
+            .then(result => setMessages(result))
     }, [])
 
     return (

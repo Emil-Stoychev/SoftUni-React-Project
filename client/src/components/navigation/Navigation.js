@@ -20,10 +20,13 @@ export const Navigation = ({ cookies, setCookies }) => {
                     {cookies?.email
                         ?
                         <>
+                            <li className="nav-item">
+                                <Link className="nav-link active" style={{ color: "white", margin: "-30% 0 0 -30%", userSelect: "none" }} aria-current="page" to='/messages' >&#x2709;<span style={{color: "red"}}>*</span> Messages </Link>
+                            </li>
                             <Link className="nav-link disabled" style={{ color: "#f1ce99", userSelect: "none" }} to=''>{cookies?.money ? `Balance: ${cookies?.money}€` : ''}</Link>
                             <Link className="nav-link disabled" style={{ color: "#f1ce99", margin: "0 2%", userSelect: "none" }} to=''>{cookies?.email ? cookies?.email : ''}</Link>
                             <li className="nav-item">
-                                <Link className="nav-link active" style={{ color: "white" , margin: "-45% 0 0 -30%" , userSelect: "none"}} aria-current="page" to='/user/login' onClick={() => logout(setCookies)}>Logout </Link>
+                                <Link className="nav-link active" style={{ color: "white", margin: "-45% 0 0 -30%", userSelect: "none" }} aria-current="page" to='/user/login' onClick={() => logout(setCookies)}>Logout </Link>
                             </li>
                         </>
                         : ''
