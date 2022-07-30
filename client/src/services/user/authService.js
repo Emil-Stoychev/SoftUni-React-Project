@@ -18,6 +18,21 @@ export const getMessages = (ownerId) => {
         .then(res => res.json())
 }
 
+export const changeMessageStatus = (userId, messageId, token) => {
+    let data = {
+        messageId,
+        token
+    }
+
+    return fetch(`${URL}/messages/${userId}/changeStatus`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+}
+
 export const updateUserAfterBuy = (cookie, product) => {
     let data = {
         cookie,
