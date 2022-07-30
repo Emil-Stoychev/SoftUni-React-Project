@@ -8,7 +8,6 @@ import { MessageTemplate } from "./MessageTemplate";
 export const Messages = () => {
     const [messages, setMessages] = useState([])
     const cookie = getCookie('sessionStorage')
-    const navigate = useNavigate()
 
     useEffect(() => {
         authService.getMessages(cookie?._id)
@@ -22,7 +21,7 @@ export const Messages = () => {
             {messages.length > 0
                 ?
                 <div className="row row-cols-1 row-cols-md-1 g-5" style={{ margin: "0 4%" }} >
-                    {messages.map(x => <MessageTemplate key={x._id} data={x} />)}
+                    {messages.map(x => <MessageTemplate key={x._id} data={x} cookie={cookie} setMessages={setMessages}/>)}
                 </div>
                 :
                 messages.message || messages.length === 0
