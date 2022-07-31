@@ -66,7 +66,7 @@ export const EditSection = () => {
 
     return (
         <>
-            <h1 style={{ margin: "10% 0 0 25%" }}>EDIT PAGE</h1>
+            <h1 style={{ margin: "10% 0 0 25%" , fontFamily: "Copperplate Gothic" , userSelect: "none" }}>EDIT</h1>
             <form onSubmit={onSubmitHandler} style={{ margin: "0 25% 0 25%" }}>
                 {errors && <TextError message={errors} />}
                 <div className="input-group mb-3">

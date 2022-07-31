@@ -17,7 +17,7 @@ export const OwnProducts = () => {
 
     return (
         <>
-            <h1 style={{ textAlign: "center", margin: "2% 0 0 0" }}>My products</h1>
+            <h1 style={{ textAlign: "center", margin: "2% 0 0 0" , fontFamily: "Copperplate Gothic" , userSelect: "none" }}>My products</h1>
 
             {products.length > 0
                 ?
@@ -28,10 +28,10 @@ export const OwnProducts = () => {
                 products.message
                     ?
                     <>
-                        <h2 style={{ textAlign: "center", margin: "12% 0 0 0" }}>You don't have products yet!</h2>
+                        <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>You don't have products yet!</h2>
                         <button className="btn btn-primary" style={{ margin: "1% 47%" }} onClick={() => navigate('/catalog/create')}>Create now</button>
                     </>
-                    : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" }}>Loading...</h2>
+                    : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>Loading...</h2>
             }
         </>
     );

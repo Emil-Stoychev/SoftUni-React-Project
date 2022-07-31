@@ -68,7 +68,7 @@ export const CatalogSection = () => {
                 products.length > 0
                     ?
                     <>
-                        <h1 style={{ textAlign: "center", margin: "2% 0 0 0" }}>CATALOG PAGE</h1>
+                        <h1 style={{ textAlign: "center", margin: "2% 0 0 0" , fontFamily: "Copperplate Gothic", userSelect: "none"}}>CATALOG</h1>
                         <button className="btn btn-primary" style={{ margin: "0 3.2%" }} onClick={sortByPrice}> Sort by price </button>
                         <button className="btn btn-primary" style={{ margin: "0 -2.5%" }} onClick={sortByLikes}> Sort by likes </button>
 
@@ -92,10 +92,10 @@ export const CatalogSection = () => {
                     products.message
                         ?
                         <>
-                            <h2 style={{ textAlign: "center", margin: "12% 0 0 0" }}>No products yet!</h2>
+                            <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>No products yet!</h2>
                             <button className="btn btn-primary" style={{ margin: "1% 47%" }} onClick={() => navigate('/catalog/create')}>Create now</button>
                         </>
-                        : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" }}>Loading...</h2>
+                        : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>Loading...</h2>
             }
         </>
     );

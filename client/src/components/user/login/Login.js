@@ -51,7 +51,7 @@ export const LoginSection = ({setCookies}) => {
 
     return (
         <>
-            <h1 style={{ margin: "10% 0 0 25%" }}>LOGIN PAGE</h1>
+            <h1 style={{ margin: "10% 0 0 25%" , fontFamily: "Copperplate Gothic" , userSelect: "none" }}>LOGIN</h1>
 
             <form onSubmit={onSubmitHandler} style={{ margin: "0 25% 0 25%" }}>
                 {errors && <TextError message={errors} />}

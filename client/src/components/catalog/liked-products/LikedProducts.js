@@ -17,7 +17,7 @@ export const LikedProducts = () => {
 
     return (
         <>
-            <h1 style={{ textAlign: "center", margin: "2% 0 0 0" }}>Liked products</h1>
+            <h1 style={{ textAlign: "center", margin: "2% 0 0 0" , fontFamily: "Copperplate Gothic" , userSelect: "none" }}>Liked products</h1>
 
             {products.length > 0
                 ?
@@ -28,10 +28,10 @@ export const LikedProducts = () => {
                 products.message
                     ?
                     <>
-                        <h2 style={{ textAlign: "center", margin: "12% 0 0 0" }}>You don't have liked products yet!</h2>
+                        <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>You don't have liked products yet!</h2>
                         <button className="btn btn-primary" style={{ margin: "1% 46%" }} onClick={() => navigate('/catalog')}>Go to Catalog</button>
                     </>
-                    : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" }}>Loading...</h2>
+                    : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>Loading...</h2>
             }
         </>
     );

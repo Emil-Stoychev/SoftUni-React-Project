@@ -16,7 +16,9 @@ export const Messages = () => {
 
     return (
         <>
-            <h1 style={{ textAlign: "center", margin: "2% 0 0 0" }}>All messages</h1>
+            <h1 style={{ textAlign: "center", margin: "2% 0 0 0" , fontFamily: "Copperplate Gothic" , userSelect: "none" }}>All messages</h1>
+            <button className="btn btn-primary" style={{ margin: "0 3.2%" }} > Sort by date </button>
+                        <button className="btn btn-primary" style={{ margin: "0 -2.5%" }} > Sort by read </button>
 
             {messages.length > 0
                 ?
@@ -27,9 +29,9 @@ export const Messages = () => {
                 messages.message || messages.length === 0
                     ?
                     <>
-                        <h2 style={{ textAlign: "center", margin: "12% 0 0 0" }}>You don't have messages yet!</h2>
+                        <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>You don't have messages yet!</h2>
                     </>
-                    : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" }}>Loading...</h2>
+                    : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>Loading...</h2>
             }
         </>
     );

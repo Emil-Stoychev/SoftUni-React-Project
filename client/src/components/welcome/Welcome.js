@@ -16,7 +16,7 @@ export const WelcomeSection = () => {
     <>
     <IntroduceSection />
 
-      <h1 className="fw-light" style={{ textAlign: "center" , userSelect: 'none'}}>Some of the best products</h1>
+      <h1 className="fw-light" style={{ textAlign: "center" , userSelect: 'none' , fontFamily: "Copperplate Gothic"}}>Some of the best products</h1>
       <div className="album py-5 bg-light">
         <div className="container">
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">

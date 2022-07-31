@@ -19,9 +19,9 @@ export const ErrorSection = () => {
         <>
             <div style={{ margin: "12%" }}>
                 <div className="text-center">
-                    <h1 className="display-1 fw-bold">404</h1>
-                    <p className="fs-3"> <span className="text-danger">Opps!</span> Page not found.</p>
-                    <p className="lead">
+                    <h1 className="display-1 fw-bold" style={{fontFamily: "Copperplate, Papyrus, fantasy" , userSelect: "none"}}>404</h1>
+                    <p className="fs-3" style={{fontFamily: "Copperplate Gothic" , userSelect: "none"}}> <span className="text-danger" >Opps!</span> Page not found.</p>
+                    <p className="lead" style={{userSelect: "none"}}>
                         The page you’re looking for doesn’t exist.
                     </p>
                     <a href={pathName} className="btn btn-primary">{name}</a>
