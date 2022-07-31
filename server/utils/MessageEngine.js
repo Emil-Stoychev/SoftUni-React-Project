@@ -1,4 +1,9 @@
-const messageToOwner = (_id, nameOfProduct, price, from) => {
+const messageToOwner = (id, nameOfProduct, price, from) => {
+    let randomNum1 = Math.ceil(Math.random() * 334112)
+    let randomNum2 = Math.ceil(Math.random() * 221434)
+
+    let _id = id + randomNum1 * randomNum2
+
     let newDate = new Date()
 
     let date = newDate.toLocaleString()
@@ -11,7 +16,12 @@ const messageToOwner = (_id, nameOfProduct, price, from) => {
     }
 }
 
-const messageToBuyer = (_id, nameOfProduct, price, from) => {
+const messageToBuyer = (id, nameOfProduct, price, from) => {
+    let randomNum1 = Math.ceil(Math.random() * 334112)
+    let randomNum2 = Math.ceil(Math.random() * 221434)
+
+    let _id = id + randomNum1 * randomNum2
+
     let newDate = new Date()
 
     let date = newDate.toLocaleString()
