@@ -4,8 +4,8 @@ export const IntroduceSection = () => {
             <section className="py-5 text-center container">
                 <div className="row py-lg-5">
                     <div className="col-lg-6 col-md-8 mx-auto">
-                        <h1 className="fw-light" style={{userSelect: 'none' , fontFamily: "Copperplate Gothic"}}>Welcome to our store</h1>
-                        <p className="lead text-muted" style={{userSelect: 'none'}}>
+                        <h1 className="fw-light" style={{userSelect: 'none' , fontFamily: "Copperplate Gothic" , color: "navajowhite"}}>Welcome to our store</h1>
+                        <p className="lead text" style={{userSelect: 'none' , color: "navajowhite" }}>
                             You can find all in our store and we have good news for you, Every new register user will receive a 100€ and you will be able to use them for whatever you want! <br /> What are you waiting for?
                         </p>
                         <p>

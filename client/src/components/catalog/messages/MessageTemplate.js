@@ -19,12 +19,12 @@ export const MessageTemplate = ({data, cookie, setMessages}) => {
 
     return (
         <>
-            <div className={`alert alert-${data.read ? 'dark' : 'success'}`} role="alert">
+            <div className={`alert alert-${data.read ? 'dark' : ' bg-info'}`} role="alert">
                 <h4 className="alert-heading">Well done!</h4>
                 <p>{data.title}</p>
                 <hr />
                 <p className="mb-0">Date: {data.date}</p>
-                {!data.read ? <button className="btn btn-primary" onClick={statusChange}> Marked as read </button> : ''}
+                {!data.read ? <button className="btn btn-primary" style={{margin: "1% 0 0 0"}} onClick={statusChange}> Marked as read </button> : ''}
             </div>
         </>
     )

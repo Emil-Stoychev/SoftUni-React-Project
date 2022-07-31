@@ -47,22 +47,22 @@ export const RegisterSection = () => {
 
     return (
         <>
-            <h1 style={{ margin: "10% 0 0 25%" , fontFamily: "Copperplate Gothic" , userSelect: "none" }}>REGISTER</h1>
+            <h1 style={{ margin: "10% 0 0 25%" , fontFamily: "Copperplate Gothic" , userSelect: "none" , color: "navajowhite"}}>REGISTER</h1>
             
-            <form onSubmit={onSubmitHandler} style={{ margin: "0 25% 0 25%" }}>
+            <form onSubmit={onSubmitHandler} style={{ margin: "0 25% 15% 25%" }}>
                 {errors && <TextError message={errors} /> }
 
                     <div className="mb-3">
-                    <label htmlFor="exampleInputEmail1" className="form-label"> Email address </label>
+                    <label htmlFor="exampleInputEmail1" className="form-label" style={{color: "white"}}> Email address </label>
                     <input type="email" className="form-control" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" value={values.email} onChange={changeHandler} onBlur={errorChangeHandler}/>
-                    <div id="emailHelp" className="form-text"> We'll never share your email with anyone else. </div>
+                    <div id="emailHelp" className="form-text" style={{color: "white"}}> We'll never share your email with anyone else. </div>
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="exampleInputPassword1" className="form-label"> Password </label>
+                    <label htmlFor="exampleInputPassword1" className="form-label" style={{color: "white"}}> Password </label>
                     <input type="password" name="password" className="form-control" id="exampleInputPassword1" value={values.password} onChange={changeHandler} onBlur={errorChangeHandler}/>
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="exampleInputPassword1" className="form-label"> Repeat Password </label>
+                    <label htmlFor="exampleInputPassword1" className="form-label" style={{color: "white"}}> Repeat Password </label>
                     <input type="password" name="rePassword" className="form-control" id="exampleInputPassword1" value={values.rePassword} onChange={changeHandler} onBlur={errorChangeHandler}/>
                 </div>
                 <button type="submit" className="btn btn-primary" > Submit </button>

@@ -19,6 +19,7 @@ import { Messages } from "./components/catalog/messages/Messages";
 import { ErrorSection } from './components/error/Error'
 import getCookie from "./components/cookies/getCookie";
 import { useEffect, useState } from "react";
+import { Footer } from "./components/footer/Footer";
 
 // TODO: To make check for edit and other pages whether have permission to do this request and if not just redirect!!! 
 
@@ -79,6 +80,7 @@ function App() {
 
       </Routes>
 
+      <Footer />
     </div>
   );
 }
