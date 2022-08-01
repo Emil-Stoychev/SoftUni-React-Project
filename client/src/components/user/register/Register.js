@@ -62,8 +62,8 @@ export const RegisterSection = () => {
                     <input type="password" name="password" className="form-control" id="exampleInputPassword1" value={values.password} onChange={changeHandler} onBlur={errorChangeHandler}/>
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="exampleInputPassword1" className="form-label" style={{color: "white"}}> Repeat Password </label>
-                    <input type="password" name="rePassword" className="form-control" id="exampleInputPassword1" value={values.rePassword} onChange={changeHandler} onBlur={errorChangeHandler}/>
+                    <label htmlFor="exampleInputPassword2" className="form-label" style={{color: "white"}}> Repeat Password </label>
+                    <input type="password" name="rePassword" className="form-control" id="exampleInputPassword2" value={values.rePassword} onChange={changeHandler} onBlur={errorChangeHandler}/>
                 </div>
                 <button type="submit" className="btn btn-primary" > Submit </button>
             </form>
