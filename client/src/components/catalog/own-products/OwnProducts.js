@@ -28,10 +28,10 @@ export const OwnProducts = () => {
                 products.message
                     ?
                     <>
-                        <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>You don't have products yet!</h2>
+                        <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none", color: "navajowhite"  }}>You don't have products yet!</h2>
                         <button className="btn btn-primary" style={{ margin: "1% 47% 20%" }} onClick={() => navigate('/catalog/create')}>Create now</button>
                     </>
-                    : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>Loading...</h2>
+                    : <h2 style={{ textAlign: "center", margin: "12% 0 23% 0" , userSelect: "none", color: "navajowhite"  }}>Loading...</h2>
             }
         </>
     );
