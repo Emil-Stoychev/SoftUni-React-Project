@@ -1,73 +1,47 @@
 export const Footer = () => {
     return (
         <footer className="navbar-fixed-bottom bg-dark text-center text-white">
-            {/* Grid container */}
             <div className="container p-4 pb-0">
-                {/* Section: Social media */}
                 <section className="mb-4">
                     {/* Facebook */}
                     <a
                         className="btn btn-outline-light btn-floating m-1"
-                        href="#!"
+                        href="https://www.facebook.com/profile.php?id=100010478416709"
                         role="button"
+                        target="_blank"
                     >
-                        <i className="fab fa-facebook-f" />
+                        <i className="fa fa-facebook" style={{margin: "4px 4px 4px 4px"}} />
                     </a>
-                    {/* Twitter */}
-                    <a
-                        className="btn btn-outline-light btn-floating m-1"
-                        href="#!"
-                        role="button"
-                    >
-                        <i className="fab fa-twitter" />
-                    </a>
-                    {/* Google */}
-                    <a
-                        className="btn btn-outline-light btn-floating m-1"
-                        href="#!"
-                        role="button"
-                    >
-                        <i className="fab fa-google" />
-                    </a>
+
                     {/* Instagram */}
                     <a
                         className="btn btn-outline-light btn-floating m-1"
-                        href="#!"
+                        href="https://www.instagram.com/emil.stoichev/"
                         role="button"
+                        target="_blank"
                     >
-                        <i className="fab fa-instagram" />
+                        <i className="fa fa-instagram" style={{margin: "4px 4px 4px 4px"}}/>
                     </a>
-                    {/* Linkedin */}
-                    <a
-                        className="btn btn-outline-light btn-floating m-1"
-                        href="#!"
-                        role="button"
-                    >
-                        <i className="fab fa-linkedin-in" />
-                    </a>
+
                     {/* Github */}
                     <a
                         className="btn btn-outline-light btn-floating m-1"
-                        href="#!"
+                        href="https://github.com/Emil-Stoychev"
                         role="button"
+                        target="_blank"
                     >
-                        <i className="fab fa-github" />
+                        <i className="fa fa-github" style={{margin: "4px 4px 4px 4px"}}/>
                     </a>
                 </section>
-                {/* Section: Social media */}
             </div>
-            {/* Grid container */}
-            {/* Copyright */}
             <div
                 className="text-center p-3"
-                style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
+                style={{ backgroundColor: "rgba(0, 0, 0, 0.2)", userSelect: "none" }}
             >
-                © 2020 Copyright:
-                <a className="text-white" href="https://mdbootstrap.com/">
-                    MDBootstrap.com
-                </a>
+                © 2022 Copyright
+                <br />
+                <a style={{ color: "white", userSelect: "none" }}>Made by Emil Stoychev</a>
             </div>
-            {/* Copyright */}
         </footer>
     )
 }
