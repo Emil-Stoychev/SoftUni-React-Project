@@ -209,6 +209,12 @@ const register = async (data) => {
         return user
     }
 
+    let isExist = await User.findOne({email: user.email}).lean()
+
+    if(isExist) {
+        return {message: "Email already exist!"}
+    }
+
     let hashedPassword = await bcrypt.hash(user.password, 10)
 
     let createdUser = {

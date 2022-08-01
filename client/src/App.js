@@ -25,10 +25,6 @@ import GuestRoutes from "./routerGuard/GuestRoutes";
 
 // TODO: To make check for edit and other pages whether have permission to do this request and if not just redirect!!! 
 
-// TODO: To make email unique
-
-// TODO: Comments model
-
 function App() {
   const [cookies, setCookies] = useState('')
 
