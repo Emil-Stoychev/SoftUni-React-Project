@@ -20,14 +20,14 @@ import { ErrorSection } from './components/error/Error'
 import getCookie from "./components/cookies/getCookie";
 import { useEffect, useState } from "react";
 import { Footer } from "./components/footer/Footer";
+import PrivateRoutes from "./routerGuard/PrivateRoutes";
+import GuestRoutes from "./routerGuard/GuestRoutes";
 
 // TODO: To make check for edit and other pages whether have permission to do this request and if not just redirect!!! 
 
 // TODO: To make email unique
 
 // TODO: Comments model
-
-// TODO: Update route guard
 
 function App() {
   const [cookies, setCookies] = useState('')
@@ -51,30 +51,33 @@ function App() {
 
         <Route path="/catalog/details/:productId" element={<DetailsSection setCookies={setCookies} />} />
 
-        {cookies._id
-          ?
-          <>
-            <Route path="/catalog/create" element={<CreateSection />} />
+        {/* PRIVATE ROUTES */}
+        <Route element={<PrivateRoutes />}>
 
-            <Route path="/catalog/edit/:productId" element={<EditSection />} />
+          <Route path="/catalog/create" element={<CreateSection />} />
 
-            <Route path="/ownProducts" element={<OwnProducts />} />
+          <Route path="/catalog/edit/:productId" element={<EditSection />} />
 
-            <Route path="/likedProducts" element={<LikedProducts />} />
+          <Route path="/ownProducts" element={<OwnProducts />} />
 
-            <Route path="/messages" element={<Messages />} />
+          <Route path="/likedProducts" element={<LikedProducts />} />
 
-            <Route path="/profile" element={<ProfileSection />} />
-          </>
-          :
-          <>
-            <Route path="/" element={<WelcomeSection />} />
+          <Route path="/messages" element={<Messages />} />
 
-            <Route path="/user/login" element={<LoginSection setCookies={setCookies} />} />
+          <Route path="/profile" element={<ProfileSection />} />
 
-            <Route path="/user/register" element={<RegisterSection />} />
-          </>
-        }
+        </Route>
+
+        {/* GUEST ROUTES */}
+        <Route element={<GuestRoutes />}>
+
+          <Route path="/" element={<WelcomeSection />} />
+
+          <Route path="/user/login" element={<LoginSection setCookies={setCookies} />} />
+
+          <Route path="/user/register" element={<RegisterSection />} />
+
+        </Route>
 
         <Route path="*" element={<ErrorSection />} />
 
