@@ -22,7 +22,7 @@ router.get('/:userId', async(req, res) => {
 
 router.put('/deleteItem/:userId', async(req, res) => {
     try {
-        res.json(await authService.removeItemFromUser(req.params.userId, req.body.productId))
+        res.json(await authService.removeItemFromUser(req.params.userId, req.body))
     } catch (error) {
         res.json({message: `User doesn't exist!`})
     }
@@ -49,7 +49,7 @@ router.put('/addItem/:userId', async(req, res) => {
             return res.json(token)
         }
 
-        let user = await authService.addNewItemToUser(req.params.userId, req.body.productId)
+        let user = await authService.addNewItemToUser(req.params.userId, req.body.productId, req.body.nameOfProduct)
 
         res.json(user)
     } catch (error) {
@@ -143,6 +143,16 @@ router.put('/messages/:userId/changeStatus', async(req, res) => {
         let editedMessage = await authService.changeMessageStatus(req.params.userId, req.body)
 
         editedMessage.length > 0 ? res.json(editedMessage) : res.json({message: "Empty!"})
+    } catch (error) {
+        res.json({message: `User doesn't exist!`})
+    }
+})
+
+router.post('/messages/:userId/addMessageAfterEditing', async(req, res) => {
+    try {
+        let editedMessage = await authService.addMessageAfterEditing(req.params.userId, req.body)
+
+        editedMessage.email ? res.json(editedMessage.messages) : res.json({message: "Error!"})
     } catch (error) {
         res.json({message: `User doesn't exist!`})
     }

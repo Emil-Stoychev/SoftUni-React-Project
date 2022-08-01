@@ -93,7 +93,7 @@ export const DetailsSection = ({setCookies}) => {
             {product._id
                 ?
                 <>
-                    <h1 style={{ textAlign: "center" , fontFamily: "Copperplate Gothic" , userSelect: "none" , color: "navajowhite"}}>DETAILS</h1>
+                    <h1 style={{ textAlign: "center" ,margin: "2%", fontFamily: "Copperplate Gothic" , userSelect: "none" , color: "navajowhite"}}>DETAILS</h1>
                     <div className="card" style={{ width: "38rem", margin: "0 0 10% 35%" }}>
                         <img src={product?.imageUrl} alt={product?.title + ' image not found'} />
                         <div className="card-body">

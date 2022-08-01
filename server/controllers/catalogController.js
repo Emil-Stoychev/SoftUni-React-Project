@@ -3,14 +3,12 @@ const router = require('express').Router()
 const productService = require('../Services/catalogService')
 
 router.get('/', async(req, res) => {
-    let products = await productService.getAll() || { message: "Empty" }
+    let products = await productService.getAll()
 
-    res.json(products)
+    res.json(products.length > 0 ? products : { message: "Empty" })
 })
 
 router.post('/create', async(req, res) => {
-    // TODO: Set userId in locals or when fetch to the server - send data and userId
-
     let createdProduct = await productService.create(req.body) || []
 
     res.json(createdProduct)

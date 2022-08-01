@@ -71,14 +71,31 @@ export const login = (data) => {
         .then(res => res.json())
 }
 
-export const updateUserOwnProducts = (cookie, productId) => {
+export const updateUserOwnProducts = (cookie, productId, nameOfProduct) => {
     let data = {
         token: cookie.token,
-        productId
+        productId,
+        nameOfProduct
     }
 
     return fetch(`${URL}/addItem/${cookie._id}`, {
         method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+        .then(res => res.json())
+}
+
+export const addMessageAfterEditing = (userId, product, token) => {
+    let data = {
+        product,
+        token
+    }
+
+    return fetch(`${URL}/messages/${userId}/addMessageAfterEditing`, {
+        method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
@@ -121,10 +138,11 @@ export const removeLikeFromUser = (user, productId) => {
         .then(res => res.json())
 }
 
-export const deleteProductFromUser = (cookie, productId) => {
+export const deleteProductFromUser = (cookie, product) => {
     let data = {
-        cookie,
-        productId
+        token: cookie.token,
+        productId: product._id,
+        nameOfProduct: product.title
     }
 
     return fetch(`${URL}/deleteItem/${cookie._id}`, {

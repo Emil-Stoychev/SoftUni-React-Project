@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt')
 const { authMiddleware } = require('../Middlewares/authMiddleware')
 
 const { User } = require('../Models/User')
-const { messageToOwner, messageToBuyer } = require('../utils/MessageEngine')
+const { messageToOwner, messageToBuyer, createNewItemMessage, newMessageAfterEditing, newMessageAfterDelete } = require('../utils/MessageEngine')
 const { userValidator } = require('../utils/userValidator')
 
 const getUserById = async (userId) => {
@@ -15,7 +15,7 @@ const getUserById = async (userId) => {
     return user
 }
 
-const addNewItemToUser = async (userId, productId) => {
+const addNewItemToUser = async (userId, productId, nameOfProduct) => {
     let user = await User.findOne({ _id: userId })
 
     if (!user) {
@@ -23,8 +23,9 @@ const addNewItemToUser = async (userId, productId) => {
     }
 
     user.ownProducts.push(productId)
+    user.messages.push(createNewItemMessage(productId, nameOfProduct))
 
-    return await User.findByIdAndUpdate(userId, { ownProducts: user.ownProducts })
+    return await User.findByIdAndUpdate(userId, { ownProducts: user.ownProducts, messages: user.messages })
 }
 
 const addNewLikeToUser = async ({ userId, token, productId }) => {
@@ -51,7 +52,19 @@ const removeLikeFromUser = async ({ userId, token, productId }) => {
     return await User.findByIdAndUpdate(userId, { likedProducts: user.likedProducts })
 }
 
-const removeItemFromUser = async (userId, productId) => {
+const removeItemFromUser = async (userId, data) => {
+    let { token, productId, nameOfProduct } = data
+
+    if (token.message) {
+        return { message: "Invalid access token!" }
+    }
+
+    let isValidToken = await authMiddleware(token)
+
+    if (isValidToken.message) {
+        return isValidToken
+    }
+
     let user = await User.findOne({ _id: userId })
 
     if (!user) {
@@ -60,8 +73,9 @@ const removeItemFromUser = async (userId, productId) => {
 
     let newOwnProducts = user.ownProducts.filter(x => x != productId)
     let newLikedProducts = user.likedProducts.filter(x => x != productId)
+    user.messages.push(newMessageAfterDelete(productId, nameOfProduct))
 
-    let updatedUser = await User.findByIdAndUpdate(userId, { ownProducts: newOwnProducts, likedProducts: newLikedProducts })
+    let updatedUser = await User.findByIdAndUpdate(userId, { ownProducts: newOwnProducts, likedProducts: newLikedProducts, messages: user.messages })
 
     if (!updatedUser.email) {
         return { message: "Error with update, please try again later!" }
@@ -132,7 +146,7 @@ const changeMessageStatus = async (userId, data) => {
         let isValidToken = await authMiddleware(token)
 
         if (isValidToken.message) {
-            return token
+            return isValidToken
         }
 
         let user = await User.findById(userId).lean()
@@ -152,6 +166,34 @@ const changeMessageStatus = async (userId, data) => {
         })
 
         return await User.findByIdAndUpdate(userId, { messages })
+    } catch (error) {
+        return error
+    }
+}
+
+const addMessageAfterEditing = async (userId, data) => {
+    try {
+        let { product, token } = data
+
+        if (token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let isValidToken = await authMiddleware(token)
+
+        if (isValidToken.message) {
+            return isValidToken
+        }
+
+        let user = await User.findById(userId).lean()
+
+        if (!user) {
+            return { message: "User not found!" }
+        }
+
+        user.messages.push(newMessageAfterEditing(product._id, product.title))
+
+        return await User.findByIdAndUpdate(userId, {messages: user.messages})
     } catch (error) {
         return error
     }
@@ -238,5 +280,6 @@ module.exports = {
     removeLikeFromUser,
     updateUserAfterBuyNewProduct,
     getAllMessages,
-    changeMessageStatus
+    changeMessageStatus,
+    addMessageAfterEditing
 }

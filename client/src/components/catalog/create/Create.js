@@ -5,7 +5,6 @@ import * as productService from '../../../services/catalog/productService'
 import getCookie from "../../cookies/getCookie"
 import { useNavigate } from "react-router-dom"
 import { updateUserOwnProducts } from "../../../services/user/authService"
-import { CookieContext } from "../../../contexts/CookieContext"
 
 export const CreateSection = () => {
     const [errors, setErrors] = useState('')
@@ -16,8 +15,6 @@ export const CreateSection = () => {
         category: "",
         price: ""
     })
-
-    let {cookie} = useContext(CookieContext)
 
     let navigate = useNavigate()
 
@@ -42,8 +39,9 @@ export const CreateSection = () => {
                     setErrors(result.message)
                 } else {
                     let productId = result._id
+                    let nameOfProduct = result.title
 
-                    updateUserOwnProducts(cookie, result._id)
+                    updateUserOwnProducts(cookie, result._id, nameOfProduct)
                         .then(result => {
                             if(result.message) {
                                 if(result.message === "User doesn't exist!") {

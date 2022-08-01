@@ -15,7 +15,7 @@ export const DeleteOrBuyAction = ({ onDeleteClickHandler, product, options , set
                     console.log(result);
                     navigate('/404')
                 } else {
-                    authService.deleteProductFromUser(cookie, product._id)
+                    authService.deleteProductFromUser(cookie, product)
                         .then(result => {
                             if (result.message) {
                                 console.log(result);

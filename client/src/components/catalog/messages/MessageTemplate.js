@@ -17,10 +17,12 @@ export const MessageTemplate = ({data, cookie, setMessages}) => {
             })))
     }
 
+    let word = data.title.includes('deleted') ? 'DELETED PRODUCT' : data.title.includes('edited') ? 'EDITED PRODUCT' : data.title.includes('created') ? 'CREATED PRODUCT' : data.title.includes('have purchased') ? 'PURCHASED NEW PRODUCT' : data.title.includes('was purchased') ? 'PRODUCT SOLD' : ''
+
     return (
         <>
             <div className={`alert alert-${data.read ? 'dark' : ' bg-info'}`} role="alert">
-                <h4 className="alert-heading">Well done!</h4>
+                <h4 className="alert-heading">{word}!</h4>
                 <p>{data.title}</p>
                 <hr />
                 <p className="mb-0">Date: {data.date}</p>
