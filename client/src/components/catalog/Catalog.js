@@ -90,10 +90,10 @@ export const CatalogSection = () => {
                     products.message
                         ?
                         <>
-                            <h2 style={{ textAlign: "center", margin: "12% 0 0 0", userSelect: "none" }}>No products yet!</h2>
-                            <button className="btn btn-primary" style={{ margin: "1% 47%" }} onClick={() => navigate('/catalog/create')}>Create now</button>
+                            <h2 style={{ textAlign: "center", margin: "12% 0 0 0", userSelect: "none" , color: "navajowhite"}}>No products yet!</h2>
+                            <button className="btn btn-primary" style={{ margin: "1% 47% 25%" }} onClick={() => navigate('/catalog/create')}>Create now</button>
                         </>
-                        : <h2 style={{ textAlign: "center", margin: "12% 0 0 0", userSelect: "none" }}>Loading...</h2>
+                        : <h2 style={{ textAlign: "center", margin: "12% 0 28% 0", color: "navajowhite", userSelect: "none" }}>Loading...</h2>
             }
         </>
     );

@@ -29,7 +29,7 @@ export const OwnProducts = () => {
                     ?
                     <>
                         <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>You don't have products yet!</h2>
-                        <button className="btn btn-primary" style={{ margin: "1% 47%" }} onClick={() => navigate('/catalog/create')}>Create now</button>
+                        <button className="btn btn-primary" style={{ margin: "1% 47% 20%" }} onClick={() => navigate('/catalog/create')}>Create now</button>
                     </>
                     : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>Loading...</h2>
             }

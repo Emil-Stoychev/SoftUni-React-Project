@@ -29,7 +29,7 @@ export const LikedProducts = () => {
                     ?
                     <>
                         <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>You don't have liked products yet!</h2>
-                        <button className="btn btn-primary" style={{ margin: "1% 46%" }} onClick={() => navigate('/catalog')}>Go to Catalog</button>
+                        <button className="btn btn-primary" style={{ margin: "1% 46% 20%" }} onClick={() => navigate('/catalog')}>Go to Catalog</button>
                     </>
                     : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>Loading...</h2>
             }

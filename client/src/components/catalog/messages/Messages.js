@@ -29,7 +29,7 @@ export const Messages = () => {
     return (
         <>
             <h1 style={{ textAlign: "center", margin: "2% 0 0 0" , fontFamily: "Copperplate Gothic" , userSelect: "none" , color: "navajowhite" }}>All messages</h1>
-            <button className="btn btn-primary" style={{ margin: "0 3.2%" }} onClick={sortByRead}> Sort by read </button>
+            {messages.length > 0 && <button className="btn btn-primary" style={{ margin: "0 3.2%" }} onClick={sortByRead}> Sort by read </button>}
 
             {messages.length > 0
                 ?
@@ -37,12 +37,12 @@ export const Messages = () => {
                     {messages.map(x => <MessageTemplate key={x._id} data={x} cookie={cookie} setMessages={setMessages}/>)}
                 </div>
                 :
-                messages.message || messages.length === 0
+                messages.message
                     ?
                     <>
-                        <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>You don't have messages yet!</h2>
+                        <h2 style={{ textAlign: "center", margin: "12% 0 22% 0" , userSelect: "none", color: "navajowhite" }}>You don't have messages yet!</h2>
                     </>
-                    : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" }}>Loading...</h2>
+                    : <h2 style={{ textAlign: "center", margin: "12% 0 22% 0" , userSelect: "none", color: "navajowhite" }}>Loading...</h2>
             }
         </>
     );
