@@ -9,23 +9,29 @@ export const WelcomeSection = () => {
 
   useEffect(() => {
     productService.getAll()
-          .then(result => setProducts(result.slice(result.length - 3)))
+      .then(result => setProducts(result.length > 0 ? result.slice(result.length - 3) : result))
   }, [])
 
   return (
     <>
-    <IntroduceSection />
+      <IntroduceSection products={products}/>
 
-      <h1 className="fw-light" style={{ textAlign: "center" , userSelect: 'none' , fontFamily: "Copperplate Gothic" , color: "navajowhite"}}>Some of the best products</h1>
-      <div className="album py-5 bg-light">
-        <div className="container">
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+      {products.message || products.length === 0
+        ? ''
+        :
+        <>
+          <h1 className="fw-light" style={{ textAlign: "center", userSelect: 'none', fontFamily: "Copperplate Gothic", color: "navajowhite" }}>Some of the best products</h1>
+          <div className="album py-5 bg-light">
+            <div className="container">
+              <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
-            {products.map(x => <ProductTemplate key={x._id} data={x} />)}
+                {products.map(x => <ProductTemplate key={x._id} data={x} />)}
 
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      }
     </>
   );
 };
