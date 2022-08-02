@@ -107,7 +107,7 @@ export const DetailsSection = ({setCookies}) => {
                                             }
 
                                             {!product?.likes?.includes(user?._id)
-                                                ? <LikeAction product={product} user={user} setProduct={setProduct} />
+                                                ? <LikeAction product={product} user={user} setProduct={setProduct} setCookies={setCookies} setUser={setUser} setErrors={setErrors} errors={errors}/>
                                                 : <UnlikeAction product={product} user={user} setProduct={setProduct} />
                                             }
                                             <button type="button" className="btn btn-outline-primary disabled" style={{ margin: "0 1% 0 0" }}> Likes: {product?.likes.length} </button>
