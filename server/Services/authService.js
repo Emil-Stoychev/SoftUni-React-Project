@@ -119,6 +119,14 @@ const updateUserAfterBuyNewProduct = async (userId, data) => {
     }
 }
 
+const checkUserExisting = async(email) => {
+    try {
+        return await User.findOne({email}).lean()
+    } catch (error) {
+        return error
+    }
+}
+
 const getAllMessages = async (userId) => {
     try {
         let user = await User.findById(userId).lean()
@@ -281,5 +289,6 @@ module.exports = {
     updateUserAfterBuyNewProduct,
     getAllMessages,
     changeMessageStatus,
-    addMessageAfterEditing
+    addMessageAfterEditing,
+    checkUserExisting
 }

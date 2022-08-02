@@ -41,14 +41,14 @@ export const deleteProduct = (productId, cookie) => {
         .then(res => res.json())
 }
 
-export const changeProductAuthor = (user, productId) => {
+export const changeProductAuthor = (user, productId, productEmail) => {
 
     return fetch(`${URL}/changeProductAuthor/${productId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(user)
+        body: JSON.stringify({user, productEmail, productId})
     })
         .then(res => res.json())
 }
@@ -107,6 +107,7 @@ export const removeLike = (productId, user) => {
 export const create = (data, cookie) => {
     data.author = cookie._id
     data.token = cookie.token
+    data.email = cookie.email
 
     return fetch(`${URL}/create`, {
         method: "POST",

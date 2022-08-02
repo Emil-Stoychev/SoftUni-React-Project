@@ -1,6 +1,7 @@
 const { authMiddleware } = require('../Middlewares/authMiddleware')
 const { Product } = require('../Models/Product')
 const { productValidator } = require('../utils/productValidator')
+const { checkUserExisting } = require('./authService')
 
 const getAll = async() => {
     try {
@@ -21,7 +22,9 @@ const getById = async(productId) => {
     }
 }
 
-const changeProductAuthor = async(productId, user) => {
+const changeProductAuthor = async(data) => {
+    let {user, productEmail, productId} = data
+
     try {
         if (user.token.message) {
             return { message: "Invalid access token!" }
@@ -33,6 +36,17 @@ const changeProductAuthor = async(productId, user) => {
             return token
         }
 
+        let isUserExist = await checkUserExisting(productEmail)
+
+        if(!isUserExist.email) {
+            // CHECK EVERY REQUEST FOR TOKEN AND VALIDATE
+            // AND MAKE OPTIONS FOR MORE IMAGES
+
+            await Product.findByIdAndDelete(productId)
+
+            return { message: "Product owner doesn't exist!" }
+        }
+
         let product = await Product.findById(productId).lean()
 
         if(!product) {
@@ -40,6 +54,7 @@ const changeProductAuthor = async(productId, user) => {
         }
 
         product.author = user._id
+        product.email = user.email
         product.likes = product.likes.filter(x => x != user._id)
         product.visible = false
 

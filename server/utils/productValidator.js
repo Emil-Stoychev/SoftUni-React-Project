@@ -3,7 +3,7 @@ const imageAddressPattern = '^(?:http\\:\\/\\/|https\\:\\/\\/).+$'
 const imageRegex = new RegExp(imageAddressPattern)
 
 const productValidator = (data) => {
-    let { title, description, imageUrl, category, price, author } = data
+    let { title, description, imageUrl, category, price, author, email } = data
 
     if (!title || title.length < 3 || title.trim() === '') {
         return { message: 'Title must be at least 3 characters!' }
@@ -35,6 +35,7 @@ const productValidator = (data) => {
 
     if (author) {
         product.author = author
+        product.email = email
         product.visible = true
     }
 

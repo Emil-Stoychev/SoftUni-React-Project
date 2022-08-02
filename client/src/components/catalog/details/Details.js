@@ -29,16 +29,6 @@ export const DetailsSection = ({setCookies}) => {
             })
     }, [])
 
-    useEffect(() => {
-        authService.getUserById(product?.author)
-            .then(result => {
-                setProduct(state => ({
-                    ...state,
-                    email: result.email
-                }))
-            })
-    }, [user])
-
     const onDeleteClickHandler = (type, action) => {
         setOptions(({
             type,
@@ -127,7 +117,7 @@ export const DetailsSection = ({setCookies}) => {
                         </div>
                     </div>
                 </>
-                : <h2 style={{ textAlign: "center", margin: "12% 0 0 0" }}>Loading...</h2>
+                : <h2 style={{ textAlign: "center", margin: "12% 0 31.9% 0" }}>Loading...</h2>
             }
         </>
     )

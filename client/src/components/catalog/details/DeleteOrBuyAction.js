@@ -31,22 +31,24 @@ export const DeleteOrBuyAction = ({ onDeleteClickHandler, product, options , set
     const buyHandler = () => {
         let cookie = getCookie('sessionStorage')
 
-        productService.changeProductAuthor(cookie, product._id)
+        productService.changeProductAuthor(cookie, product._id, product.email)
             .then(result => {
                 if (result.message) {
                     console.log(result);
                 } else {
                     let updatedProduct = result
-                    authService.updateUserAfterBuy(cookie, product)
+                    let sessionCookie = cookie
+                    
+                    authService.updateUserAfterBuy(sessionCookie, product)
                         .then(result => {
                             if (result.message) {
                                 console.log(result);
                             } else {
-                                updatedProduct.email = cookie.email
-                                cookie.money = Number(cookie.money) - Number(updatedProduct.price)
+                                updatedProduct.email = sessionCookie.email
+                                sessionCookie.money = Number(sessionCookie.money) - Number(updatedProduct.price)
 
-                                setCookies(cookie)
                                 setOptions({ type: '', action: false })
+                                setCookies(sessionCookie)
                                 setProduct(updatedProduct)
                             }
                         })
