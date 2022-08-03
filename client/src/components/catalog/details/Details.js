@@ -1,24 +1,26 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { EditAndDelete } from './EditAndDelete'
 import { DeleteOrBuyAction } from './DeleteOrBuyAction'
 
 import * as productService from '../../../services/catalog/productService'
-import * as authService from '../../../services/user/authService'
 import getCookie from '../../cookies/getCookie'
 import validateIsExist from '../../utils/isProductExistValidator'
 import { LikeAction } from './LikeAction'
 import { UnlikeAction } from './UnlikeAction'
 import { TextError } from '../../error/TextError'
+import { AuthContext } from '../../../contexts/AuthContext'
 
-export const DetailsSection = ({setCookies}) => {
+export const DetailsSection = () => {
     const [product, setProduct] = useState([])
     const [user, setUser] = useState([])
     const [options, setOptions] = useState({ type: '', action: false })
     const [errors, setErrors] = useState('')
     const { productId } = useParams()
     const navigate = useNavigate()
+
+    let {setCookies} = useContext(AuthContext)
 
     useEffect(() => {
         productService.getById(productId)

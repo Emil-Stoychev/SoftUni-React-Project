@@ -4,8 +4,12 @@ import { logout } from '../user/logout/Logout'
 
 import User from './User'
 import Guest from './Guest'
+import { useContext } from "react"
+import { AuthContext } from "../../contexts/AuthContext"
 
-export const Navigation = ({ cookies, setCookies }) => {
+export const Navigation = () => {
+    let {cookies, setCookies} = useContext(AuthContext)
+
     return (
         <nav className="navbar navbar-expand-lg bg-dark">
             <div className="container-fluid">

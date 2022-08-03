@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import SetCookie from '../../cookies/setCookie'
@@ -7,9 +7,13 @@ import * as userService from '../../../services/user/authService'
 import { TextError } from '../../error/TextError'
 import { userValidator } from "../../utils/UserValidator"
 import getCookie from "../../cookies/getCookie"
+import { AuthContext } from "../../../contexts/AuthContext"
 
-export const LoginSection = ({setCookies}) => {
-    const [errors, setErrors] = useState('')
+export const LoginSection = () => {
+    const [errors,setErrors] = useState('')
+
+    let {setCookies} = useContext(AuthContext)
+
     const [values, setValues] = useState({
         email: '',
         password: ''
@@ -32,6 +36,7 @@ export const LoginSection = ({setCookies}) => {
                 if (result.message) {
                     setErrors(result.message)
                 } else {
+                    setErrors('')
                     SetCookie('sessionStorage', result.sessionStorage)
                     setCookies(getCookie('sessionStorage'))
                     navigate('/catalog')
