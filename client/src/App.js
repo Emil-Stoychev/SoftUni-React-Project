@@ -17,69 +17,59 @@ import { LikedProducts } from "./components/catalog/liked-products/LikedProducts
 import { Messages } from "./components/catalog/messages/Messages";
 
 import { ErrorSection } from './components/error/Error'
-import getCookie from "./components/cookies/getCookie";
-import { useEffect, useState } from "react";
 import { Footer } from "./components/footer/Footer";
 import PrivateRoutes from "./routerGuard/PrivateRoutes";
 import GuestRoutes from "./routerGuard/GuestRoutes";
-
-// TODO: To make check for edit and other pages whether have permission to do this request and if not just redirect!!! 
+import { AuthContextProvider } from "./contexts/AuthContext";
 
 function App() {
-  const [cookies, setCookies] = useState('')
-
-  useEffect(() => {
-    let cookie = getCookie('sessionStorage')
-
-    if (cookie._id) {
-      setCookies(cookie)
-    }
-
-  }, [])
-
   return (
     <div className="App">
-      <Navigation cookies={cookies} setCookies={setCookies} />
+        <AuthContextProvider>
 
-      <Routes>
+          <Navigation/>
 
-        <Route path="/catalog" element={<CatalogSection />} />
+          <Routes>
 
-        <Route path="/catalog/details/:productId" element={<DetailsSection setCookies={setCookies} />} />
+            <Route path="/catalog" element={<CatalogSection />} />
 
-        {/* PRIVATE ROUTES */}
-        <Route element={<PrivateRoutes />}>
+            <Route path="/catalog/details/:productId" element={<DetailsSection/>} />
 
-          <Route path="/catalog/create" element={<CreateSection />} />
+            {/* PRIVATE ROUTES */}
+            <Route element={<PrivateRoutes />}>
 
-          <Route path="/catalog/edit/:productId" element={<EditSection />} />
+              <Route path="/catalog/create" element={<CreateSection />} />
 
-          <Route path="/ownProducts" element={<OwnProducts />} />
+              <Route path="/catalog/edit/:productId" element={<EditSection />} />
 
-          <Route path="/likedProducts" element={<LikedProducts />} />
+              <Route path="/ownProducts" element={<OwnProducts />} />
 
-          <Route path="/messages" element={<Messages />} />
+              <Route path="/likedProducts" element={<LikedProducts />} />
 
-          <Route path="/profile" element={<ProfileSection />} />
+              <Route path="/messages" element={<Messages />} />
 
-        </Route>
+              <Route path="/profile" element={<ProfileSection />} />
 
-        {/* GUEST ROUTES */}
-        <Route element={<GuestRoutes />}>
+            </Route>
 
-          <Route path="/" element={<WelcomeSection />} />
+            {/* GUEST ROUTES */}
+            <Route element={<GuestRoutes />}>
 
-          <Route path="/user/login" element={<LoginSection setCookies={setCookies} />} />
+              <Route path="/" element={<WelcomeSection />} />
 
-          <Route path="/user/register" element={<RegisterSection />} />
+              <Route path="/user/login" element={<LoginSection/>} />
 
-        </Route>
+              <Route path="/user/register" element={<RegisterSection />} />
 
-        <Route path="*" element={<ErrorSection />} />
+            </Route>
 
-      </Routes>
+            <Route path="*" element={<ErrorSection />} />
 
-      <Footer />
+          </Routes>
+
+          <Footer />
+
+        </AuthContextProvider>
     </div>
   );
 }

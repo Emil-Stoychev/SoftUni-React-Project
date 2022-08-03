@@ -6,7 +6,9 @@ import { TextError } from '../../error/TextError'
 import { userValidator } from "../../utils/UserValidator"
 
 export const RegisterSection = () => {
-    const [errors, setErrors] = useState('')
+    const [errors,setErrors] = useState('')
+
+
     const [values, setValues] = useState({
         email: '',
         password: '',

@@ -6,8 +6,8 @@ import { Product } from "./ProductTemplate";
 
 export const CatalogSection = () => {
     const [products, setProducts] = useState([])
+    const [errors, setErrors] = useState('')
     const [defaultProducts, setDefaultProducts] = useState([])
-    const [error, setError] = useState('')
     const [searchValue, setSearchValue] = useState('')
     const [type, setType] = useState(false)
     const navigate = useNavigate()
@@ -42,21 +42,21 @@ export const CatalogSection = () => {
 
     const sortByName = (e) => {
         if (searchValue === '') {
-            setError('')
+            setErrors('')
             setProducts(defaultProducts)
         } else {
             let isEmpty = products.filter(x => x.title.toLowerCase().includes(searchValue.toLowerCase()))
 
             if (isEmpty.length === 0) {
-                if (!error.message) {
-                    setError({ message: 'Search not found' })
+                if (!errors.message) {
+                    setErrors({ message: 'Search not found' })
 
                     setTimeout(() => {
-                        setError('')
+                        setErrors('')
                     }, 2000);
                 }
             } else {
-                setError('')
+                setErrors('')
                 setProducts(isEmpty)
             }
         }
@@ -74,7 +74,7 @@ export const CatalogSection = () => {
 
                         <div className="input-group" style={{ width: "75%", margin: '2% 0 -2% 3%' }}>
                             <div className="form-outline" >
-                                <input type="search" id="form1" style={error.message && {borderWidth: "1.2px", borderColor: "red"}} className="form-control" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+                                <input type="search" id="form1" style={errors.message && {borderWidth: "1.2px", borderColor: "red"}} className="form-control" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
                                 <label className="form-label" htmlFor="form1"></label>
                             </div>
                             <div style={{margin: "0 0 0 0.3%"}}>
