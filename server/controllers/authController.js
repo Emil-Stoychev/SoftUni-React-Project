@@ -175,10 +175,9 @@ router.post('/login', async(req, res) => {
         })
     })
 
-    // res.cookie(sessionName, result)
-    loggedUser.sessionStorage = result
+    sessionStorage = result
 
-    res.json(loggedUser)
+    res.json(sessionStorage)
 })
 
 router.post('/register', async(req, res) => {

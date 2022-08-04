@@ -187,6 +187,12 @@ const addLikes = async(productId, data) => {
 
 const removeLikes = async(productId, data) => {
     try {
+        let isUserExist = await getUserById(data.userId)
+
+        if(isUserExist.message) {
+            return { message: "User doesn't exist!"}
+        }
+
         if (data.token.message) {
             return { message: "Invalid access token!" }
         }
