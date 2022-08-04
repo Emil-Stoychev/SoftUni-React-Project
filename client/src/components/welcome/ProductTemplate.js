@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 
-export const ProductTemplate = ({data}) => {
+export const ProductTemplate = ({ data }) => {
     const navigate = useNavigate()
 
     const onDetailsHandler = () => {
@@ -11,9 +11,11 @@ export const ProductTemplate = ({data}) => {
         <>
             <div className="col">
                 <div className="card shadow-sm">
-                    <img src={data.imageUrl} style={{width: "50%", height: " 200px", display: "block", margin: "auto"}} alt={data.title + ' image not found'}/>
+                    <picture>
+                        <img className='img-fluid img-thumbnail' src={data.imageUrl} style={{ width: "100%", height: "auto", maxHeight: "28vh" }} alt={data.title + ' image not found'} />
+                    </picture>
                     <div className="card-body">
-                        <p className="card-text" style={{userSelect: 'none'}}>Price: {data.price}€</p>
+                        <p className="card-text" style={{ userSelect: 'none' }}>Price: {data.price}€</p>
                         <div className="d-flex justify-content-between align-items-center">
                             <div className="btn-group">
                                 <button type="button" className="btn btn-sm btn-outline-secondary" onClick={onDetailsHandler}> View </button>

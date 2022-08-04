@@ -21,7 +21,7 @@ export const DetailsSection = () => {
     const { productId } = useParams()
     const navigate = useNavigate()
 
-    let {setCookies} = useContext(AuthContext)
+    let { setCookies } = useContext(AuthContext)
 
     useEffect(() => {
         productService.getById(productId)
@@ -70,7 +70,7 @@ export const DetailsSection = () => {
 
         productService.updateStatus(product._id, cookie)
             .then(result => {
-                if(result.message) {
+                if (result.message) {
 
                 } else {
                     setProduct(state => ({
@@ -86,38 +86,40 @@ export const DetailsSection = () => {
             {product._id
                 ?
                 <>
-                    <h1 style={{ textAlign: "center" ,margin: "2%", fontFamily: "Copperplate Gothic" , userSelect: "none" , color: "navajowhite"}}>DETAILS</h1>
-                    <div className="card" style={{ width: "38rem", margin: "0 0 1% 35%" }}>
-                        <img src={product?.imageUrl} alt={product?.title + ' image not found'} />
-                        <div className="card-body">
-                            <h2>{product?.title}</h2>
-                            <p className="card-text">{product?.description}</p>
-                            <p>Category: {product?.category}</p>
-                            <p>Author: {product?.email}</p>
-                            <p>Price: {product?.price}€</p>
+                    <h1 style={{ textAlign: "center", margin: "2%", fontFamily: "Copperplate Gothic", userSelect: "none", color: "navajowhite" }}>DETAILS</h1>
+                    <div className="row d-flex justify-content-center" style={{margin: '0 0 2% 0'}}>
+                        <div className="card col-md-8 col-lg-6">
+                            <img className='img-fluid' src={product?.imageUrl} alt={product?.title + ' image not found'} />
+                            <div className="card-body">
+                                <h2>{product?.title}</h2>
+                                <p className="card-text">{product?.description}</p>
+                                <p>Category: {product?.category}</p>
+                                <p>Author: {product?.email}</p>
+                                <p>Price: {product?.price}€</p>
 
-                            {errors && <TextError message={errors} />}
+                                {errors && <TextError message={errors} />}
 
-                            {options.action
-                                ? <DeleteOrBuyAction onDeleteClickHandler={onDeleteClickHandler} product={product} options={options} setProduct={setProduct} setOptions={setOptions} setCookies={setCookies}/>
-                                : !user.message
-                                    ? user?._id == product?.author
-                                        ? <EditAndDelete onDeleteClickHandler={onDeleteClickHandler} product={product} changeStatusHandler={changeStatusHandler} />
-                                        :
-                                        <>
-                                            {!product?.author != user?._id &&
-                                                <button type="button" className="btn btn-primary" style={{ margin: "0 1% 0 0" }} onClick={() => onBuyClickHandler('buy', true)}> Buy </button>
-                                            }
+                                {options.action
+                                    ? <DeleteOrBuyAction onDeleteClickHandler={onDeleteClickHandler} product={product} options={options} setProduct={setProduct} setOptions={setOptions} setCookies={setCookies} />
+                                    : !user.message
+                                        ? user?._id == product?.author
+                                            ? <EditAndDelete onDeleteClickHandler={onDeleteClickHandler} product={product} changeStatusHandler={changeStatusHandler} />
+                                            :
+                                            <>
+                                                {!product?.author != user?._id &&
+                                                    <button type="button" className="btn btn-primary" style={{ margin: "0 1% 0 0" }} onClick={() => onBuyClickHandler('buy', true)}> Buy </button>
+                                                }
 
-                                            {!product?.likes?.includes(user?._id)
-                                                ? <LikeAction product={product} user={user} setProduct={setProduct} setCookies={setCookies} setUser={setUser} setErrors={setErrors} errors={errors}/>
-                                                : <UnlikeAction product={product} user={user} setProduct={setProduct} setCookies={setCookies} setUser={setUser} setErrors={setErrors} errors={errors}/>
-                                            }
-                                            <button type="button" className="btn btn-outline-primary disabled" style={{ margin: "0 1% 0 0" }}> Likes: {product?.likes.length} </button>
-                                            <button type="button" className="btn btn-outline-primary disabled" style={{ margin: "0 1% 0 0" }}> Comments: {product?.comments.length} </button>
-                                        </>
-                                    : ''
-                            }
+                                                {!product?.likes?.includes(user?._id)
+                                                    ? <LikeAction product={product} user={user} setProduct={setProduct} setCookies={setCookies} setUser={setUser} setErrors={setErrors} errors={errors} />
+                                                    : <UnlikeAction product={product} user={user} setProduct={setProduct} setCookies={setCookies} setUser={setUser} setErrors={setErrors} errors={errors} />
+                                                }
+                                                <button type="button" className="btn btn-outline-primary disabled" style={{ margin: "0 1% 0 0" }}> Likes: {product?.likes.length} </button>
+                                                <button type="button" className="btn btn-outline-primary disabled" style={{ margin: "0 1% 0 0" }}> Comments: {product?.comments.length} </button>
+                                            </>
+                                        : ''
+                                }
+                            </div>
                         </div>
                     </div>
                 </>

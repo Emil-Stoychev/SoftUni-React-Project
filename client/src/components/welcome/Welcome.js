@@ -23,7 +23,7 @@ export const WelcomeSection = () => {
           <h1 className="fw-light" style={{ textAlign: "center", userSelect: 'none', fontFamily: "Copperplate Gothic", color: "navajowhite" }}>Some of the best products</h1>
           <div className="album py-5 bg-light">
             <div className="container">
-              <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+              <div className="row row-cols-1 row-cols-sm-3 row-cols-md-3 g-6">
 
                 {products.map(x => <ProductTemplate key={x._id} data={x} />)}
 

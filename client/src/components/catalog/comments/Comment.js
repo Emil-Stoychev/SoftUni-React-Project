@@ -1,6 +1,6 @@
 export const CommentSection = () => {
     return (
-        <div className="row d-flex justify-content-center" style={{margin: "0 0 2% 0"}}>
+        <div className="row d-flex justify-content-center" style={{ margin: "0 0 2% 0" }}>
             <div className="col-md-8 col-lg-6">
                 <div
                     className="card shadow-0 border"
@@ -8,12 +8,10 @@ export const CommentSection = () => {
                 >
                     <div className="card-body p-4">
                         <div className="form-outline mb-4">
-                            <input
-                                type="text"
-                                id="addANote"
-                                className="form-control"
-                                placeholder="Type comment..."
-                            />
+                            <div className="form-outline" >
+                                <input type="search" id="form1" className="form-control" placeholder="Type a comment..." />
+                                <label className="form-label" htmlFor="form1"></label>
+                            </div>
                             <label className="form-label" htmlFor="addANote">
                                 + Add a note
                             </label>
@@ -35,9 +33,14 @@ export const CommentSection = () => {
                                                 <p className="mb-1">
                                                     Maria Smantha <span className="small">- 2 hours ago</span>
                                                 </p>
-                                                <a href="#!">
-                                                    <span className="small">&#8617; reply</span>
-                                                </a>
+                                                <div>
+                                                    <a href="#!" style={{ margin: "0 30% 0 -80%" }}>
+                                                        <span className="small" >&#8617; reply</span>
+                                                    </a>
+                                                    <a href="#!" >
+                                                        <span className="small">&#9998; edit</span>
+                                                    </a>
+                                                </div>
                                             </div>
                                             <p className="small mb-0">
                                                 It is a long established fact that a reader will be distracted by
@@ -60,6 +63,14 @@ export const CommentSection = () => {
                                                         <p className="mb-1">
                                                             Simona Disa <span className="small">- 3 hours ago</span>
                                                         </p>
+                                                        <div>
+                                                            <a href="#!" style={{ margin: "0 30% 0 -80%" }}>
+                                                                <span className="small" >&#8617; reply</span>
+                                                            </a>
+                                                            <a href="#!" >
+                                                                <span className="small">&#9998; edit</span>
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                     <p className="small mb-0">
                                                         letters, as opposed to using 'Content here, content here',
@@ -84,6 +95,14 @@ export const CommentSection = () => {
                                                         <p className="mb-1">
                                                             John Smith <span className="small">- 4 hours ago</span>
                                                         </p>
+                                                        <div>
+                                                            <a href="#!" style={{ margin: "0 30% 0 -80%" }}>
+                                                                <span className="small" >&#8617; reply</span>
+                                                            </a>
+                                                            <a href="#!" >
+                                                                <span className="small">&#9998; edit</span>
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                     <p className="small mb-0">
                                                         the majority have suffered alteration in some form, by injected
@@ -108,9 +127,14 @@ export const CommentSection = () => {
                                                 <p className="mb-1">
                                                     Natalie Smith <span className="small">- 2 hours ago</span>
                                                 </p>
-                                                <a href="#!">
-                                                    <span className="small">&#8617; reply</span>
-                                                </a>
+                                                <div>
+                                                    <a href="#!" style={{ margin: "0 30% 0 -80%" }}>
+                                                        <span className="small" >&#8617; reply</span>
+                                                    </a>
+                                                    <a href="#!">
+                                                        <span className="small">&#9998; edit</span>
+                                                    </a>
+                                                </div>
                                             </div>
                                             <p className="small mb-0">
                                                 The standard chunk of Lorem Ipsum used since the 1500s is reproduced
@@ -133,6 +157,14 @@ export const CommentSection = () => {
                                                         <p className="mb-1">
                                                             Lisa Cudrow <span className="small">- 4 hours ago</span>
                                                         </p>
+                                                        <div>
+                                                            <a href="#!" style={{ margin: "0 30% 0 -80%" }}>
+                                                                <span className="small" >&#8617; reply</span>
+                                                            </a>
+                                                            <a href="#!" >
+                                                                <span className="small">&#9998; edit</span>
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                     <p className="small mb-0">
                                                         Cras sit amet nibh libero, in gravida nulla. Nulla vel metus
@@ -158,6 +190,14 @@ export const CommentSection = () => {
                                                         <p className="mb-1">
                                                             Maggie McLoan <span className="small">- 5 hours ago</span>
                                                         </p>
+                                                        <div>
+                                                            <a href="#!" style={{ margin: "0 30% 0 -80%" }}>
+                                                                <span className="small" >&#8617; reply</span>
+                                                            </a>
+                                                            <a href="#!" >
+                                                                <span className="small">&#9998; edit</span>
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                     <p className="small mb-0">
                                                         a Latin professor at Hampden-Sydney College in Virginia, looked
@@ -182,6 +222,14 @@ export const CommentSection = () => {
                                                         <p className="mb-1">
                                                             John Smith <span className="small">- 6 hours ago</span>
                                                         </p>
+                                                        <div>
+                                                            <a href="#!" style={{ margin: "0 30% 0 -80%" }}>
+                                                                <span className="small" >&#8617; reply</span>
+                                                            </a>
+                                                            <a href="#!" >
+                                                                <span className="small">&#9998; edit</span>
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                     <p className="small mb-0">
                                                         Autem, totam debitis suscipit saepe sapiente magnam officiis
