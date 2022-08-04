@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import * as productService from '../../../services/catalog/productService'
 import * as authService from '../../../services/user/authService'
+import { likeAndUnlikeErrorRedirect } from '../../utils/errorRedirect'
 
-export const UnlikeAction = ({ product, user, setProduct }) => {
+export const UnlikeAction = ({ product, user, setProduct, setCookies, setUser, setErrors, errors }) => {
     let navigate = useNavigate()
 
     const onClickUnlikeHandler = () => {
@@ -13,14 +14,12 @@ export const UnlikeAction = ({ product, user, setProduct }) => {
         productService.removeLike(product._id, user)
             .then(result => {
                 if (result.message) {
-                    console.log(result);
-                    navigate('/404')
+                    likeAndUnlikeErrorRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
                 } else {
                     authService.removeLikeFromUser(user, product._id)
                         .then(result => {
                             if (result.message) {
-                                console.log(result);
-                                navigate('/404')
+                                likeAndUnlikeErrorRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
                             } else {
                                 setProduct(state => ({
                                     ...state,

@@ -1,6 +1,6 @@
 import removeCookie from "../cookies/removeCookie"
 
-export const likeErrorRedirect = (navigate, message, setCookies, setUser, setErrors, errors) => {
+export const likeAndUnlikeErrorRedirect = (navigate, message, setCookies, setUser, setErrors, errors) => {
     removeCookie('sessionStorage')
     setCookies('')
     setUser('')
