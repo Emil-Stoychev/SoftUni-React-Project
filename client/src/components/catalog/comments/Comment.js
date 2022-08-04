@@ -1,32 +1,69 @@
-export const CommentSection = () => {
+import Picker from 'emoji-picker-react'
+import { useState } from 'react';
+
+import * as productService from '../../../services/catalog/productService'
+
+export const CommentSection = ({ product, user }) => {
+    const [value, setValue] = useState('')
+    const [errors, setErrors] = useState('')
+    const [action, setAction] = useState(false)
+
+    const onEmojiClick = (event, emojiObject) => {
+        setValue(state => state + emojiObject.emoji)
+    };
+
+    const onSubmitHandler = () => {
+        if(value.length === 0 || !value || value.trim() === '') {
+            if (!errors.message) {
+                setErrors({message: 'Cannot add empty comment!'})
+
+                setValue('')
+                setTimeout(() => {
+                    setErrors('')
+                }, 2000);
+            }
+        } else {
+            setErrors('')
+            productService.addComment(product, user, value)
+        }
+    }
+
     return (
-        <div className="row d-flex justify-content-center" style={{ margin: "0 0 2% 0" }}>
-            <div className="col-md-8 col-lg-6">
-                <div
-                    className="card shadow-0 border"
-                    style={{ backgroundColor: "#f0f2f5" }}
-                >
-                    <div className="card-body p-4">
+        <div className="row d-flex justify-content-center" style={{ margin: "0 0 2% 0" }} >
+            <div className="col-md-8 col-lg-6" >
+                <div className="card shadow-0 border" style={{ backgroundColor: "#f0f2f5" }} >
+                    <div className="card-body p-4" >
                         <div className="form-outline mb-4">
                             <div className="form-outline" >
-                                <input type="search" id="form1" className="form-control" placeholder="Type a comment..." />
+                                <input
+                                type="search"
+                                id="form1"
+                                name='comment'
+                                className="form-control"
+                                placeholder="Type a comment..."
+                                onClick={() => setAction(false)}
+                                value={value} onChange={(e) => setValue(e.target.value)}
+                                style={errors.message && {borderWidth: "1.2px", borderColor: "red"}}    
+                            />
                                 <label className="form-label" htmlFor="form1"></label>
                             </div>
-                            <label className="form-label" htmlFor="addANote">
-                                + Add a note
-                            </label>
+
+                            <div>
+                                <label className="btn btn-primary" htmlFor="addANote" style={{ margin: '0 1% 0 0' }} onClick={onSubmitHandler}>+ Add a note</label>
+                                <button className='btn btn-primary' onClick={() => setAction(true)}>Emoji</button>
+
+                                {action &&
+                                    <div onClick={() => setAction(false)}>
+                                        <Picker onEmojiClick={onEmojiClick} />
+                                    </div>
+                                }
+                            </div>
                         </div>
 
-                        <div className="row">
+                        <div className="row" onClick={() => setAction(false)}>
                             <div className="col">
                                 <div className="d-flex flex-start">
-                                    <img
-                                        className="rounded-circle shadow-1-strong me-3"
-                                        src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(10).webp"
-                                        alt="avatar"
-                                        width={65}
-                                        height={65}
-                                    />
+                                    <img className="rounded-circle shadow-1-strong me-3" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(10).webp" alt="avatar" width={65} height={65} />
                                     <div className="flex-grow-1 flex-shrink-1">
                                         <div>
                                             <div className="d-flex justify-content-between align-items-center">
@@ -49,13 +86,7 @@ export const CommentSection = () => {
                                         </div>
                                         <div className="d-flex flex-start mt-4">
                                             <a className="me-3" href="#">
-                                                <img
-                                                    className="rounded-circle shadow-1-strong"
-                                                    src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(11).webp"
-                                                    alt="avatar"
-                                                    width={65}
-                                                    height={65}
-                                                />
+                                                <img className="rounded-circle shadow-1-strong" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(11).webp" alt="avatar" width={65} height={65} />
                                             </a>
                                             <div className="flex-grow-1 flex-shrink-1">
                                                 <div>
@@ -81,13 +112,7 @@ export const CommentSection = () => {
                                         </div>
                                         <div className="d-flex flex-start mt-4">
                                             <a className="me-3" href="#">
-                                                <img
-                                                    className="rounded-circle shadow-1-strong"
-                                                    src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(32).webp"
-                                                    alt="avatar"
-                                                    width={65}
-                                                    height={65}
-                                                />
+                                                <img className="rounded-circle shadow-1-strong" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(32).webp" alt="avatar" width={65} height={65} />
                                             </a>
                                             <div className="flex-grow-1 flex-shrink-1">
                                                 <div>
@@ -114,13 +139,7 @@ export const CommentSection = () => {
                                     </div>
                                 </div>
                                 <div className="d-flex flex-start mt-4">
-                                    <img
-                                        className="rounded-circle shadow-1-strong me-3"
-                                        src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(12).webp"
-                                        alt="avatar"
-                                        width={65}
-                                        height={65}
-                                    />
+                                    <img className="rounded-circle shadow-1-strong me-3" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(12).webp" alt="avatar" width={65} height={65} />
                                     <div className="flex-grow-1 flex-shrink-1">
                                         <div>
                                             <div className="d-flex justify-content-between align-items-center">
@@ -143,13 +162,7 @@ export const CommentSection = () => {
                                         </div>
                                         <div className="d-flex flex-start mt-4">
                                             <a className="me-3" href="#">
-                                                <img
-                                                    className="rounded-circle shadow-1-strong"
-                                                    src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(31).webp"
-                                                    alt="avatar"
-                                                    width={65}
-                                                    height={65}
-                                                />
+                                                <img className="rounded-circle shadow-1-strong" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(31).webp" alt="avatar" width={65} height={65} />
                                             </a>
                                             <div className="flex-grow-1 flex-shrink-1">
                                                 <div>
@@ -176,13 +189,7 @@ export const CommentSection = () => {
                                         </div>
                                         <div className="d-flex flex-start mt-4">
                                             <a className="me-3" href="#">
-                                                <img
-                                                    className="rounded-circle shadow-1-strong"
-                                                    src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(29).webp"
-                                                    alt="avatar"
-                                                    width={65}
-                                                    height={65}
-                                                />
+                                                <img className="rounded-circle shadow-1-strong" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(29).webp" alt="avatar" width={65} height={65} />
                                             </a>
                                             <div className="flex-grow-1 flex-shrink-1">
                                                 <div>
@@ -208,13 +215,7 @@ export const CommentSection = () => {
                                         </div>
                                         <div className="d-flex flex-start mt-4">
                                             <a className="me-3" href="#">
-                                                <img
-                                                    className="rounded-circle shadow-1-strong"
-                                                    src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(32).webp"
-                                                    alt="avatar"
-                                                    width={65}
-                                                    height={65}
-                                                />
+                                                <img className="rounded-circle shadow-1-strong" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(32).webp" alt="avatar" width={65} height={65} />
                                             </a>
                                             <div className="flex-grow-1 flex-shrink-1">
                                                 <div>
