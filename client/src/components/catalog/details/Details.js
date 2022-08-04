@@ -11,6 +11,7 @@ import { LikeAction } from './LikeAction'
 import { UnlikeAction } from './UnlikeAction'
 import { TextError } from '../../error/TextError'
 import { AuthContext } from '../../../contexts/AuthContext'
+import { CommentSection } from '../comments/Comment'
 
 export const DetailsSection = () => {
     const [product, setProduct] = useState([])
@@ -86,7 +87,7 @@ export const DetailsSection = () => {
                 ?
                 <>
                     <h1 style={{ textAlign: "center" ,margin: "2%", fontFamily: "Copperplate Gothic" , userSelect: "none" , color: "navajowhite"}}>DETAILS</h1>
-                    <div className="card" style={{ width: "38rem", margin: "0 0 10% 35%" }}>
+                    <div className="card" style={{ width: "38rem", margin: "0 0 1% 35%" }}>
                         <img src={product?.imageUrl} alt={product?.title + ' image not found'} />
                         <div className="card-body">
                             <h2>{product?.title}</h2>
@@ -110,9 +111,10 @@ export const DetailsSection = () => {
 
                                             {!product?.likes?.includes(user?._id)
                                                 ? <LikeAction product={product} user={user} setProduct={setProduct} setCookies={setCookies} setUser={setUser} setErrors={setErrors} errors={errors}/>
-                                                : <UnlikeAction product={product} user={user} setProduct={setProduct} />
+                                                : <UnlikeAction product={product} user={user} setProduct={setProduct} setCookies={setCookies} setUser={setUser} setErrors={setErrors} errors={errors}/>
                                             }
                                             <button type="button" className="btn btn-outline-primary disabled" style={{ margin: "0 1% 0 0" }}> Likes: {product?.likes.length} </button>
+                                            <button type="button" className="btn btn-outline-primary disabled" style={{ margin: "0 1% 0 0" }}> Comments: {product?.comments.length} </button>
                                         </>
                                     : ''
                             }
@@ -121,6 +123,7 @@ export const DetailsSection = () => {
                 </>
                 : <h2 style={{ textAlign: "center", margin: "12% 0 31.9% 0" }}>Loading...</h2>
             }
+            <CommentSection />
         </>
     )
 }
