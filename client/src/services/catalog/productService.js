@@ -14,7 +14,7 @@ export const getById = (productId) => {
 }
 
 export const updateStatus = (productId, cookie) => {
-    
+
     return fetch(`${URL}/changeProductStatus/${productId}`, {
         method: "PUT",
         headers: {
@@ -48,7 +48,7 @@ export const changeProductAuthor = (user, productId, productEmail) => {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({user, productEmail, productId})
+        body: JSON.stringify({ user, productEmail, productId })
     })
         .then(res => res.json())
 }
@@ -101,6 +101,25 @@ export const removeLike = (productId, user) => {
         },
         body: JSON.stringify(data)
     })
+        .then(res => res.json())
+}
+
+export const addComment = (product, user, title) => {
+    let data = {
+        email: user.email,
+        title,
+        authorId: user._id,
+        productId: product._id,
+        token: user.token
+    }
+
+    return fetch(`${URL}/addComment`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    }) 
         .then(res => res.json())
 }
 
