@@ -39,17 +39,7 @@ router.put('/changeUserAfterBuyProduct/:userId', async(req, res) => {
 
 router.put('/addItem/:userId', async(req, res) => {
     try {
-        if(req.body.token.message) {
-            return {message: "Invalid access token!"}
-        }   
-
-        let token = await authMiddleware(req.body.token)
-
-        if(token.message) {
-            return res.json(token)
-        }
-
-        let user = await authService.addNewItemToUser(req.params.userId, req.body.productId, req.body.nameOfProduct)
+        let user = await authService.addNewItemToUser(req.params.userId, req.body.productId, req.body.nameOfProduct, req.body.token)
 
         res.json(user)
     } catch (error) {
@@ -60,19 +50,7 @@ router.put('/addItem/:userId', async(req, res) => {
 
 router.put('/addLikes/:userId', async(req, res) => {
     try {
-        let data = req.body
-
-        if(data.token.message) {
-            return {message: "Invalid access token!"}
-        }    
-
-        let token = await authMiddleware(data.token)
-
-        if(token.message) {
-            return token
-        }
-
-        let addLikeToUser = await authService.addNewLikeToUser(data)
+        let addLikeToUser = await authService.addNewLikeToUser(req.body)
 
         res.json(addLikeToUser)
     } catch (error) {
@@ -83,19 +61,7 @@ router.put('/addLikes/:userId', async(req, res) => {
 
 router.put('/removeLikes/:userId', async(req, res) => {
     try {
-        let data = req.body
-
-        if(data.token.message) {
-            return {message: "Invalid access token!"}
-        }    
-
-        let token = await authMiddleware(data.token)
-
-        if(token.message) {
-            return token
-        }
-
-        let removeLikeFromUser = await authService.removeLikeFromUser(data)
+        let removeLikeFromUser = await authService.removeLikeFromUser(req.body)
 
         res.json(removeLikeFromUser)
     } catch (error) {
@@ -142,7 +108,7 @@ router.put('/messages/:userId/changeStatus', async(req, res) => {
     try {
         let editedMessage = await authService.changeMessageStatus(req.params.userId, req.body)
 
-        editedMessage.length > 0 ? res.json(editedMessage) : res.json({message: "Empty!"})
+        res.json(editedMessage)
     } catch (error) {
         res.json({message: `User doesn't exist!`})
     }
