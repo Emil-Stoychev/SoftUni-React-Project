@@ -1,21 +1,27 @@
 import Picker from 'emoji-picker-react'
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../contexts/AuthContext';
 
 import * as productService from '../../../services/catalog/productService'
+import { TextError } from '../../error/TextError';
+import { isInvalidTokenThenRedirect } from '../../utils/errorRedirect';
 
 export const CommentSection = ({ product, user }) => {
     const [value, setValue] = useState('')
     const [errors, setErrors] = useState('')
     const [action, setAction] = useState(false)
+    const navigate = useNavigate()
+    const {setCookies} = useContext(AuthContext)
 
     const onEmojiClick = (event, emojiObject) => {
         setValue(state => state + emojiObject.emoji)
     };
 
     const onSubmitHandler = () => {
-        if(value.length === 0 || !value || value.trim() === '') {
-            if (!errors.message) {
-                setErrors({message: 'Cannot add empty comment!'})
+        if (value.length === 0 || !value || value.trim() === '') {
+            if (!errors) {
+                setErrors('Cannot add empty comment!')
 
                 setValue('')
                 setTimeout(() => {
@@ -25,6 +31,17 @@ export const CommentSection = ({ product, user }) => {
         } else {
             setErrors('')
             productService.addComment(product, user, value)
+                .then(result => {
+                    if(result.message) {
+                        if(result.message.startsWith('Invalid access')) {
+                            isInvalidTokenThenRedirect(navigate, result.message, setCookies, null, setErrors, errors)
+                        } else {
+                            setErrors(result)
+                        }
+                    } else {
+                        console.log(result);
+                    }
+                })
         }
     }
 
@@ -35,16 +52,19 @@ export const CommentSection = ({ product, user }) => {
                     <div className="card-body p-4" >
                         <div className="form-outline mb-4">
                             <div className="form-outline" >
+
+                                {errors.includes('Invalid access') && <TextError message={errors} />}
+
                                 <input
-                                type="search"
-                                id="form1"
-                                name='comment'
-                                className="form-control"
-                                placeholder="Type a comment..."
-                                onClick={() => setAction(false)}
-                                value={value} onChange={(e) => setValue(e.target.value)}
-                                style={errors.message && {borderWidth: "1.2px", borderColor: "red"}}    
-                            />
+                                    type="search"
+                                    id="form1"
+                                    name='comment'
+                                    className="form-control"
+                                    placeholder="Type a comment..."
+                                    onClick={() => setAction(false)}
+                                    value={value} onChange={(e) => setValue(e.target.value)}
+                                    style={errors.includes('Cannot add empty comment!') ? { borderWidth: "1.2px", borderColor: "red" } : {} }
+                                />
                                 <label className="form-label" htmlFor="form1"></label>
                             </div>
 

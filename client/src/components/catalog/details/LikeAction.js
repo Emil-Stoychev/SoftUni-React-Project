@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import * as productService from '../../../services/catalog/productService'
 import * as authService from '../../../services/user/authService'
-import { likeAndUnlikeErrorRedirect } from '../../utils/errorRedirect'
+import { isInvalidTokenThenRedirect } from '../../utils/errorRedirect'
 
 export const LikeAction = ({ product, user, setProduct, setCookies, setUser, setErrors, errors }) => {
     let navigate = useNavigate()
@@ -14,12 +14,12 @@ export const LikeAction = ({ product, user, setProduct, setCookies, setUser, set
         productService.addLike(product._id, user)
             .then(result => {
                 if (result.message) {
-                    likeAndUnlikeErrorRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
+                    isInvalidTokenThenRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
                 } else {
                     authService.addLikeToUser(user, product._id)
                         .then(result => {
                             if (result.message) {
-                                likeAndUnlikeErrorRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
+                                isInvalidTokenThenRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
                             } else {
                                 setProduct(state => ({
                                     ...state,

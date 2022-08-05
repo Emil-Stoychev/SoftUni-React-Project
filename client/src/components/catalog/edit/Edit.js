@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { useNavigate, useParams } from "react-router-dom"
+import { AuthContext } from "../../../contexts/AuthContext";
 import * as productService from '../../../services/catalog/productService'
 import * as authService from '../../../services/user/authService'
 import getCookie from "../../cookies/getCookie";
 import { TextError } from "../../error/TextError";
+import { addImage, removeImage } from "../../utils/AddRemoveImages";
+import { isInvalidTokenThenRedirect } from "../../utils/errorRedirect";
 import { productValidator } from "../../utils/ProductValidator";
 
 export const EditSection = () => {
@@ -12,12 +15,13 @@ export const EditSection = () => {
     const [values, setValues] = useState({
         title: "",
         description: "",
-        imageUrl: "",
+        images: [],
         category: "",
         price: ""
     })
     const { productId } = useParams()
     const navigate = useNavigate()
+    const { setCookies } = useContext(AuthContext)
 
     useEffect(() => {
         productService.getById(productId)
@@ -55,10 +59,11 @@ export const EditSection = () => {
         productService.edit(productId, values, cookie)
             .then(result => {
                 if (result.message) {
-                    if (result.message === 'Invalid access token!') {
-                        return navigate('/404')
+                    if (result.message.startsWith('Invalid access')) {
+                        isInvalidTokenThenRedirect(navigate, result.message, setCookies, null, setErrors, errors)
+                    } else {
+                        setErrors(result.message)
                     }
-                    setErrors(result.message)
                 } else {
                     authService.addMessageAfterEditing(cookie._id, result, cookie.token)
                         .then(navigate(`/catalog/details/${productId}`))
@@ -79,11 +84,19 @@ export const EditSection = () => {
                     <span className="input-group-text" />
                     <textarea className="form-control" placeholder="Description" aria-label="With textarea" name="description" onChange={onChangeHandler} onBlur={errorChangeHandler} value={values.description} />
                 </div>
-                <label htmlFor="basic-url" className="form-label" style={{ color: "white" }}> Your image URL </label>
-                <div className="input-group mb-3">
-                    <span className="input-group-text" id="basic-addon3"> https or http </span>
-                    <input type="text" className="form-control" id="basic-url" name="imageUrl" value={values.imageUrl} onChange={onChangeHandler} onBlur={errorChangeHandler} aria-describedby="basic-addon3" />
+
+                <div className="input-group mb-1" style={{ margin: "1% 0 0 0" }}>
+                    <input className="form-control" type="file" onChange={(e) => addImage(e, values, setValues, errors, setErrors)} />
                 </div>
+                <div className="input-group mb-3">
+                    {values.images.length > 0 && values.images.map(x =>
+                        <div key={x.dataString}>
+                            <img src={x.dataString} style={{ margin: "0 1% 1% 0", width: "100px", height: "100px" }} />
+                            <input className="btn btn-primary delete" type="button" value="X" style={{ margin: "-66px 0px 0px 0px" }} onClick={(e) => removeImage(e, setValues)} />
+                        </div>
+                    )}
+                </div>
+
                 <div className="input-group mb-3">
                     <span className="input-group-text" id="basic-addon1" />
                     <input type="text" className="form-control" placeholder="Category" name="category" value={values.category} onChange={onChangeHandler} onBlur={errorChangeHandler} aria-label="Username" aria-describedby="basic-addon1" />

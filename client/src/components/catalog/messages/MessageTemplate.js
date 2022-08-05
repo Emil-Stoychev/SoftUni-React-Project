@@ -1,20 +1,33 @@
 import { changeMessageStatus } from "../../../services/user/authService"
+import { TextError } from "../../error/TextError"
+import { isInvalidTokenThenRedirect } from "../../utils/errorRedirect"
 
-export const MessageTemplate = ({data, cookie, setMessages}) => {
+export const MessageTemplate = ({ data, cookie, setMessages, navigate, setCookies, setErrors, errors }) => {
 
     const statusChange = (e) => {
-        e.target.parentElement.className = 'alert alert-dark'
-
         changeMessageStatus(cookie._id, data._id, cookie.token)
-            .then(result => setMessages(state => state.map(x => {
-                if(x._id === data._id) {
-                    x.read = !x.read
-
-                    return x
+            .then(result => {
+                if (result.message) {
+                    if (result.message.startsWith('Invalid access')) {
+                        isInvalidTokenThenRedirect(navigate, result.message, setCookies, null, setErrors, errors)
+                    } else {
+                        setErrors(result.message)
+                    }
                 } else {
-                    return x
+                    e.target.parentElement.className = 'alert alert-dark'
+
+                    setMessages(state => state.map(x => {
+                        if (x._id === data._id) {
+                            x.read = !x.read
+
+                            return x
+                        } else {
+                            return x
+                        }
+                    }
+                    ))
                 }
-            })))
+            })
     }
 
     let word = data.title.includes('deleted') ? 'DELETED PRODUCT' : data.title.includes('edited') ? 'EDITED PRODUCT' : data.title.includes('created') ? 'CREATED PRODUCT' : data.title.includes('have purchased') ? 'PURCHASED NEW PRODUCT' : data.title.includes('was purchased') ? 'PRODUCT SOLD' : ''
@@ -26,7 +39,10 @@ export const MessageTemplate = ({data, cookie, setMessages}) => {
                 <p>{data.title}</p>
                 <hr />
                 <p className="mb-0">Date: {data.date}</p>
-                {!data.read ? <button className="btn btn-primary" style={{margin: "1% 0 0 0"}} onClick={statusChange}> Marked as read </button> : ''}
+
+                {errors && <TextError message={errors} />}
+
+                {!data.read ? <button className="btn btn-primary" style={{ margin: "1% 0 0 0" }} onClick={statusChange}> Marked as read </button> : ''}
             </div>
         </>
     )

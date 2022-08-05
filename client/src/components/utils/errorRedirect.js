@@ -1,12 +1,12 @@
 import removeCookie from "../cookies/removeCookie"
 
-export const likeAndUnlikeErrorRedirect = (navigate, message, setCookies, setUser, setErrors, errors) => {
+export const isInvalidTokenThenRedirect = (navigate, message, setCookies, setUser, setErrors, errors) => {
     removeCookie('sessionStorage')
     setCookies('')
-    setUser('')
+    setUser && setUser('')
     setErrors(message + ' Automatically redirect after 3 seconds!')
 
-    if(!errors.includes('Automatically redirect after 3 seconds!')) {
+    if (!errors.includes('Automatically redirect after 3 seconds!')) {
         setTimeout(() => {
             setErrors('')
             return navigate('/user/login', { replace: true })

@@ -2,8 +2,9 @@ import getCookie from "../../cookies/getCookie";
 import * as productService from '../../../services/catalog/productService'
 import * as authService from '../../../services/user/authService'
 import { useNavigate } from "react-router-dom";
+import { isInvalidTokenThenRedirect } from "../../utils/errorRedirect";
 
-export const DeleteOrBuyAction = ({ onDeleteClickHandler, product, options , setProduct, setOptions, setCookies}) => {
+export const DeleteOrBuyAction = ({ onDeleteClickHandler, product, options, setProduct, setOptions, setCookies, setErrors, setUser, errors }) => {
     let navigate = useNavigate()
 
     const deleteHandler = () => {
@@ -12,14 +13,20 @@ export const DeleteOrBuyAction = ({ onDeleteClickHandler, product, options , set
         productService.deleteProduct(product._id, cookie)
             .then(result => {
                 if (result.message) {
-                    console.log(result);
-                    navigate('/404')
+                    if (result.message.startsWith('Invalid access')) {
+                        isInvalidTokenThenRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
+                    } else {
+                        setErrors(result.message)
+                    }
                 } else {
                     authService.deleteProductFromUser(cookie, product)
                         .then(result => {
                             if (result.message) {
-                                console.log(result);
-                                navigate('/404')
+                                if (result.message.startsWith('Invalid access')) {
+                                    isInvalidTokenThenRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
+                                } else {
+                                    setErrors(result.message)
+                                }
                             } else {
                                 navigate('/ownProducts')
                             }
@@ -34,15 +41,23 @@ export const DeleteOrBuyAction = ({ onDeleteClickHandler, product, options , set
         productService.changeProductAuthor(cookie, product._id, product.email)
             .then(result => {
                 if (result.message) {
-                    console.log(result);
+                    if (result.message.startsWith('Invalid access')) {
+                        isInvalidTokenThenRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
+                    } else {
+                        setErrors(result.message)
+                    }
                 } else {
                     let updatedProduct = result
                     let sessionCookie = cookie
-                    
+
                     authService.updateUserAfterBuy(sessionCookie, product)
                         .then(result => {
                             if (result.message) {
-                                console.log(result);
+                                if (result.message.startsWith('Invalid access')) {
+                                    isInvalidTokenThenRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
+                                } else {
+                                    setErrors(result.message)
+                                }
                             } else {
                                 updatedProduct.email = sessionCookie.email
                                 sessionCookie.money = Number(sessionCookie.money) - Number(updatedProduct.price)

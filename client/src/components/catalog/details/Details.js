@@ -12,12 +12,14 @@ import { UnlikeAction } from './UnlikeAction'
 import { TextError } from '../../error/TextError'
 import { AuthContext } from '../../../contexts/AuthContext'
 import { CommentSection } from '../comments/Comment'
+import { isInvalidTokenThenRedirect } from '../../utils/errorRedirect'
 
 export const DetailsSection = () => {
     const [product, setProduct] = useState([])
     const [user, setUser] = useState([])
     const [options, setOptions] = useState({ type: '', action: false })
     const [errors, setErrors] = useState('')
+    const [imageCount, setImageCount] = useState(0)
     const { productId } = useParams()
     const navigate = useNavigate()
 
@@ -71,7 +73,11 @@ export const DetailsSection = () => {
         productService.updateStatus(product._id, cookie)
             .then(result => {
                 if (result.message) {
-
+                    if (result.message.startsWith('Invalid access')) {
+                        isInvalidTokenThenRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
+                    } else {
+                        setErrors(result.message)
+                    }
                 } else {
                     setProduct(state => ({
                         ...state,
@@ -81,15 +87,55 @@ export const DetailsSection = () => {
             })
     }
 
+    const nextImage = () => {
+        if(imageCount > product?.images.length - 2) {
+            setImageCount(0)
+        } else {
+            setImageCount(state => state + 1)
+        }
+    }
+
+    const previousImage = () => {
+        if(imageCount < 1) {
+            setImageCount(product?.images.length - 1)
+        } else {
+            setImageCount(state => state - 1)
+        }
+    }
+    
     return (
         <>
             {product._id
                 ?
                 <>
                     <h1 style={{ textAlign: "center", margin: "2%", fontFamily: "Copperplate Gothic", userSelect: "none", color: "navajowhite" }}>DETAILS</h1>
-                    <div className="row d-flex justify-content-center" style={{margin: '0 0 2% 0'}}>
+                    <div className="row d-flex justify-content-center" style={{ margin: '0 0 2% 0' }}>
                         <div className="card col-md-8 col-lg-6">
-                            <img className='img-fluid' src={product?.imageUrl} alt={product?.title + ' image not found'} />
+                            {/* <img className='img-fluid' src={product?.images[0]?.dataString} alt={product?.title + ' image not found'} /> */}
+
+                            <div id="carouselExampleControls" className="carousel slide" data-ride="carousel" >
+                                <div className="carousel-inner">
+
+                                    <div className='carousel-item active'>
+                                        <img className="img-fluid rounded mx-auto d-block" src={product?.images[imageCount].dataString} style={{marginLeft: 'auto', marginRight: "auto", height: "50vh"}}/>
+                                    </div>
+
+                                </div>
+
+                                {product?.images.length > 1 &&
+                                    <>
+                                        <a className="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev" onClick={previousImage} >
+                                            <span className="carousel-control-prev-icon" aria-hidden="true" style={{backgroundColor: 'black'}} />
+                                            <span className="sr-only">Previous</span>
+                                        </a>
+                                        <a className="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next" onClick={nextImage}>
+                                            <span className="carousel-control-next-icon" aria-hidden="true" style={{backgroundColor: 'black'}}/>
+                                            <span className="sr-only">Next</span>
+                                        </a>
+                                    </>
+                                }
+                            </div>
+
                             <div className="card-body">
                                 <h2>{product?.title}</h2>
                                 <p className="card-text">{product?.description}</p>
@@ -100,7 +146,7 @@ export const DetailsSection = () => {
                                 {errors && <TextError message={errors} />}
 
                                 {options.action
-                                    ? <DeleteOrBuyAction onDeleteClickHandler={onDeleteClickHandler} product={product} options={options} setProduct={setProduct} setOptions={setOptions} setCookies={setCookies} />
+                                    ? <DeleteOrBuyAction onDeleteClickHandler={onDeleteClickHandler} errors={errors} setUser={setUser} product={product} setErrors={setErrors} options={options} setProduct={setProduct} setOptions={setOptions} setCookies={setCookies} />
                                     : !user.message
                                         ? user?._id == product?.author
                                             ? <EditAndDelete onDeleteClickHandler={onDeleteClickHandler} product={product} changeStatusHandler={changeStatusHandler} />
@@ -123,9 +169,10 @@ export const DetailsSection = () => {
                         </div>
                     </div>
                 </>
-                : <h2 style={{ textAlign: "center", margin: "12% 0 31.9% 0" }}>Loading...</h2>
+                : <h2 style={{ textAlign: "center", margin: "12% 0 31.9% 0", color: "navajowhite" }}>Loading...</h2>
             }
-            <CommentSection />
+
+            <CommentSection product={product} user={user} />
         </>
     )
 }

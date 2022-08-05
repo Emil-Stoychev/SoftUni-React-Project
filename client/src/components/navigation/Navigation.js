@@ -8,7 +8,7 @@ import { useContext } from "react"
 import { AuthContext } from "../../contexts/AuthContext"
 
 export const Navigation = () => {
-    let {cookies, setCookies} = useContext(AuthContext)
+    let { cookies, setCookies } = useContext(AuthContext)
 
     return (
         <nav className="navbar navbar-expand-lg bg-dark">
@@ -24,17 +24,24 @@ export const Navigation = () => {
                     {cookies?.email
                         ?
                         <>
-                            <li className="nav-item">
-                                <Link className="nav-link active" style={{ color: "white", margin: "-30% 0 0 -30%", userSelect: "none" }} aria-current="page" to='/messages' ><span style={{color: "red"}}>*</span>&#x2709; Messages </Link>
-                            </li>
-                            <Link className="nav-link disabled" style={{ color: "#f1ce99", userSelect: "none" }} to=''>{cookies?.money ? `Balance: ${cookies?.money}€` : ''}</Link>
-                            <Link className="nav-link disabled" style={{ color: "#f1ce99", margin: "0 2%", userSelect: "none" }} to=''>{cookies?.email ? cookies?.email : ''}</Link>
-                            <li className="nav-item">
-                                <Link className="nav-link active" style={{ color: "white", margin: "-45% 0 0 -30%", userSelect: "none" }} aria-current="page" to='/user/login' onClick={() => logout(setCookies)}>Logout </Link>
-                            </li>
+                            <ul className="nav navbar-nav navbar-right">
+                                <li className="nav-item">
+                                    <Link className="nav-link active" style={{ color: "white", userSelect: "none" }} aria-current="page" to='/messages' ><span style={{ color: "red" }}>*</span>&#x2709; Messages </Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link disabled" style={{ color: "#f1ce99", userSelect: "none" }} to=''>{cookies?.money ? `Balance: ${cookies?.money}€` : ''}</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link disabled" style={{ color: "#f1ce99", userSelect: "none" }} to=''>{cookies?.email ? cookies?.email : ''}</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link active" style={{ color: "white", userSelect: "none" }} aria-current="page" to='/user/login' onClick={() => logout(setCookies)}>Logout </Link>
+                                </li>
+                            </ul>
                         </>
                         : ''
                     }
+
 
                 </div>
             </div>
