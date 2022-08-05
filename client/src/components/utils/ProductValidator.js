@@ -1,9 +1,5 @@
-const imageAddressPattern = '^(?:http\\:\\/\\/|https\\:\\/\\/).+$'
-
-const imageRegex = new RegExp(imageAddressPattern)
-
 const productValidator = (data) => {
-    let { title, description, imageUrl, category, price, author } = data
+    let { title, description, images, category, price, author } = data
 
     if (!title || title.length < 3 || title.trim() === '') {
         return { message: 'Title must be at least 3 characters!' }
@@ -21,8 +17,8 @@ const productValidator = (data) => {
         return { message: 'Price must be a positive number!' }
     }
 
-    if (!imageRegex.test(imageUrl)) {
-        return { message: 'Image URL must starts with https ot http!' }
+    if(images.length === 0) {
+        return { message: "You must upload at least 1 image!"}
     }
 
     return false
