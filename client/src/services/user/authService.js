@@ -31,6 +31,7 @@ export const changeMessageStatus = (userId, messageId, token) => {
         },
         body: JSON.stringify(data)
     })
+        .then(res => res.json())
 }
 
 export const updateUserAfterBuy = (cookie, product) => {
