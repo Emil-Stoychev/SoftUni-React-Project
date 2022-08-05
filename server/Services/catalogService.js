@@ -1,18 +1,19 @@
 const { authMiddleware } = require('../Middlewares/authMiddleware')
 const { Product } = require('../Models/Product')
+const { addCommentToProduct } = require('../utils/CommentEngine')
 const { productValidator } = require('../utils/productValidator')
 const { checkUserExisting, getUserById } = require('./authService')
 
-const getAll = async() => {
+const getAll = async () => {
     try {
-        return await Product.find({visible: true}).lean()
+        return await Product.find({ visible: true }).lean()
     } catch (error) {
         console.error(error)
         return error
     }
 }
 
-const getById = async(productId) => {
+const getById = async (productId) => {
     try {
         let product = await Product.findById(productId).lean() || { message: "404 Not found!" }
 
@@ -22,8 +23,36 @@ const getById = async(productId) => {
     }
 }
 
-const changeProductAuthor = async(data) => {
-    let {user, productEmail, productId} = data
+const addComment = async (data) => {
+    let { email, title, authorId, productId, token } = data
+
+    try {
+        if (token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let isValidToken = await authMiddleware(token)
+
+        if (isValidToken.message) {
+            return isValidToken
+        }
+
+        let isUserExist = await checkUserExisting(email)
+
+        if (!isUserExist.email) {
+            return { message: "User doesn't exist!" }
+        }
+
+        let newComment = await addCommentToProduct(email, title, authorId, productId)
+
+        return newComment
+    } catch (error) {
+        return error
+    }
+}
+
+const changeProductAuthor = async (data) => {
+    let { user, productEmail, productId } = data
 
     try {
         if (user.token.message) {
@@ -38,7 +67,7 @@ const changeProductAuthor = async(data) => {
 
         let isUserExist = await checkUserExisting(productEmail)
 
-        if(!isUserExist.email) {
+        if (!isUserExist.email) {
             await Product.findByIdAndDelete(productId)
 
             return { message: "Product owner doesn't exist!" }
@@ -46,8 +75,8 @@ const changeProductAuthor = async(data) => {
 
         let product = await Product.findById(productId).lean()
 
-        if(!product) {
-            return {message: "Product not found"}
+        if (!product) {
+            return { message: "Product not found" }
         }
 
         product.author = user._id
@@ -57,8 +86,8 @@ const changeProductAuthor = async(data) => {
 
         let updatedProduct = await Product.findByIdAndUpdate(productId, product)
 
-        if(!updatedProduct) {
-            return {message: "Error"}
+        if (!updatedProduct) {
+            return { message: "Error" }
         }
 
         return product
@@ -68,7 +97,7 @@ const changeProductAuthor = async(data) => {
     }
 }
 
-const changeProductStatus = async(productId, data) => {
+const changeProductStatus = async (productId, data) => {
     try {
         if (!data.token) {
             return { message: "User doesn't exist!" }
@@ -82,13 +111,13 @@ const changeProductStatus = async(productId, data) => {
 
         let product = await Product.findById(productId).lean()
 
-        return await Product.findByIdAndUpdate(productId, {visible: !product.visible})
+        return await Product.findByIdAndUpdate(productId, { visible: !product.visible })
     } catch (error) {
         return error
     }
 }
 
-const create = async(data) => {
+const create = async (data) => {
     try {
         if (!data.token) {
             return { message: "User doesn't exist!" }
@@ -113,7 +142,7 @@ const create = async(data) => {
     }
 }
 
-const edit = async(productId, data) => {
+const edit = async (productId, data) => {
     try {
         if (data.cookie.message) {
             return { message: "Invalid access token!" }
@@ -148,12 +177,12 @@ const edit = async(productId, data) => {
     }
 }
 
-const addLikes = async(productId, data) => {
+const addLikes = async (productId, data) => {
     try {
         let isUserExist = await getUserById(data.userId)
 
-        if(isUserExist.message) {
-            return { message: "User doesn't exist!"}
+        if (isUserExist.message) {
+            return { message: "User doesn't exist!" }
         }
 
         if (data.token.message) {
@@ -185,12 +214,12 @@ const addLikes = async(productId, data) => {
     }
 }
 
-const removeLikes = async(productId, data) => {
+const removeLikes = async (productId, data) => {
     try {
         let isUserExist = await getUserById(data.userId)
 
-        if(isUserExist.message) {
-            return { message: "User doesn't exist!"}
+        if (isUserExist.message) {
+            return { message: "User doesn't exist!" }
         }
 
         if (data.token.message) {
@@ -222,7 +251,7 @@ const removeLikes = async(productId, data) => {
     }
 }
 
-const del = async(productId, data) => {
+const del = async (productId, data) => {
     try {
         if (data.cookie.message) {
             return { message: "Invalid access token!" }
@@ -251,7 +280,7 @@ const del = async(productId, data) => {
     }
 }
 
-const getAllFilteredByIds = async(ids) => {
+const getAllFilteredByIds = async (ids) => {
     try {
         let allProducts = await Product.find().lean()
 
@@ -272,5 +301,6 @@ module.exports = {
     addLikes,
     removeLikes,
     changeProductAuthor,
-    changeProductStatus
+    changeProductStatus,
+    addComment
 }
