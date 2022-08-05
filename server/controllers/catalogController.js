@@ -20,6 +20,12 @@ router.put('/edit/:productId', async(req, res) => {
     res.json(editedProduct)
 })
 
+router.post('/addComment', async(req, res) => {
+    let addedComment = await productService.addComment(req.body) || { message: "404 Not found!"}
+
+    res.json(addedComment)
+})
+
 router.put('/addProductLikes/:productId', async(req, res) => {
     let editedProduct = await productService.addLikes(req.params.productId, req.body) || { message: "404 Not found!" }
 
