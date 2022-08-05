@@ -22,20 +22,20 @@ export const CatalogSection = () => {
 
     const sortByPrice = () => {
         if (type) {
-            setProducts(products.sort((a, b) => Number(b.price) - Number(a.price)))
+            products.sort((a, b) => Number(b.price) - Number(a.price))
             setType(!type)
         } else {
-            setProducts(products.sort((a, b) => Number(a.price) - Number(b.price)))
+            products.sort((a, b) => Number(a.price) - Number(b.price))
             setType(!type)
         }
     }
 
     const sortByLikes = () => {
         if (type) {
-            setProducts(products.sort((a, b) => Number(b.likes.length) - Number(a.likes.length)))
+            products.sort((a, b) => Number(b.likes.length) - Number(a.likes.length))
             setType(!type)
         } else {
-            setProducts(products.sort((a, b) => Number(a.likes.length) - Number(b.likes.length)))
+            products.sort((a, b) => Number(a.likes.length) - Number(b.likes.length))
             setType(!type)
         }
     }
@@ -82,7 +82,7 @@ export const CatalogSection = () => {
                             </div>
                         </div>
 
-                        <div className="row row-cols-1 row-cols-md-3 g-5" style={{ margin: "0 2% 12% 2%" }} >
+                        <div className="row row-cols-1 row-cols-md-5 g-5" style={{ margin: "0 2% 12% 2%" }} >
                             {products.map(x => <Product key={x._id} data={x} />)}
                         </div>
                     </>

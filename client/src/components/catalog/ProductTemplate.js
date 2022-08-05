@@ -10,7 +10,7 @@ export const Product = ({data}) => {
     return (
         <div className="col">
             <div className="card">
-                <img className='img-fluid img-thumbnail' src={data.imageUrl} style={{width: "100%", height: "auto", maxHeight: "38vh"}} alt={data.title + ' image not found'}/>
+                <img className='img-fluid img-thumbnail' src={data.images[0].dataString} style={{width: "100%", height: "auto", maxHeight: "38vh"}} alt={data.title + ' image not found'}/>
                 <div className="card-body">
                     <h5 className="card-title" style={{ userSelect: "none" }}>{data.title}</h5>
                     <p className="card-text" style={{ userSelect: "none" }}>Price: {data.price}€</p>

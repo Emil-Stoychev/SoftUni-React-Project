@@ -21,7 +21,7 @@ export const OwnProducts = () => {
 
             {products.length > 0
                 ?
-                <div className="row row-cols-1 row-cols-md-3 g-5" style={{ margin: "0 2% 12% 2%" }} >
+                <div className="row row-cols-1 row-cols-md-5 g-5" style={{ margin: "0 2% 12% 2%" }} >
                     {products.map(x => <Product key={x._id} data={x} />)}
                 </div>
                 :
