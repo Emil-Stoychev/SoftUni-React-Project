@@ -15,7 +15,18 @@ const getUserById = async (userId) => {
     return user
 }
 
-const addNewItemToUser = async (userId, productId, nameOfProduct) => {
+const addNewItemToUser = async (userId, productId, nameOfProduct, token) => {
+
+    if(token.message) {
+        return {message: "Invalid access token!"}
+    }   
+
+    let isValidToken = await authMiddleware(token)
+
+    if(isValidToken.message) {
+        return res.json(isValidToken)
+    }
+
     let user = await User.findOne({ _id: userId })
 
     if (!user) {
@@ -29,6 +40,16 @@ const addNewItemToUser = async (userId, productId, nameOfProduct) => {
 }
 
 const addNewLikeToUser = async ({ userId, token, productId }) => {
+    if (token.message) {
+        return { message: "Invalid access token!" }
+    }
+
+    let isValidToken = await authMiddleware(token)
+
+    if (isValidToken.message) {
+        return isValidToken
+    }
+
     let user = await User.findById(userId).lean()
 
     if (!user) {
@@ -41,6 +62,16 @@ const addNewLikeToUser = async ({ userId, token, productId }) => {
 }
 
 const removeLikeFromUser = async ({ userId, token, productId }) => {
+    if (token.message) {
+        return { message: "Invalid access token!" }
+    }
+
+    let isValidToken = await authMiddleware(token)
+
+    if (isValidToken.message) {
+        return isValidToken
+    }
+
     let user = await User.findById(userId).lean()
 
     if (!user) {
@@ -88,6 +119,16 @@ const removeItemFromUser = async (userId, data) => {
 
 const updateUserAfterBuyNewProduct = async (userId, data) => {
     try {
+        if (data.cookie.token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let isValidToken = await authMiddleware(data.cookie.token)
+
+        if (isValidToken.message) {
+            return isValidToken
+        }
+
         let user = await User.findById(userId).lean()
 
         if (!user) {
