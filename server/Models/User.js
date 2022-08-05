@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema({
     },
     ownProducts: Array,
     likedProducts: Array,
-    comments: Array,
     messages: Array,
     money: Number
 })
