@@ -50,6 +50,22 @@ export const updateUserAfterBuy = (cookie, product) => {
         .then(res => res.json())
 }
 
+export const updateUserPicture = (cookie, image) => {
+    let data = {
+        cookie,
+        image
+    }
+
+    return fetch(`${URL}/changePicture/${cookie._id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+        .then(res => res.json())
+}
+
 export const register = (data) => {
     return fetch(`${URL}/register`, {
         method: "POST",

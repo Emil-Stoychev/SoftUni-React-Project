@@ -294,7 +294,7 @@ const login = async (data) => {
 }
 
 const register = async (data) => {
-    let user = userValidator(data)
+    let user = userValidator(data, 'register')
 
     if (user.message) {
         return user
@@ -311,10 +311,39 @@ const register = async (data) => {
     let createdUser = {
         email: user.email,
         password: hashedPassword,
+        image: user.image,
         money: 100
     }
 
     return await User.create(createdUser)
+}
+
+const updatePicture = async(data) => {
+    try {
+        let { cookie, image } = data
+
+        if (cookie.token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let isValidToken = await authMiddleware(cookie.token)
+
+        if (isValidToken.message) {
+            return isValidToken
+        }
+
+        let user = await User.findById(cookie._id).lean()
+
+        if (!user) {
+            return { message: "User not found!" }
+        }
+
+        user.image = image
+
+        return await User.findByIdAndUpdate(cookie._id, {image: user.image})
+    } catch (error) {
+        return error
+    }
 }
 
 module.exports = {
@@ -331,5 +360,6 @@ module.exports = {
     getAllMessages,
     changeMessageStatus,
     addMessageAfterEditing,
-    checkUserExisting
+    checkUserExisting,
+    updatePicture
 }

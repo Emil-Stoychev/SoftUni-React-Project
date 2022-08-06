@@ -3,16 +3,16 @@ import { useNavigate } from "react-router-dom"
 
 import * as userService from '../../../services/user/authService'
 import { TextError } from '../../error/TextError'
+import { convertBase64, imageTypes } from "../../utils/AddRemoveImages"
 import { userValidator } from "../../utils/UserValidator"
 
 export const RegisterSection = () => {
     const [errors,setErrors] = useState('')
-
-
     const [values, setValues] = useState({
         email: '',
         password: '',
-        rePassword: ''
+        rePassword: '',
+        image: ''
     })
 
     const navigate = useNavigate()
@@ -38,13 +38,63 @@ export const RegisterSection = () => {
     }
 
     const errorChangeHandler = () => {
-        let err = userValidator(values)
+        let err = userValidator(values, 'register')
 
         if(err.message) {
             setErrors(err.message)
         } else {
             setErrors('')
         }
+    }
+
+    const addImage = async (e) => {
+        let file = e.target.files[0]
+
+        if (file && imageTypes.includes(file.type)) {
+            let base64 = await convertBase64(file)
+
+            if (values.image === base64) {
+                if (errors !== 'This image already exist!') {
+                    setErrors('This image already exist!')
+    
+                    setTimeout(() => {
+                        setErrors('')
+                    }, 2000);
+                }
+            } else {
+                if(values.image !== '') {
+                    if (errors !== 'You cannot upload more than 1 image!') {
+                        setErrors('You cannot upload more than 1 image!')
+        
+                        setTimeout(() => {
+                            setErrors('')
+                        }, 2000);
+                    }
+                } else {
+                    setValues(state => ({
+                        ...state,
+                        ['image']: base64
+                    }));
+                }
+            }
+        } else {
+            if (errors !== 'File must be a image!') {
+                setErrors('File must be a image!')
+    
+                setTimeout(() => {
+                    setErrors('')
+                }, 2000);
+            }
+        }
+    
+        e.target.value = null
+    }
+    
+    const removeImage = (e) => {
+        setValues(state => ({
+            ...state,
+            ['image']: ''
+        }));
     }
 
     return (
@@ -67,6 +117,21 @@ export const RegisterSection = () => {
                     <label htmlFor="exampleInputPassword2" className="form-label" style={{color: "white"}}> Repeat Password </label>
                     <input type="password" name="rePassword" className="form-control" id="exampleInputPassword2" value={values.rePassword} onChange={changeHandler} onBlur={errorChangeHandler}/>
                 </div>
+
+                <label htmlFor="exampleInputPassword2" className="form-label" style={{color: "white"}}> Profile picture </label>
+                <div className="input-group mb-1" style={{ margin: "1% 0 0 0" }}>
+                    <input className="form-control" type="file" onChange={(e) => addImage(e)} />
+                </div>
+
+                <div className="input-group mb-3">
+                    {values.image !== '' &&
+                        <div key={values.image}>
+                            <img src={values.image} style={{ margin: "0 1% 1% 0", width: "100px", height: "100px" }} />
+                            <input className="btn btn-primary delete" type="button" value="X" style={{ margin: "-66px 0px 0px 0px" }} onClick={(e) => removeImage(e)} />
+                        </div>
+                    }
+                </div>
+
                 <button type="submit" className="btn btn-primary" > Submit </button>
             </form>
         </>

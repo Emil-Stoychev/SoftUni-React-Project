@@ -2,8 +2,8 @@ const emailPattern = '^(?:[A-Za-z]+[0-9]+|[A-Za-z]+|[0-9]+[A-Za-z]+)\\@[A-Za-z]+
 
 const emailRegex = new RegExp(emailPattern)
 
-const userValidator = (user) => {
-    let { email, password, rePassword } = user
+const userValidator = (user, type) => {
+    let { email, password, rePassword, image } = user
 
     if (!emailRegex.test(email) || email.length < 3) {
         return { message: 'Email is not valid!' }
@@ -17,7 +17,17 @@ const userValidator = (user) => {
         return { message: 'Password must be at least 3 characters!' }
     }
 
-    return { email, password }
+    if(type === 'register') {
+        if (image === '') {
+            return { message: 'Profile picture is required!' }
+        } else {
+            if (!image.startsWith('data:image')) {
+                return { message: 'Profile picture should be valid!' }
+            }
+        }
+    }
+
+    return { email, password, image }
 }
 
 module.exports = {

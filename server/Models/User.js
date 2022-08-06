@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    image: String,
     ownProducts: Array,
     likedProducts: Array,
     messages: Array,

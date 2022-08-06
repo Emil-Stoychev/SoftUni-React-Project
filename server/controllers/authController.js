@@ -146,6 +146,12 @@ router.post('/login', async(req, res) => {
     res.json(sessionStorage)
 })
 
+router.put('/changePicture/:userId', async(req, res) => {
+    let updatedUser = await authService.updatePicture(req.body)
+
+    res.json(updatedUser)
+})
+
 router.post('/register', async(req, res) => {
     let registereduser = await authService.register(req.body)
 
