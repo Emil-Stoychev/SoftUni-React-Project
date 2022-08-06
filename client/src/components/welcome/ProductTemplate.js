@@ -12,7 +12,7 @@ export const ProductTemplate = ({ data }) => {
             <div className="col">
                 <div className="card shadow-sm">
                     <picture>
-                        <img className='img-fluid img-thumbnail' src={data.imageUrl} style={{ width: "100%", height: "auto", maxHeight: "28vh" }} alt={data.title + ' image not found'} />
+                        <img className='img-fluid img-thumbnail' src={data.images[0].dataString} style={{ width: "100%", height: "auto", maxHeight: "38vh" }} alt={data.title + ' image not found'} />
                     </picture>
                     <div className="card-body">
                         <p className="card-text" style={{ userSelect: 'none' }}>Price: {data.price}€</p>

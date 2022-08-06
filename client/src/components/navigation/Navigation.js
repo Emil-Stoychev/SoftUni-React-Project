@@ -17,9 +17,7 @@ export const Navigation = () => {
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                        {cookies?._id ? <User /> : <Guest />}
-                    </ul>
+                    {cookies?._id ? <User /> : <Guest />}
 
                     {cookies?.email
                         ?
@@ -41,7 +39,6 @@ export const Navigation = () => {
                         </>
                         : ''
                     }
-
 
                 </div>
             </div>

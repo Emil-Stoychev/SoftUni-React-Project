@@ -23,7 +23,7 @@ export const DetailsSection = () => {
     const { productId } = useParams()
     const navigate = useNavigate()
 
-    let { setCookies } = useContext(AuthContext)
+    let { cookies, setCookies } = useContext(AuthContext)
 
     useEffect(() => {
         productService.getById(productId)
@@ -105,21 +105,17 @@ export const DetailsSection = () => {
     
     return (
         <>
-            {product._id
+            {product?._id
                 ?
                 <>
                     <h1 style={{ textAlign: "center", margin: "2%", fontFamily: "Copperplate Gothic", userSelect: "none", color: "navajowhite" }}>DETAILS</h1>
                     <div className="row d-flex justify-content-center" style={{ margin: '0 0 2% 0' }}>
                         <div className="card col-md-8 col-lg-6">
-                            {/* <img className='img-fluid' src={product?.images[0]?.dataString} alt={product?.title + ' image not found'} /> */}
-
                             <div id="carouselExampleControls" className="carousel slide" data-ride="carousel" >
                                 <div className="carousel-inner">
-
                                     <div className='carousel-item active'>
-                                        <img className="img-fluid rounded mx-auto d-block" src={product?.images[imageCount].dataString} style={{marginLeft: 'auto', marginRight: "auto", height: "50vh"}}/>
+                                        <img className="img-fluid rounded mx-auto d-block" src={product?.images[imageCount]?.dataString} style={{marginLeft: 'auto', marginRight: "auto", height: "50vh"}}/>
                                     </div>
-
                                 </div>
 
                                 {product?.images.length > 1 &&
@@ -160,8 +156,8 @@ export const DetailsSection = () => {
                                                     ? <LikeAction product={product} user={user} setProduct={setProduct} setCookies={setCookies} setUser={setUser} setErrors={setErrors} errors={errors} />
                                                     : <UnlikeAction product={product} user={user} setProduct={setProduct} setCookies={setCookies} setUser={setUser} setErrors={setErrors} errors={errors} />
                                                 }
-                                                <button type="button" className="btn btn-outline-primary disabled" style={{ margin: "0 1% 0 0" }}> Likes: {product?.likes.length} </button>
-                                                <button type="button" className="btn btn-outline-primary disabled" style={{ margin: "0 1% 0 0" }}> Comments: {product?.comments.length} </button>
+                                                <button type="button" className="btn btn-outline-primary disabled" style={{ margin: "0 1% 0 0" }}> Likes: {product?.likes?.length} </button>
+                                                <button type="button" className="btn btn-outline-primary disabled" style={{ margin: "0 1% 0 0" }}> Comments: {product?.comments?.length} </button>
                                             </>
                                         : ''
                                 }
@@ -172,7 +168,7 @@ export const DetailsSection = () => {
                 : <h2 style={{ textAlign: "center", margin: "12% 0 31.9% 0", color: "navajowhite" }}>Loading...</h2>
             }
 
-            <CommentSection product={product} user={user} />
+            <CommentSection setProduct={setProduct} product={product} user={user} cookies={cookies} setCookies={setCookies}/>
         </>
     )
 }

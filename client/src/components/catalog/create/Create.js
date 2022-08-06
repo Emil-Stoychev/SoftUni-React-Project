@@ -73,7 +73,6 @@ export const CreateSection = () => {
             })
     }
 
-
     return (
         <>
             <h1 style={{ margin: "10% 0 0 25%", fontFamily: "Copperplate Gothic", userSelect: "none", color: "navajowhite" }}>CREATE</h1>
