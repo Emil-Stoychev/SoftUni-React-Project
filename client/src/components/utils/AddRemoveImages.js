@@ -1,4 +1,4 @@
-const imageTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/raw']
+export const imageTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/raw']
 
 export const convertBase64 = async (file) => {
     return new Promise((resolve, reject) => {
@@ -29,7 +29,7 @@ export const addImage = async (e, values, setValues, errors, setErrors) => {
             name: file.name,
             type: file.type,
             date,
-            dataString: base64
+            dataString: base64,
         }
 
         if (values.images.some(x => x.dataString == imageData.dataString)) {
@@ -41,10 +41,20 @@ export const addImage = async (e, values, setValues, errors, setErrors) => {
                 }, 2000);
             }
         } else {
-            setValues(state => ({
-                ...state,
-                ['images']: [...state.images, imageData]
-            }));
+            if(values.images.length > 5) {
+                if (errors !== 'You cannot upload more than 6 images!') {
+                    setErrors('You cannot upload more than 6 images!')
+    
+                    setTimeout(() => {
+                        setErrors('')
+                    }, 2000);
+                }
+            } else {
+                setValues(state => ({
+                    ...state,
+                    ['images']: [...state.images, imageData]
+                }));
+            }
         }
     } else {
         if (errors !== 'File must be a image!') {

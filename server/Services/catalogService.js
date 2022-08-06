@@ -1,12 +1,13 @@
 const { authMiddleware } = require('../Middlewares/authMiddleware')
 const { Product } = require('../Models/Product')
+const { Comment } = require('../Models/Comment')
 const { addCommentToProduct } = require('../utils/CommentEngine')
 const { productValidator } = require('../utils/productValidator')
 const { checkUserExisting, getUserById } = require('./authService')
 
 const getAll = async () => {
     try {
-        return await Product.find({ visible: true }).lean()
+        return await Product.find({ visible: true }, { "images": { $slice: 1 } }).lean()
     } catch (error) {
         console.error(error)
         return error
@@ -16,6 +17,10 @@ const getAll = async () => {
 const getById = async (productId) => {
     try {
         let product = await Product.findById(productId).lean() || { message: "404 Not found!" }
+
+        let comments = await Comment.find().lean()
+
+        product.comments = comments.filter(x => product.comments?.includes(x._id.toString()))
 
         return product
     } catch (error) {
@@ -44,6 +49,12 @@ const addComment = async (data) => {
         }
 
         let newComment = await addCommentToProduct(email, title, authorId, productId)
+
+        let product = await Product.findById(productId).lean()
+
+        product.comments.push(newComment._id.toString())
+
+        await Product.findByIdAndUpdate(productId, {comments: product.comments})
 
         return newComment
     } catch (error) {
