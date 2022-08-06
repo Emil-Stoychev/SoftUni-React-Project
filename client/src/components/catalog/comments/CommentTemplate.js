@@ -1,15 +1,60 @@
-export const CommentTemplateSection = () => {
+export const CommentTemplateSection = ({cookies, data}) => {
     return (
         <>
-            <h1 style={{ marginLeft: "25%" }}> Comment from {"{"}username{"}"} </h1>
-            <div style={{ margin: "0 25% 0 25%" }}>
-                <div className="row mb-3">
-                    <label htmlFor="colFormLabel" className="col-sm-2 col-form-label"> peter@abv.bg </label>
-                    <div className="col-sm-10">
-                        <input type="text" className="form-control" id="colFormLabel" disabled="" />
-                        <button type="submit" className="btn btn-primary"> Edit </button>
-                        <button type="submit" className="btn btn-primary"> Delete </button>
+            <div className="d-flex flex-start">
+                <img className="rounded-circle shadow-1-strong me-3" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(10).webp" alt="avatar" width={65} height={65} />
+                <div className="flex-grow-1 flex-shrink-1">
+                    <div>
+                        <div className="d-flex justify-content-between align-items-center">
+                            <p className="mb-1"> {data.email.split('@')[0]} <span className="small">- {data.date}</span></p>
+
+                            {cookies._id == data.authorId &&
+                                <div>
+                                    <a href="#!" style={{ margin: "0 30% 0 -80%" }}>
+                                        <span className="small" >&#8617; reply</span>
+                                    </a>
+                                    <a href="#!" >
+                                        <span className="small">&#9998; edit</span>
+                                    </a>
+                                </div>
+                            }
+
+                        </div>
+                        <p className="small mb-0">{data.title}</p>
                     </div>
+
+                    {/* NESTED COMMENTS */}
+                    {/* <div className="d-flex flex-start mt-4">
+                                                    <a className="me-3" href="#">
+                                                        <img className="rounded-circle shadow-1-strong" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(11).webp" alt="avatar" width={65} height={65} />
+                                                    </a>
+                                                    <div className="flex-grow-1 flex-shrink-1">
+                                                        <div>
+                                                            <div className="d-flex justify-content-between align-items-center">
+                                                                <p className="mb-1">
+                                                                    Simona Disa <span className="small">- 3 hours ago</span>
+                                                                </p>
+
+                                                                {cookies.token &&
+                                                                    <div>
+                                                                        <a href="#!" style={{ margin: "0 30% 0 -80%" }}>
+                                                                            <span className="small" >&#8617; reply</span>
+                                                                        </a>
+                                                                        <a href="#!" >
+                                                                            <span className="small">&#9998; edit</span>
+                                                                        </a>
+                                                                    </div>
+                                                                }
+
+                                                            </div>
+                                                            <p className="small mb-0">
+                                                                letters, as opposed to using 'Content here, content here',
+                                                                making it look like readable English.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div> */}
+
                 </div>
             </div>
         </>
