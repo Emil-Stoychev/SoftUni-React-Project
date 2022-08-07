@@ -4,7 +4,7 @@ import * as productService from '../../../services/catalog/productService'
 import { useNavigate } from "react-router-dom"
 import { isInvalidTokenThenRedirect } from "../../utils/errorRedirect"
 
-export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct }) => {
+export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct , product}) => {
     const [value, setValue] = useState('')
     const [action, setAction] = useState({ type: null, model: false, emoji: false })
     const [errors, setErrors] = useState('')
@@ -26,6 +26,40 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct }
             model: true,
             emoji: false
         }))
+    }
+
+    const likeCommentHandler = () => {
+        if(cookies._id != data.authorId) {
+            productService.likeComment(data._id, cookies)
+                .then(result => {
+                    if (result.message) {
+                        if (result.message.startsWith('Invalid access')) {
+                            isInvalidTokenThenRedirect(navigate, result.message, setCookies, null, setErrors, errors)
+                        } else {
+                            setErrors(result)
+                        }
+                    } else {
+                        setProduct(state => ({
+                            ...state,
+                            ['comments']: state.comments.map(x => {
+                            if(x._id == data._id) {
+                                if(result === 'like') {
+                                    x.likes.push(cookies._id)
+
+                                    return x
+                                } else {
+                                    x.likes = x.likes.filter(x => x != cookies._id)
+
+                                    return x
+                                }
+                            } else {
+                                return x
+                            }
+                        })}))
+                    }
+                })
+
+        }
     }
 
     const deleteCommentHandler = () => {
@@ -91,8 +125,8 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct }
 
     return (
         <>
-            <div className="d-flex flex-start" style={{borderStyle: 'outset', marginBottom: '2%'}}>
-                <img className="rounded-circle shadow-1d-strong me-3" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(10).webp" alt="avatar" width={65} height={65} />
+            <div className="d-flex flex-start" style={{ borderStyle: 'outset', marginBottom: '2%' }}>
+                <img className="rounded-circle shadow-1d-strong me-3" src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png" alt="avatar" width={65} height={65} />
                 <div className="flex-grow-1 flex-shrink-1">
                     <div>
                         <div className="d-flex justify-content-between align-items-center">
@@ -107,19 +141,23 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct }
                                         <a href="#!" style={{ marginLeft: "-30%", textDecoration: 'none' }}>
                                             <span className="extra-large" onClick={clickEditBtn}>&#9998;</span>
                                         </a>
-                                        <a href="#!" style={{ margin: "0 10% 0 10px", textDecoration: 'none' }}>
+                                        <a href="#!" style={{ margin: "0 1% 0 10px", textDecoration: 'none' }}>
                                             <span className="extra-large" onClick={clickDeleteBtn}>&#10060;</span>
                                         </a>
                                     </>
                                     : action.model
                                         ? ''
-                                        :
+                                        : cookies._id && cookies._id != data.authorId &&
                                         <>
-                                            <a href="#!" style={{ margin: "0 0 0 -10%", textDecoration: 'none' }}>
+                                            <a href="#!" style={{ margin: "0 0 0 -30%", textDecoration: 'none' }}>
                                                 <span className="extra-large" >&#8617; reply</span>
                                             </a>
                                         </>
                                 }
+
+                                <a href="#!" style={{ margin: "0 0 0 15%", textDecoration: 'none' }}>
+                                    <span className="extra-large" onClick={likeCommentHandler} >&#x1F44D; {data.likes.length || 0}</span>
+                                </a>
                             </div>
 
 
@@ -159,8 +197,8 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct }
                                                 <header className="headers">
                                                     <p className="small mb-0">{data.title}</p>
                                                     <h6>Are you sure you want to delete this comment?</h6>
-                                                    <button id="action-save" className="btn btn-primary" type="submit" style={{ margin: "0 1% 0 0" }} onClick={deleteCommentHandler} > Yes </button>
-                                                    <button id="action-cancel" className="btn btn-primary" type="button" onClick={() => setAction(({ type: null, model: false, emoji: false }))}> No </button>
+                                                    <button id="action-save" className="btn btn-primary" type="submit" style={{ margin: "1%" }} onClick={deleteCommentHandler} > Yes </button>
+                                                    <button id="action-cancel" className="btn btn-primary" type="button" style={{ margin: "1%" }} onClick={() => setAction(({ type: null, model: false, emoji: false }))}> No </button>
                                                 </header>
                                             </div>
                                         </div>

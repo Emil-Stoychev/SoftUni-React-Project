@@ -94,6 +94,50 @@ const editComment = async (data) => {
     }
 }
 
+const likeComment = async (data) => {
+    let { commentId, cookie} = data
+
+    try {
+        if (cookie.token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let token = await authMiddleware(cookie.token)
+
+        if (token.message) {
+            return token
+        }
+
+        let isCommentExist = await Comment.findById(commentId)
+
+        if(!isCommentExist) {
+            return { message: "This comment doesn't exist!"}
+        }
+
+        if(isCommentExist.authorId == cookie._id) {
+            return { message: "You cannot like this comment!"}
+        }
+
+        if(isCommentExist.likes.includes(cookie._id)) {
+            isCommentExist.likes = isCommentExist.likes.filter(x => x != cookie._id) 
+
+            await Comment.findByIdAndUpdate(commentId, {likes: isCommentExist.likes})
+
+            isCommentExist = 'unlike'
+        } else {
+            isCommentExist.likes.push(cookie._id)
+
+            await Comment.findByIdAndUpdate(commentId, {likes: isCommentExist.likes})
+
+            isCommentExist = 'like'
+        }
+
+        return isCommentExist
+    } catch (error) {
+        return error
+    }
+}
+
 
 const deleteComment = async (data) => {
     let { commentId, cookie} = data
@@ -386,5 +430,6 @@ module.exports = {
     changeProductStatus,
     addComment,
     editComment,
-    deleteComment
+    deleteComment,
+    likeComment
 }

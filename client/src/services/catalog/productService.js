@@ -140,6 +140,22 @@ export const editComment = (commentValue, commentData, cookie) => {
         .then(res => res.json())
 }
 
+export const likeComment = (commentId, cookie) => {
+    let data = {
+        cookie,
+        commentId
+    }
+
+    return fetch(`${URL}/likeComment/${commentId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+        .then(res => res.json())
+}
+
 export const deleteComment = (commentId, cookie) => {
     let data = {
         cookie,

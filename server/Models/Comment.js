@@ -18,6 +18,7 @@ const commentSchema = new mongoose.Schema({
         required: true
     },
     nestedComments: Array,
+    likes: Array,
     date: String
 })
 
