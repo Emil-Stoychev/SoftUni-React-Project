@@ -4,7 +4,7 @@ import * as productService from '../../../services/catalog/productService'
 import { useNavigate } from "react-router-dom"
 import { isInvalidTokenThenRedirect } from "../../utils/errorRedirect"
 
-export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct , product}) => {
+export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, product }) => {
     const [value, setValue] = useState('')
     const [action, setAction] = useState({ type: null, model: false, emoji: false })
     const [errors, setErrors] = useState('')
@@ -29,7 +29,7 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct ,
     }
 
     const likeCommentHandler = () => {
-        if(cookies._id != data.authorId) {
+        if (cookies._id != data.authorId) {
             productService.likeComment(data._id, cookies)
                 .then(result => {
                     if (result.message) {
@@ -42,20 +42,21 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct ,
                         setProduct(state => ({
                             ...state,
                             ['comments']: state.comments.map(x => {
-                            if(x._id == data._id) {
-                                if(result === 'like') {
-                                    x.likes.push(cookies._id)
+                                if (x._id == data._id) {
+                                    if (result === 'like') {
+                                        x.likes.push(cookies._id)
 
-                                    return x
+                                        return x
+                                    } else {
+                                        x.likes = x.likes.filter(x => x != cookies._id)
+
+                                        return x
+                                    }
                                 } else {
-                                    x.likes = x.likes.filter(x => x != cookies._id)
-
                                     return x
                                 }
-                            } else {
-                                return x
-                            }
-                        })}))
+                            })
+                        }))
                     }
                 })
 
@@ -132,36 +133,12 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct ,
                         <div className="d-flex justify-content-between align-items-center">
                             <p className="mb-1"> {data.email.split('@')[0]} <span className="small">- {data.date}</span></p>
 
-                            <div>
 
-
-                                {!action.model && cookies._id == data.authorId
-                                    ?
-                                    <>
-                                        <a href="#!" style={{ marginLeft: "-30%", textDecoration: 'none' }}>
-                                            <span className="extra-large" onClick={clickEditBtn}>&#9998;</span>
-                                        </a>
-                                        <a href="#!" style={{ margin: "0 1% 0 10px", textDecoration: 'none' }}>
-                                            <span className="extra-large" onClick={clickDeleteBtn}>&#10060;</span>
-                                        </a>
-                                    </>
-                                    : action.model
-                                        ? ''
-                                        : cookies._id && cookies._id != data.authorId &&
-                                        <>
-                                            <a href="#!" style={{ margin: "0 0 0 -30%", textDecoration: 'none' }}>
-                                                <span className="extra-large" >&#8617; reply</span>
-                                            </a>
-                                        </>
-                                }
-
-                                <a href="#!" style={{ margin: "0 0 0 15%", textDecoration: 'none' }}>
-                                    <span className="extra-large" onClick={likeCommentHandler} >&#x1F44D; {data.likes.length || 0}</span>
-                                </a>
-                            </div>
 
 
                         </div>
+
+
 
                         {action.type === 'edit' && action.model
                             ?
@@ -209,6 +186,34 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct ,
                         }
                     </div>
 
+                    <div style={{ margin: "1%" }} >
+                        {!action.model && cookies._id == data.authorId
+                            ?
+                            <>
+                                <a href="#!" style={{ textDecoration: 'none' }}>
+                                    <span className="extra-large" onClick={clickEditBtn}>&#9998;</span>
+                                </a>
+                                <a href="#!" style={{ margin: "0 0 3% 2%", textDecoration: 'none' }}>
+                                    <span className="extra-large" onClick={clickDeleteBtn}>&#10060;</span>
+                                </a>
+                            </>
+                            : action.model
+                                ? ''
+                                : cookies._id && cookies._id != data.authorId &&
+                                <>
+                                    <a href="#!" style={{ margin: "0 0 3% 0", textDecoration: 'none' }}>
+                                        <span className="extra-large" >&#8617; reply</span>
+                                    </a>
+                                </>
+                        }
+
+                        {!action.model &&
+                            <a href="#!" style={{ margin: "0 0 3% 2%", textDecoration: 'none' }}>
+                                <span className="extra-large" onClick={likeCommentHandler} >&#x1F44D; {data.likes.length || 0}</span>
+                            </a>
+                        }
+                    </div>
+
                     {/* NESTED COMMENTS */}
                     {/* <div className="d-flex flex-start mt-4">
                                                     <a className="me-3" href="#">
@@ -246,3 +251,30 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct ,
         </>
     )
 }
+
+{/* <div>
+
+{!action.model && cookies._id == data.authorId
+    ?
+    <>
+        <a href="#!" style={{ marginLeft: "-30%", textDecoration: 'none' }}>
+            <span className="extra-large" onClick={clickEditBtn}>&#9998;</span>
+        </a>
+        <a href="#!" style={{ margin: "0 1% 0 10px", textDecoration: 'none' }}>
+            <span className="extra-large" onClick={clickDeleteBtn}>&#10060;</span>
+        </a>
+    </>
+    : action.model
+        ? ''
+        : cookies._id && cookies._id != data.authorId &&
+        <>
+            <a href="#!" style={{ margin: "0 0 0 -30%", textDecoration: 'none' }}>
+                <span className="extra-large" >&#8617; reply</span>
+            </a>
+        </>
+}
+
+<a href="#!" style={{ margin: "0 0 0 15%", textDecoration: 'none' }}>
+    <span className="extra-large" onClick={likeCommentHandler} >&#x1F44D; {data.likes.length || 0}</span>
+</a>
+</div> */}
