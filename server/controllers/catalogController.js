@@ -26,6 +26,18 @@ router.post('/addComment', async (req, res) => {
     res.json(addedComment)
 })
 
+router.put('/editComment/:commentId', async (req, res) => {
+    let editedComment = await productService.editComment(req.body) || { message: "404 Not found!" }
+
+    res.json(editedComment)
+})
+
+router.delete('/deleteComment/:commentId', async (req, res) => {
+    let deletedComment = await productService.deleteComment(req.body) || { message: "404 Not found!" }
+
+    res.json(deletedComment)
+})
+
 router.put('/addProductLikes/:productId', async (req, res) => {
     let editedProduct = await productService.addLikes(req.params.productId, req.body) || { message: "404 Not found!" }
 

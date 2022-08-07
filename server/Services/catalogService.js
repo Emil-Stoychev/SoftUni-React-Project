@@ -1,7 +1,7 @@
 const { authMiddleware } = require('../Middlewares/authMiddleware')
 const { Product } = require('../Models/Product')
 const { Comment } = require('../Models/Comment')
-const { addCommentToProduct } = require('../utils/CommentEngine')
+const { addCommentService, editCommentService } = require('../utils/CommentEngine')
 const { productValidator } = require('../utils/productValidator')
 const { checkUserExisting, getUserById } = require('./authService')
 
@@ -48,7 +48,7 @@ const addComment = async (data) => {
             return { message: "User doesn't exist!" }
         }
 
-        let newComment = await addCommentToProduct(email, title, authorId, productId)
+        let newComment = await addCommentService(email, title, authorId, productId)
 
         let product = await Product.findById(productId).lean()
 
@@ -57,6 +57,77 @@ const addComment = async (data) => {
         await Product.findByIdAndUpdate(productId, {comments: product.comments})
 
         return newComment
+    } catch (error) {
+        return error
+    }
+}
+
+const editComment = async (data) => {
+    let { commentValue, commentData, cookie} = data
+
+    try {
+        if (cookie.token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let token = await authMiddleware(cookie.token)
+
+        if (token.message) {
+            return token
+        }
+
+        let isCommentExist = await Comment.findById(commentData._id)
+
+        if(!isCommentExist) {
+            return { message: "This comment doesn't exist!"}
+        }
+
+        if(commentData.authorId != cookie._id) {
+            return { message: "You cannot change this comment!"}
+        }
+
+        let editedComment = await editCommentService(commentValue, isCommentExist)
+
+        return editedComment
+    } catch (error) {
+        return error
+    }
+}
+
+
+const deleteComment = async (data) => {
+    let { commentId, cookie} = data
+
+    try {
+        if (cookie.token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let token = await authMiddleware(cookie.token)
+
+        if (token.message) {
+            return token
+        }
+
+        let isCommentExist = await Comment.findById(commentId)
+
+        if(!isCommentExist) {
+            return { message: "This comment doesn't exist!"}
+        }
+
+        if(isCommentExist.authorId != cookie._id) {
+            return { message: "You cannot delete this comment!"}
+        }
+
+        let deletedComment = await Comment.findByIdAndDelete(commentId)
+
+        let product = await Product.findById(isCommentExist.productId).lean()
+
+        product.comments = product.comments.filter(x => x != commentId)
+
+        await Product.findByIdAndUpdate(product._id, {comments: product.comments})
+
+        return deletedComment
     } catch (error) {
         return error
     }
@@ -313,5 +384,7 @@ module.exports = {
     removeLikes,
     changeProductAuthor,
     changeProductStatus,
-    addComment
+    addComment,
+    editComment,
+    deleteComment
 }

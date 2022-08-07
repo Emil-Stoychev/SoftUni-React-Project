@@ -123,6 +123,39 @@ export const addComment = (product, user, title) => {
         .then(res => res.json())
 }
 
+export const editComment = (commentValue, commentData, cookie) => {
+    let data = {
+        commentValue,
+        cookie,
+        commentData
+    }
+
+    return fetch(`${URL}/editComment/${data._id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+        .then(res => res.json())
+}
+
+export const deleteComment = (commentId, cookie) => {
+    let data = {
+        cookie,
+        commentId
+    }
+
+    return fetch(`${URL}/deleteComment/${commentId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+        .then(res => res.json())
+}
+
 export const create = (data, cookie) => {
     data.author = cookie._id
     data.token = cookie.token
