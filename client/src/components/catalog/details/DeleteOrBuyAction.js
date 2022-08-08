@@ -59,12 +59,17 @@ export const DeleteOrBuyAction = ({ onDeleteClickHandler, product, options, setP
                                     setErrors(result.message)
                                 }
                             } else {
-                                updatedProduct.email = sessionCookie.email
                                 sessionCookie.money = Number(sessionCookie.money) - Number(updatedProduct.price)
 
                                 setOptions({ type: '', action: false })
                                 setCookies(sessionCookie)
-                                setProduct(updatedProduct)
+
+                                setProduct(state => ({
+                                    ...state,
+                                    ['email']: sessionCookie.email,
+                                    ['author']: sessionCookie._id,
+                                    ['visible']: false
+                                }))
                             }
                         })
                 }

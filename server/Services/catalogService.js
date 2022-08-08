@@ -20,13 +20,7 @@ const getById = async (productId) => {
 
         let comments = await Comment.find().lean()
 
-        product.comments = comments.map(x => {
-            if (product.comments?.includes(x._id.toString())) {
-                return x
-            }
-        })
-
-        product.comments = product.comments.filter(x => x != null)
+        product.comments = await Comment.find({ _id: product.comments }).lean()
 
         product.comments = product.comments.map(x => {
             if (x.nestedComments.length > 0) {
@@ -243,6 +237,8 @@ const deleteComment = async (data) => {
         }
 
         let deletedComment = await Comment.findByIdAndDelete(commentId)
+
+        await Comment.deleteMany({ _id: isCommentExist.nestedComments })
 
         let product = await Product.findById(isCommentExist.productId).lean()
 
@@ -516,6 +512,8 @@ const del = async (productId, data) => {
             return { message: "You cannot change this product!" }
         }
 
+        await Comment.deleteMany({productId: product._id.toString()})
+
         return await Product.findByIdAndDelete(productId)
     } catch (error) {
         console.error(error)
@@ -525,9 +523,7 @@ const del = async (productId, data) => {
 
 const getAllFilteredByIds = async (ids) => {
     try {
-        let allProducts = await Product.find().lean()
-
-        return allProducts.filter(x => ids?.includes(x._id.toString()))
+        return await Product.find({ _id: ids }).lean()
     } catch (error) {
         console.error(error)
         return error

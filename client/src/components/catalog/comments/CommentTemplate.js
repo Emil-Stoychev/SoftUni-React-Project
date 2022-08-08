@@ -100,13 +100,11 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, 
                                 if (x._id == data._id) {
                                     if (result === 'like') {
                                         x.likes.push(cookies._id)
-
-                                        return x
                                     } else {
                                         x.likes = x.likes.filter(x => x != cookies._id)
-
-                                        return x
                                     }
+
+                                    return x
                                 } else {
                                     return x
                                 }
@@ -186,7 +184,7 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, 
                 <div className="flex-grow-1 flex-shrink-1">
                     <div>
                         <div className="d-flex justify-content-between align-items-center">
-                            <p className="mb-1"> <b>{data.email.split('@')[0]}</b> <span className="small">- {data.date}</span></p>
+                            <p className="mb-1"> <b>{data?.email?.split('@')[0]}</b> <span className="small">- {data?.date}</span></p>
                         </div>
 
                         {action.type === 'edit' && action.model
@@ -231,13 +229,13 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, 
                                     </div>
                                 </>
                                 :
-                                <p className="small mb-0">{data.title}</p>
+                                <p className="small mb-0">{data?.title}</p>
                         }
                     </div>
 
 
                     <div style={{ margin: "1%" }} >
-                        {!action.model && cookies._id == data.authorId
+                        {!action.model && cookies?._id == data?.authorId
                             ?
                             <>
                                 <a href="#!" style={{ textDecoration: 'none' }}>
@@ -246,10 +244,13 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, 
                                 <a href="#!" style={{ margin: "0 0 3% 2%", textDecoration: 'none' }}>
                                     <span className="extra-large" onClick={clickDeleteBtn}>&#10060;</span>
                                 </a>
+                                <a href="#!" style={{ margin: "0 0 0 2%", textDecoration: 'none' }}>
+                                    <span className="extra-large" onClick={replyClickHandler}>&#8617; reply</span>
+                                </a>
                             </>
                             : action.model
                                 ? ''
-                                : cookies._id && cookies._id != data.authorId &&
+                                : cookies._id &&
                                 <>
                                     <a href="#!" style={{ margin: "0 0 3% 0", textDecoration: 'none' }}>
                                         <span className="extra-large" onClick={replyClickHandler}>&#8617; reply</span>
@@ -259,7 +260,7 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, 
 
                         {!action.model &&
                             <a href="#!" style={{ margin: "0 0 3% 2%", textDecoration: 'none' }}>
-                                <span className="extra-large" onClick={likeCommentHandler} >&#x1F44D; {data.likes.length || 0}</span>
+                                <span className="extra-large" onClick={likeCommentHandler} >&#x1F44D; {data?.likes?.length || 0}</span>
                             </a>
                         }
                     </div>
@@ -294,7 +295,7 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, 
                     }
 
                     {/* NESTED COMMENTS */}
-                    {data.nestedComments.length > 0 && data.nestedComments.map(x => <NestedCommentsTemplate key={x._id} data={x} cookies={cookies} setCookies={setCookies} setProduct={setProduct} product={product} parentId={data._id}/>)}
+                    {data?.nestedComments?.length > 0 && data?.nestedComments?.map(x => <NestedCommentsTemplate key={x._id} data={x} cookies={cookies} setCookies={setCookies} setProduct={setProduct} product={product} parentId={data._id} />)}
 
                 </div>
             </div>

@@ -171,7 +171,7 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
                 <div className="flex-grow-1 flex-shrink-1">
                     <div>
                         <div className="d-flex justify-content-between align-items-center">
-                            <p className="mb-1"><b>{data.email}</b> <span className="small">- {data.date}</span></p>
+                            <p className="mb-1"><b>{data?.email}</b> <span className="small">- {data?.date}</span></p>
                         </div>
 
                         {action.type === 'edit' && action.model
@@ -206,7 +206,7 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
                                             <div className="backdrop" />
                                             <div className="confirm-container">
                                                 <header className="headers">
-                                                    <p className="small mb-0">{data.title}</p>
+                                                    <p className="small mb-0">{data?.title}</p>
                                                     <h6>Are you sure you want to delete this comment?</h6>
                                                     <button id="action-save" className="btn btn-primary" type="submit" style={{ margin: "1%" }} onClick={deleteCommentHandler} > Yes </button>
                                                     <button id="action-cancel" className="btn btn-primary" type="button" style={{ margin: "1%" }} onClick={() => setAction(({ type: null, model: false, emoji: false }))}> No </button>
@@ -216,17 +216,17 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
                                     </div>
                                 </>
                                 :
-                                <p className="small mb-0">{data.title}</p>
+                                <p className="small mb-0">{data?.title}</p>
                         }
 
                     </div>
                 </div>
             </div>
 
-            {!action.model && cookies.token &&
+            {!action.model && cookies?.token &&
                 <div style={{ margin: "1%" }}>
 
-                    {cookies._id === data.authorId
+                    {cookies?._id === data?.authorId
                         ?
                         <>
                             <a href="#!" style={{ margin: "0 0 3% 10%", textDecoration: 'none' }}>
@@ -242,7 +242,7 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
                         :
                         <>
                         <a href="#!" style={{ margin: "0 0 3% 10%", textDecoration: 'none' }}>
-                            <span className="extra-large" onClick={likeCommentHandler}>&#x1F44D; {data.likes.length || 0}</span>
+                            <span className="extra-large" onClick={likeCommentHandler}>&#x1F44D; {data?.likes?.length || 0}</span>
                         </a>
                     </>
             }
