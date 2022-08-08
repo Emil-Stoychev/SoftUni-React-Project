@@ -86,11 +86,13 @@ export const CommentSection = ({ setProduct, product, user, cookies, setCookies 
                                     }
 
                                 </div>
-                                
+
                             </div>
                         }
 
                         {/* COMMENTS */}
+
+                        <h2 style={{ fontFamily: "Copperplate Gothic", userSelect: 'none' }}>Comments: {product?.comments?.length}</h2>
 
                         {product?.comments?.length > 0
                             ?
