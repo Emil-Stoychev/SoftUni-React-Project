@@ -99,18 +99,18 @@ export const ProfileSection = () => {
                 <div className="card col-md-8 col-lg-6" style={{ width: "36rem" }}>
                     <img src={user.image || 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'} className="card-img-top" alt="user-image" />
                     <div className="card-body">
-                        <h5 className="card-title" style={{ textAlign: "center" }}> {user?.email?.split('@')[0]} </h5>
-                        <p className="card-text">Email: {user?.email}</p>
+                        <h5 className="card-title" style={{ textAlign: "center" }}><b>{user?.email?.split('@')[0]}</b> </h5>
+                        <p className="card-text"><b>Email:</b> {user?.email}</p>
                     </div>
                     <ul className="list-group list-group-flush">
-                        <li className="list-group-item">Money: {user?.money}€</li>
-                        <li className="list-group-item"> Own products: {user?.ownProducts?.length}{" "}
+                        <li className="list-group-item"><b>Money:</b> {user?.money}€</li>
+                        <li className="list-group-item"> <b>Own products:</b> {user?.ownProducts?.length}{" "}
                             <button type="submit" className="btn btn-primary" style={{ marginLeft: "47%" }} onClick={() => navigate('/ownProducts')}> Click to see </button>
                         </li>
-                        <li className="list-group-item"> Your messages: {user?.messages?.length}{" "}
+                        <li className="list-group-item"> <b>Your messages:</b> {user?.messages?.length}{" "}
                             <button type="submit" className="btn btn-primary" style={{ marginLeft: "46%" }} onClick={() => navigate('/messages')}> Click to see </button>
                         </li>
-                        <li className="list-group-item"> Liked products: {user?.likedProducts?.length}{" "}
+                        <li className="list-group-item"> <b>Liked products:</b> {user?.likedProducts?.length}{" "}
                             <button type="submit" className="btn btn-primary" style={{ marginLeft: "46%" }} onClick={() => navigate('/likedProducts')}> Click to see </button>
                         </li>
                     </ul>

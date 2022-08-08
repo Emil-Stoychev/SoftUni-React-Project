@@ -88,7 +88,7 @@ export const DetailsSection = () => {
     }
 
     const nextImage = () => {
-        if(imageCount > product?.images.length - 2) {
+        if (imageCount > product?.images.length - 2) {
             setImageCount(0)
         } else {
             setImageCount(state => state + 1)
@@ -96,13 +96,13 @@ export const DetailsSection = () => {
     }
 
     const previousImage = () => {
-        if(imageCount < 1) {
+        if (imageCount < 1) {
             setImageCount(product?.images.length - 1)
         } else {
             setImageCount(state => state - 1)
         }
     }
-    
+
     return (
         <>
             {product?._id
@@ -114,18 +114,18 @@ export const DetailsSection = () => {
                             <div id="carouselExampleControls" className="carousel slide" data-ride="carousel" >
                                 <div className="carousel-inner">
                                     <div className='carousel-item active'>
-                                        <img className="img-fluid rounded mx-auto d-block" src={product?.images[imageCount]?.dataString} style={{marginLeft: 'auto', marginRight: "auto", height: "50vh"}}/>
+                                        <img className="img-fluid rounded mx-auto d-block" src={product?.images[imageCount]?.dataString} style={{ marginLeft: 'auto', marginRight: "auto", height: "50vh" }} />
                                     </div>
                                 </div>
 
                                 {product?.images.length > 1 &&
                                     <>
                                         <a className="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev" onClick={previousImage} >
-                                            <span className="carousel-control-prev-icon" aria-hidden="true" style={{backgroundColor: 'black'}} />
+                                            <span className="carousel-control-prev-icon" aria-hidden="true" style={{ backgroundColor: 'black' }} />
                                             <span className="sr-only">Previous</span>
                                         </a>
                                         <a className="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next" onClick={nextImage}>
-                                            <span className="carousel-control-next-icon" aria-hidden="true" style={{backgroundColor: 'black'}}/>
+                                            <span className="carousel-control-next-icon" aria-hidden="true" style={{ backgroundColor: 'black' }} />
                                             <span className="sr-only">Next</span>
                                         </a>
                                     </>
@@ -133,11 +133,11 @@ export const DetailsSection = () => {
                             </div>
 
                             <div className="card-body">
-                                <h2>{product?.title}</h2>
-                                <p className="card-text">{product?.description}</p>
-                                <p>Category: {product?.category}</p>
-                                <p>Author: {product?.email}</p>
-                                <p>Price: {product?.price}€</p>
+                                <h2 style={{ fontFamily: "Copperplate Gothic" }}>{product?.title}</h2>
+                                <p className="card-text" ><b>Description:</b> {product?.description}</p>
+                                <p><b>Category:</b> {product?.category}</p>
+                                <p><b>Author:</b> {product?.email}</p>
+                                <p><b>Price:</b> {product?.price}€</p>
 
                                 {errors && <TextError message={errors} />}
 
@@ -168,7 +168,7 @@ export const DetailsSection = () => {
                 : <h2 style={{ textAlign: "center", margin: "12% 0 31.9% 0", color: "navajowhite" }}>Loading...</h2>
             }
 
-            <CommentSection setProduct={setProduct} product={product} user={user} cookies={cookies} setCookies={setCookies}/>
+            <CommentSection setProduct={setProduct} product={product} user={user} cookies={cookies} setCookies={setCookies} />
         </>
     )
 }
