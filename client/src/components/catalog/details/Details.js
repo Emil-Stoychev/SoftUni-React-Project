@@ -168,7 +168,7 @@ export const DetailsSection = () => {
                 : <h2 style={{ textAlign: "center", margin: "12% 0 31.9% 0", color: "navajowhite" }}>Loading...</h2>
             }
 
-            <CommentSection setProduct={setProduct} product={product} user={user} cookies={cookies} setCookies={setCookies} />
+            {product?._id && <CommentSection setProduct={setProduct} product={product} user={user} cookies={cookies} setCookies={setCookies} />}
         </>
     )
 }
