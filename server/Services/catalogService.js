@@ -1,7 +1,7 @@
 const { authMiddleware } = require('../Middlewares/authMiddleware')
 const { Product } = require('../Models/Product')
 const { Comment } = require('../Models/Comment')
-const { addCommentService, editCommentService } = require('../utils/CommentEngine')
+const { addCommentService, editCommentService, addReplyCommentService } = require('../utils/CommentEngine')
 const { productValidator } = require('../utils/productValidator')
 const { checkUserExisting, getUserById } = require('./authService')
 
@@ -20,7 +20,27 @@ const getById = async (productId) => {
 
         let comments = await Comment.find().lean()
 
-        product.comments = comments.filter(x => product.comments?.includes(x._id.toString()))
+        product.comments = comments.map(x => {
+            if (product.comments?.includes(x._id.toString())) {
+                return x
+            }
+        })
+
+        product.comments = product.comments.filter(x => x != null)
+
+        product.comments = product.comments.map(x => {
+            if (x.nestedComments.length > 0) {
+                x.nestedComments = comments.map(y => {
+                    if (x.nestedComments.includes(y._id.toString())) {
+                        return y
+                    }
+                })
+            }
+
+            x.nestedComments = x.nestedComments.filter(x => x != null)
+
+            return x
+        })
 
         return product
     } catch (error) {
@@ -54,7 +74,7 @@ const addComment = async (data) => {
 
         product.comments.push(newComment._id.toString())
 
-        await Product.findByIdAndUpdate(productId, {comments: product.comments})
+        await Product.findByIdAndUpdate(productId, { comments: product.comments })
 
         return newComment
     } catch (error) {
@@ -63,7 +83,7 @@ const addComment = async (data) => {
 }
 
 const editComment = async (data) => {
-    let { commentValue, commentData, cookie} = data
+    let { commentValue, commentData, cookie } = data
 
     try {
         if (cookie.token.message) {
@@ -78,12 +98,12 @@ const editComment = async (data) => {
 
         let isCommentExist = await Comment.findById(commentData._id)
 
-        if(!isCommentExist) {
-            return { message: "This comment doesn't exist!"}
+        if (!isCommentExist) {
+            return { message: "This comment doesn't exist!" }
         }
 
-        if(commentData.authorId != cookie._id) {
-            return { message: "You cannot change this comment!"}
+        if (commentData.authorId != cookie._id) {
+            return { message: "You cannot change this comment!" }
         }
 
         let editedComment = await editCommentService(commentValue, isCommentExist)
@@ -94,8 +114,8 @@ const editComment = async (data) => {
     }
 }
 
-const likeComment = async (data) => {
-    let { commentId, cookie} = data
+const editNestedComment = async (data) => {
+    let { commentValue, commentId, cookie } = data
 
     try {
         if (cookie.token.message) {
@@ -110,24 +130,84 @@ const likeComment = async (data) => {
 
         let isCommentExist = await Comment.findById(commentId)
 
-        if(!isCommentExist) {
-            return { message: "This comment doesn't exist!"}
+        if (!isCommentExist) {
+            return { message: "This comment doesn't exist!" }
         }
 
-        if(isCommentExist.authorId == cookie._id) {
-            return { message: "You cannot like this comment!"}
+        if (isCommentExist.authorId != cookie._id) {
+            return { message: "You cannot change this comment!" }
         }
 
-        if(isCommentExist.likes.includes(cookie._id)) {
-            isCommentExist.likes = isCommentExist.likes.filter(x => x != cookie._id) 
+        let editedComment = await editCommentService(commentValue, isCommentExist)
 
-            await Comment.findByIdAndUpdate(commentId, {likes: isCommentExist.likes})
+        return editedComment
+    } catch (error) {
+        return error
+    }
+}
+
+const addReplyComment = async (data) => {
+    let { commentId, cookie, commentValue } = data
+
+    try {
+        if (cookie.token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let token = await authMiddleware(cookie.token)
+
+        if (token.message) {
+            return token
+        }
+
+        let isCommentExist = await Comment.findById(commentId)
+
+        if (!isCommentExist) {
+            return { message: "This comment doesn't exist!" }
+        }
+
+        let editedComment = await addReplyCommentService(commentValue, isCommentExist, cookie)
+
+        return editedComment
+    } catch (error) {
+        return error
+    }
+}
+
+const likeComment = async (data) => {
+    let { commentId, cookie } = data
+
+    try {
+        if (cookie.token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let token = await authMiddleware(cookie.token)
+
+        if (token.message) {
+            return token
+        }
+
+        let isCommentExist = await Comment.findById(commentId)
+
+        if (!isCommentExist) {
+            return { message: "This comment doesn't exist!" }
+        }
+
+        if (isCommentExist.authorId == cookie._id) {
+            return { message: "You cannot like this comment!" }
+        }
+
+        if (isCommentExist.likes.includes(cookie._id)) {
+            isCommentExist.likes = isCommentExist.likes.filter(x => x != cookie._id)
+
+            await Comment.findByIdAndUpdate(commentId, { likes: isCommentExist.likes })
 
             isCommentExist = 'unlike'
         } else {
             isCommentExist.likes.push(cookie._id)
 
-            await Comment.findByIdAndUpdate(commentId, {likes: isCommentExist.likes})
+            await Comment.findByIdAndUpdate(commentId, { likes: isCommentExist.likes })
 
             isCommentExist = 'like'
         }
@@ -138,9 +218,8 @@ const likeComment = async (data) => {
     }
 }
 
-
 const deleteComment = async (data) => {
-    let { commentId, cookie} = data
+    let { commentId, cookie } = data
 
     try {
         if (cookie.token.message) {
@@ -155,12 +234,12 @@ const deleteComment = async (data) => {
 
         let isCommentExist = await Comment.findById(commentId)
 
-        if(!isCommentExist) {
-            return { message: "This comment doesn't exist!"}
+        if (!isCommentExist) {
+            return { message: "This comment doesn't exist!" }
         }
 
-        if(isCommentExist.authorId != cookie._id) {
-            return { message: "You cannot delete this comment!"}
+        if (isCommentExist.authorId != cookie._id) {
+            return { message: "You cannot delete this comment!" }
         }
 
         let deletedComment = await Comment.findByIdAndDelete(commentId)
@@ -169,7 +248,45 @@ const deleteComment = async (data) => {
 
         product.comments = product.comments.filter(x => x != commentId)
 
-        await Product.findByIdAndUpdate(product._id, {comments: product.comments})
+        await Product.findByIdAndUpdate(product._id, { comments: product.comments })
+
+        return deletedComment
+    } catch (error) {
+        return error
+    }
+}
+
+const deleteNestedComment = async (data) => {
+    let { nestedCommentId, cookie, parentId } = data
+
+    try {
+        if (cookie.token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let token = await authMiddleware(cookie.token)
+
+        if (token.message) {
+            return token
+        }
+
+        let isCommentExist = await Comment.findById(nestedCommentId)
+
+        if (!isCommentExist) {
+            return { message: "This comment doesn't exist!" }
+        }
+
+        if (isCommentExist.authorId != cookie._id) {
+            return { message: "You cannot delete this comment!" }
+        }
+
+        let deletedComment = await Comment.findByIdAndDelete(nestedCommentId)
+
+        let parentComment = await Comment.findById(parentId).lean()
+
+        parentComment.nestedComments = parentComment.nestedComments.filter(x => x != nestedCommentId)
+
+        await Comment.findByIdAndUpdate(parentId, { nestedComments: parentComment.nestedComments })
 
         return deletedComment
     } catch (error) {
@@ -431,5 +548,8 @@ module.exports = {
     addComment,
     editComment,
     deleteComment,
-    likeComment
+    likeComment,
+    addReplyComment,
+    deleteNestedComment,
+    editNestedComment
 }

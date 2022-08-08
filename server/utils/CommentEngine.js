@@ -18,6 +18,29 @@ const addCommentService = async (email, title, authorId, productId) => {
     return newComment
 }
 
+const addReplyCommentService = async (commentValue, isCommentExist, cookie) => {
+    let newDate = new Date()
+
+    let date = newDate.toLocaleString()
+
+    let comment = {
+        email: cookie.email,
+        title: commentValue,
+        authorId: cookie._id,
+        productId: isCommentExist.productId,
+        date
+    }
+
+    let newComment = await Comment.create(comment)
+
+    isCommentExist.nestedComments.push(newComment._id.toString())
+
+    await Comment.findByIdAndUpdate(isCommentExist._id, { nestedComments: isCommentExist.nestedComments })
+
+    return newComment
+
+}
+
 const editCommentService = async (commentValue, isCommentExist) => {
     let newDate = new Date()
 
@@ -35,4 +58,5 @@ const editCommentService = async (commentValue, isCommentExist) => {
 module.exports = {
     addCommentService,
     editCommentService,
+    addReplyCommentService
 }
