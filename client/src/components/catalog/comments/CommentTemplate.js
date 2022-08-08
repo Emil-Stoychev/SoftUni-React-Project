@@ -3,6 +3,8 @@ import Picker from 'emoji-picker-react'
 import * as productService from '../../../services/catalog/productService'
 import { useNavigate } from "react-router-dom"
 import { isInvalidTokenThenRedirect } from "../../utils/errorRedirect"
+import { TextError } from "../../error/TextError"
+import NestedCommentsTemplate from "./NestedCommentTemplate"
 
 export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, product }) => {
     const [value, setValue] = useState('')
@@ -26,6 +28,59 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, 
             model: true,
             emoji: false
         }))
+    }
+
+    const replyClickHandler = () => {
+        setAction(({
+            type: 'reply',
+            model: true,
+            emoji: false
+        }))
+
+        setValue('')
+    }
+
+    const replyToComment = () => {
+        if (value.length === 0 || !value || value.trim() === '') {
+            if (!errors) {
+                setErrors('Cannot add empty comment!')
+
+                setValue('')
+                setTimeout(() => {
+                    setErrors('')
+                }, 2000);
+            }
+        } else {
+            setAction(({
+                type: null,
+                model: false,
+                emoji: false
+            }))
+
+            productService.addReplyComment(data._id, cookies, value)
+                .then(result => {
+                    if (result.message) {
+                        if (result.message.startsWith('Invalid access')) {
+                            isInvalidTokenThenRedirect(navigate, result.message, setCookies, null, setErrors, errors)
+                        } else {
+                            setErrors(result)
+                        }
+                    } else {
+                        setProduct(state => ({
+                            ...state,
+                            ['comments']: state.comments.map(x => {
+                                if (x._id == data._id) {
+                                    x.nestedComments.push(result)
+
+                                    return x
+                                } else {
+                                    return x
+                                }
+                            })
+                        }))
+                    }
+                })
+        }
     }
 
     const likeCommentHandler = () => {
@@ -131,14 +186,8 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, 
                 <div className="flex-grow-1 flex-shrink-1">
                     <div>
                         <div className="d-flex justify-content-between align-items-center">
-                            <p className="mb-1"> {data.email.split('@')[0]} <span className="small">- {data.date}</span></p>
-
-
-
-
+                            <p className="mb-1"> <b>{data.email.split('@')[0]}</b> <span className="small">- {data.date}</span></p>
                         </div>
-
-
 
                         {action.type === 'edit' && action.model
                             ?
@@ -186,6 +235,7 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, 
                         }
                     </div>
 
+
                     <div style={{ margin: "1%" }} >
                         {!action.model && cookies._id == data.authorId
                             ?
@@ -202,7 +252,7 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, 
                                 : cookies._id && cookies._id != data.authorId &&
                                 <>
                                     <a href="#!" style={{ margin: "0 0 3% 0", textDecoration: 'none' }}>
-                                        <span className="extra-large" >&#8617; reply</span>
+                                        <span className="extra-large" onClick={replyClickHandler}>&#8617; reply</span>
                                     </a>
                                 </>
                         }
@@ -214,67 +264,40 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, 
                         }
                     </div>
 
+                    {action.model && action.type === 'reply' &&
+                        <div className="form-outline" >
+
+                            {errors.includes('Invalid access') && <TextError message={errors} />}
+
+                            <input
+                                type="search"
+                                id="form1"
+                                name='comment'
+                                className="form-control"
+                                placeholder="Type a comment..."
+                                onClick={() => setAction(({ type: 'reply', model: true, emoji: false }))}
+                                value={value} onChange={(e) => setValue(e.target.value)}
+                                style={errors.includes('Cannot add empty comment!') ? { borderWidth: "1.2px", borderColor: "red" } : {}}
+                            />
+                            <label className="form-label" htmlFor="form1"></label>
+                            <button id="action-save" className="btn btn-primary" type="submit" style={{ margin: "1%" }} onClick={replyToComment} > Add </button>
+                            <button id="action-cancel" className="btn btn-primary" type="button" style={{ margin: "1%" }} onClick={() => setAction(({ type: null, model: false, emoji: false }))}> Cancel </button>
+                            <button className='btn btn-primary' style={{ margin: '1%' }} onClick={() => setAction(({ type: 'reply', model: true, emoji: true }))}>Emoji</button>
+
+                            {action.emoji && action.model &&
+                                <div onClick={() => setAction(({ type: 'reply', model: true, emoji: false }))}>
+                                    <Picker onEmojiClick={onEmojiClick} />
+                                </div>
+                            }
+                        </div>
+
+                    }
+
                     {/* NESTED COMMENTS */}
-                    {/* <div className="d-flex flex-start mt-4">
-                                                    <a className="me-3" href="#">
-                                                        <img className="rounded-circle shadow-1-strong" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(11).webp" alt="avatar" width={65} height={65} />
-                                                    </a>
-                                                    <div className="flex-grow-1 flex-shrink-1">
-                                                        <div>
-                                                            <div className="d-flex justify-content-between align-items-center">
-                                                                <p className="mb-1">
-                                                                    Simona Disa <span className="small">- 3 hours ago</span>
-                                                                </p>
-
-                                                                {cookies.token &&
-                                                                    <div>
-                                                                        <a href="#!" style={{ margin: "0 30% 0 -80%" }}>
-                                                                            <span className="small" >&#8617; reply</span>
-                                                                        </a>
-                                                                        <a href="#!" >
-                                                                            <span className="small">&#9998; edit</span>
-                                                                        </a>
-                                                                    </div>
-                                                                }
-
-                                                            </div>
-                                                            <p className="small mb-0">
-                                                                letters, as opposed to using 'Content here, content here',
-                                                                making it look like readable English.
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div> */}
+                    {data.nestedComments.length > 0 && data.nestedComments.map(x => <NestedCommentsTemplate key={x._id} data={x} cookies={cookies} setCookies={setCookies} setProduct={setProduct} product={product} parentId={data._id}/>)}
 
                 </div>
             </div>
         </>
     )
 }
-
-{/* <div>
-
-{!action.model && cookies._id == data.authorId
-    ?
-    <>
-        <a href="#!" style={{ marginLeft: "-30%", textDecoration: 'none' }}>
-            <span className="extra-large" onClick={clickEditBtn}>&#9998;</span>
-        </a>
-        <a href="#!" style={{ margin: "0 1% 0 10px", textDecoration: 'none' }}>
-            <span className="extra-large" onClick={clickDeleteBtn}>&#10060;</span>
-        </a>
-    </>
-    : action.model
-        ? ''
-        : cookies._id && cookies._id != data.authorId &&
-        <>
-            <a href="#!" style={{ margin: "0 0 0 -30%", textDecoration: 'none' }}>
-                <span className="extra-large" >&#8617; reply</span>
-            </a>
-        </>
-}
-
-<a href="#!" style={{ margin: "0 0 0 15%", textDecoration: 'none' }}>
-    <span className="extra-large" onClick={likeCommentHandler} >&#x1F44D; {data.likes.length || 0}</span>
-</a>
-</div> */}
