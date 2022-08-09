@@ -335,6 +335,12 @@ const create = async (data) => {
             return token
         }
 
+        let user = await getUserById(data.author)
+
+        if(user.message) {
+            return user
+        }
+
         let dataForCreation = productValidator(data)
 
         if (dataForCreation.message) {

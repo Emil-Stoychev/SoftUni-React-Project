@@ -176,3 +176,18 @@ export const getUserById = (id) => {
     return fetch(`${URL}/${id}`)
         .then(res => res.json())
 }
+
+export const deleteAccount = (cookie) => {
+    let data = { 
+        cookie
+    }
+
+    return fetch(`${URL}/deleteAccount/${data._id}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+        .then(res => res.json())
+}

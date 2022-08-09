@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt')
 const { authMiddleware } = require('../Middlewares/authMiddleware')
 
 const { User } = require('../Models/User')
+const { Comment } = require('../Models/Comment')
+const { Product } = require('../Models/Product')
 const { messageToOwner, messageToBuyer, createNewItemMessage, newMessageAfterEditing, newMessageAfterDelete } = require('../utils/MessageEngine')
 const { userValidator } = require('../utils/userValidator')
 
@@ -352,6 +354,37 @@ const updatePicture = async(data) => {
     }
 }
 
+const deleteAccount = async(data) => {
+    try {
+        if (data.cookie.token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let isValidToken = await authMiddleware(data.cookie.token)
+
+        if (isValidToken.message) {
+            return isValidToken
+        }
+
+        let user = await User.findById(data.cookie._id)
+
+        if (!user) {
+            return { message: "User doesn't exist!" }
+        }
+
+        if(user._id.toString() !== data.cookie._id) {
+            return { message: "You cannot delete this account!"}
+        }
+
+        await Comment.deleteMany({productId: user.ownProducts})
+        await Product.deleteMany({_id: user.ownProducts })
+
+        return await User.findByIdAndDelete(data.cookie._id)
+    } catch (error) {
+        return error
+    }
+}
+
 module.exports = {
     login,
     register,
@@ -367,5 +400,6 @@ module.exports = {
     changeMessageStatus,
     addMessageAfterEditing,
     checkUserExisting,
-    updatePicture
+    updatePicture,
+    deleteAccount
 }

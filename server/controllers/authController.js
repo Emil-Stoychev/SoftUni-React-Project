@@ -164,4 +164,10 @@ router.get('/logout', (req, res) => {
     res.json({ message: "Successfully logout!" })
 })
 
+router.delete('/deleteAccount/:userId', async(req, res) => {
+    let deletedAccount = await authService.deleteAccount(req.body)
+
+    res.json(deletedAccount)
+})
+
 module.exports = router
