@@ -25,7 +25,7 @@ import { AuthContextProvider } from "./contexts/AuthContext";
 function App() {
   return (
     <div className="App">
-        <AuthContextProvider>
+        <AuthContextProvider>  
 
           <Navigation/>
 

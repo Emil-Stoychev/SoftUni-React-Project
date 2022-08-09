@@ -105,10 +105,10 @@ export const ProfileSection = () => {
                 }, 2000);
             }
         } else {
-            if(deleteAcc.value !== cookies.email) {
+            if (deleteAcc.value !== cookies.email) {
                 if (!errors) {
                     setErrors('Your email is not correct!')
-    
+
                     setTimeout(() => {
                         setErrors('')
                     }, 2000);
@@ -116,10 +116,10 @@ export const ProfileSection = () => {
             } else {
                 authService.deleteAccount(cookies)
                     .then(result => {
-                        if(result.message) {
+                        if (result.message) {
                             if (!errors) {
                                 setErrors(result.message)
-                
+
                                 setTimeout(() => {
                                     setErrors('')
                                 }, 2000);
@@ -129,7 +129,7 @@ export const ProfileSection = () => {
                             setCookies('')
                             setUser('')
                             setErrors('Your account was deleted, Automatically redirect after 3 seconds!')
-                        
+
                             if (!errors.includes('Your account was deleted')) {
                                 setTimeout(() => {
                                     setErrors('')
@@ -147,7 +147,11 @@ export const ProfileSection = () => {
             <h1 style={{ textAlign: "center", userSelect: "none", fontFamily: "Copperplate Gothic", color: "navajowhite", marginTop: '2%' }}>PROFILE</h1>
             <div className="row d-flex justify-content-center" style={{ margin: '0 0 2% 0' }}>
                 <div className="card col-md-8 col-lg-6" style={{ width: "36rem" }}>
-                    <img src={user.image || 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'} className="card-img-top" alt="user-image" />
+                    <img
+                        src={user.image || 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'}
+                        className="card-img-top"
+                        alt="user-image"
+                    />
                     <div className="card-body">
                         <h5 className="card-title" style={{ textAlign: "center" }}><b>{user?.email?.split('@')[0]}</b> </h5>
                         <p className="card-text"><b>Email:</b> {user?.email}</p>
@@ -165,7 +169,12 @@ export const ProfileSection = () => {
                         </li>
                     </ul>
                     <button className='btn btn-primary' style={{ margin: '1%' }} onClick={() => setAction(state => !state)}>Edit profile image</button>
-                    <button className='btn btn-danger' style={{ margin: '1%' }} onClick={() => setDeleteAcc(state => ({ ...state, ['action']: !state.action }))}>Delete your account</button>
+                    <button
+                        className='btn btn-danger'
+                        style={{ margin: '1%' }}
+                        onClick={() => setDeleteAcc(state => ({ ...state, ['action']: !state.action }))}
+                    >Delete your account
+                    </button>
 
                     {errors && <TextError message={errors} />}
 
@@ -189,8 +198,22 @@ export const ProfileSection = () => {
                             </div>
 
                             <div>
-                                <button id="action-save" className="btn btn-danger" type="submit" style={{ margin: "1%" }} onClick={onDeleteAccHandler} > Yes </button>
-                                <button id="action-cancel" className="btn btn-primary" type="button" style={{ margin: "1%" }} onClick={() => setDeleteAcc(state => ({ ...state, ['action']: !state.action }))}> No </button>
+                                <button
+                                    id="action-save"
+                                    className="btn btn-danger"
+                                    type="submit"
+                                    style={{ margin: "1%" }}
+                                    onClick={onDeleteAccHandler}
+                                > Yes
+                                </button>
+                                <button
+                                    id="action-cancel"
+                                    className="btn btn-primary"
+                                    type="button"
+                                    style={{ margin: "1%" }}
+                                    onClick={() => setDeleteAcc(state => ({ ...state, ['action']: !state.action }))}
+                                > No
+                                </button>
                             </div>
                         </>
                     }
@@ -209,7 +232,13 @@ export const ProfileSection = () => {
                                 {user.image !== '' &&
                                     <div key={user.image}>
                                         <img src={user.image} style={{ margin: "0 1% 1% 0", width: "100px", height: "100px" }} />
-                                        <input className="btn btn-primary delete" type="button" value="X" style={{ margin: "-66px 0px 0px 0px" }} onClick={(e) => removeImage(e)} />
+                                        <input
+                                            className="btn btn-primary delete"
+                                            type="button"
+                                            value="X"
+                                            style={{ margin: "-66px 0px 0px 0px" }}
+                                            onClick={(e) => removeImage(e)}
+                                        />
                                         <div>
                                             <button className='btn btn-primary' style={{ margin: '1%' }} onClick={editUserImage}>Save</button>
                                         </div>

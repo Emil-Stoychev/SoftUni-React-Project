@@ -114,7 +114,11 @@ export const DetailsSection = () => {
                             <div id="carouselExampleControls" className="carousel slide" data-ride="carousel" >
                                 <div className="carousel-inner">
                                     <div className='carousel-item active'>
-                                        <img className="img-fluid rounded mx-auto d-block" src={product?.images[imageCount]?.dataString} style={{ marginLeft: 'auto', marginRight: "auto", height: "50vh" }} />
+                                        <img
+                                            className="img-fluid rounded mx-auto d-block"
+                                            src={product?.images[imageCount]?.dataString}
+                                            style={{ marginLeft: 'auto', marginRight: "auto", height: "50vh" }}
+                                        />
                                     </div>
                                 </div>
 
@@ -142,22 +146,69 @@ export const DetailsSection = () => {
                                 {errors && <TextError message={errors} />}
 
                                 {options.action
-                                    ? <DeleteOrBuyAction onDeleteClickHandler={onDeleteClickHandler} errors={errors} setUser={setUser} product={product} setErrors={setErrors} options={options} setProduct={setProduct} setOptions={setOptions} setCookies={setCookies} />
+                                    ? <DeleteOrBuyAction
+                                        onDeleteClickHandler={onDeleteClickHandler}
+                                        errors={errors}
+                                        setUser={setUser}
+                                        product={product}
+                                        setErrors={setErrors}
+                                        options={options}
+                                        setProduct={setProduct}
+                                        setOptions={setOptions}
+                                        setCookies={setCookies}
+                                    />
                                     : !user.message
                                         ? user?._id == product?.author
-                                            ? <EditAndDelete onDeleteClickHandler={onDeleteClickHandler} product={product} changeStatusHandler={changeStatusHandler} />
+                                            ? <EditAndDelete
+                                                onDeleteClickHandler={onDeleteClickHandler}
+                                                product={product}
+                                                changeStatusHandler={changeStatusHandler}
+                                            />
                                             :
                                             <>
                                                 {!product?.author != user?._id &&
-                                                    <button type="button" className="btn btn-primary" style={{ margin: "0 1% 0 0" }} onClick={() => onBuyClickHandler('buy', true)}> Buy </button>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-primary"
+                                                        style={{ margin: "0 1% 0 0" }}
+                                                        onClick={() => onBuyClickHandler('buy', true)}
+                                                    > Buy </button>
                                                 }
 
                                                 {!product?.likes?.includes(user?._id)
-                                                    ? <LikeAction product={product} user={user} setProduct={setProduct} setCookies={setCookies} setUser={setUser} setErrors={setErrors} errors={errors} />
-                                                    : <UnlikeAction product={product} user={user} setProduct={setProduct} setCookies={setCookies} setUser={setUser} setErrors={setErrors} errors={errors} />
+                                                    ? <LikeAction
+                                                        product={product}
+                                                        user={user}
+                                                        setProduct={setProduct}
+                                                        setCookies={setCookies}
+                                                        setUser={setUser}
+                                                        setErrors={setErrors}
+                                                        errors={errors}
+                                                    />
+                                                    : <UnlikeAction
+                                                        product={product}
+                                                        user={user}
+                                                        setProduct={setProduct}
+                                                        setCookies={setCookies}
+                                                        setUser={setUser}
+                                                        setErrors={setErrors}
+                                                        errors={errors}
+                                                    />
                                                 }
-                                                <button type="button" className="btn btn-outline-primary disabled" style={{ margin: "0 1% 0 0" }}> Likes: {product?.likes?.length} </button>
-                                                <button type="button" className="btn btn-outline-primary disabled" style={{ margin: "0 1% 0 0" }}> Comments: {product?.comments?.length} </button>
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-outline-primary disabled"
+                                                    style={{ margin: "0 1% 0 0" }}
+                                                > Likes:
+                                                    {product?.likes?.length}
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-outline-primary disabled"
+                                                    style={{ margin: "0 1% 0 0" }}
+                                                > Comments:
+                                                    {product?.comments?.length}
+                                                </button>
                                             </>
                                         : ''
                                 }
@@ -168,7 +219,14 @@ export const DetailsSection = () => {
                 : <h2 style={{ textAlign: "center", margin: "12% 0 31.9% 0", color: "navajowhite" }}>Loading...</h2>
             }
 
-            {product?._id && <CommentSection setProduct={setProduct} product={product} user={user} cookies={cookies} setCookies={setCookies} />}
+            {product?._id &&
+                <CommentSection
+                    setProduct={setProduct}
+                    product={product}
+                    user={user}
+                    cookies={cookies}
+                    setCookies={setCookies}
+                />}
         </>
     )
 }

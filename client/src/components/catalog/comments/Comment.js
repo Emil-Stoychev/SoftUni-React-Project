@@ -100,7 +100,15 @@ export const CommentSection = ({ setProduct, product, user, cookies, setCookies 
                                 <div className="row" onClick={() => setAction(false)}>
                                     <div className="col">
 
-                                        {product?.comments?.map(x => <CommentTemplateSection key={x._id} cookies={cookies} data={x} setCookies={setCookies} setProduct={setProduct} product={product} />)}
+                                        {product?.comments?.map(x =>
+                                            <CommentTemplateSection
+                                                key={x._id}
+                                                cookies={cookies}
+                                                data={x}
+                                                setCookies={setCookies}
+                                                setProduct={setProduct}
+                                                product={product}
+                                            />)}
 
                                     </div>
                                 </div>

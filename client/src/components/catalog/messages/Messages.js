@@ -40,7 +40,17 @@ export const Messages = () => {
             {messages.length > 0
                 ?
                 <div className="row row-cols-1 row-cols-md-1 g-5" style={{ margin: "0 4% 25%" }} >
-                    {messages.map(x => <MessageTemplate key={x._id} data={x} cookie={cookie} setMessages={setMessages} navigate={navigate} setCookies={setCookies} setErrors={setErrors} errors={errors} />)}
+                    {messages.map(x =>
+                        <MessageTemplate
+                            key={x._id}
+                            data={x}
+                            cookie={cookie}
+                            setMessages={setMessages}
+                            navigate={navigate}
+                            setCookies={setCookies}
+                            setErrors={setErrors}
+                            errors={errors}
+                        />)}
                 </div>
                 :
                 messages.message

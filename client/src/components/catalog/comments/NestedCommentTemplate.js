@@ -7,26 +7,19 @@ import { isInvalidTokenThenRedirect } from "../../utils/errorRedirect"
 const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product, parentId }) => {
     const [value, setValue] = useState('')
     const [action, setAction] = useState({ type: null, model: false, emoji: false })
-    const [showNestedComments, setShowNestedComments] = useState(false)
     const [errors, setErrors] = useState('')
     const navigate = useNavigate()
 
-    const clickEditBtn = () => {
+    const changeAction = (type, model, emoji) => {
         setAction(({
-            type: 'edit',
-            model: true,
-            emoji: false
+            type,
+            model,
+            emoji
         }))
 
-        setValue(data.title)
-    }
-
-    const clickDeleteBtn = () => {
-        setAction(({
-            type: 'delete',
-            model: true,
-            emoji: false
-        }))
+        if (type === 'edit') {
+            setValue(data.title)
+        }
     }
 
     const likeCommentHandler = () => {
@@ -46,7 +39,7 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
                                 if (x._id == parentId) {
                                     if (result === 'like') {
                                         x.nestedComments = x.nestedComments.map(x => {
-                                            if(x._id == data._id) {
+                                            if (x._id == data._id) {
                                                 x.likes.push(cookies._id)
                                             }
 
@@ -56,7 +49,7 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
                                         return x
                                     } else {
                                         x.nestedComments = x.nestedComments.map(x => {
-                                            if(x._id == data._id) {
+                                            if (x._id == data._id) {
                                                 x.likes = x.likes.filter(x => x != cookies._id)
                                             }
 
@@ -94,10 +87,10 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
                     setProduct(state => ({
                         ...state,
                         ['comments']: state.comments.map(x => {
-                            if(x._id.toString() == parentId) {
-                                if(x.nestedComments.length > 0) {
+                            if (x._id.toString() == parentId) {
+                                if (x.nestedComments.length > 0) {
                                     x.nestedComments = x.nestedComments.filter(x => x._id != data._id)
-                                    
+
                                     return x
                                 }
                             } else {
@@ -139,9 +132,9 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
                         setProduct(state => ({
                             ...state,
                             ['comments']: state.comments.map(x => {
-                                if(x._id === parentId) {
+                                if (x._id === parentId) {
                                     x.nestedComments = x.nestedComments.map(x => {
-                                        if(x._id == data._id) {
+                                        if (x._id == data._id) {
                                             x.title = result.title
                                             x.date = result.date
 
@@ -166,7 +159,13 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
         <div style={{ borderStyle: 'inset', marginBottom: '2%' }}>
             <div className="d-flex flex-start mt-4" >
                 <a className="me-3" href="#">
-                    <img className="rounded-circle shadow-1-strong" src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png" alt="avatar" width={65} height={65} />
+                    <img
+                        className="rounded-circle shadow-1-strong"
+                        src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+                        alt="avatar"
+                        width={65}
+                        height={65}
+                    />
                 </a>
                 <div className="flex-grow-1 flex-shrink-1">
                     <div>
@@ -179,18 +178,31 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
                             <>
                                 <div className="input-group" >
                                     <span className="input-group-text" />
-                                    <textarea className="form-control" placeholder="Description" aria-label="With textarea" name="description" value={value} onChange={(e) => setValue(e.target.value)} style={errors.includes('Cannot add empty comment!') ? { borderWidth: "1.2px", borderColor: "red" } : {}} />
+                                    <textarea
+                                        className="form-control"
+                                        placeholder="Description"
+                                        aria-label="With
+                                    textarea"
+                                        name="description"
+                                        value={value}
+                                        onChange={(e) => setValue(e.target.value)}
+                                        style={errors.includes('Cannot add empty comment!') ? { borderWidth: "1.2px", borderColor: "red" } : {}} />
                                 </div>
 
                                 <div>
                                     <button className="btn btn-primary" style={{ margin: '1%' }} onClick={clickSaveBtn}>Save</button>
-                                    <button className="btn btn-primary" style={{ margin: '1%' }} onClick={() => setAction(({ type: null, model: false, emoji: false }))}>Cancel</button>
-                                    <button className='btn btn-primary' style={{ margin: '1%' }} onClick={() => setAction(({ type: 'edit', model: true, emoji: true }))}>Emoji</button>
+                                    <button className="btn btn-primary" style={{ margin: '1%' }} onClick={() => changeAction(null, false, false)}>Cancel</button>
+                                    <button
+                                        className='btn btn-primary'
+                                        style={{ margin: '1%' }}
+                                        onClick={() => setAction({ type: 'edit', model: true, emoji: true })}
+                                    >Emoji
+                                    </button>
 
                                     <div>
 
                                         {action.emoji && action.model &&
-                                            <div onClick={() => setAction(({ type: 'edit', model: true, emoji: false }))}>
+                                            <div onClick={() => setAction({ type: 'edit', model: true, emoji: false })}>
                                                 <Picker onEmojiClick={onEmojiClick} />
                                             </div>
                                         }
@@ -208,8 +220,22 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
                                                 <header className="headers">
                                                     <p className="small mb-0">{data?.title}</p>
                                                     <h6>Are you sure you want to delete this comment?</h6>
-                                                    <button id="action-save" className="btn btn-primary" type="submit" style={{ margin: "1%" }} onClick={deleteCommentHandler} > Yes </button>
-                                                    <button id="action-cancel" className="btn btn-primary" type="button" style={{ margin: "1%" }} onClick={() => setAction(({ type: null, model: false, emoji: false }))}> No </button>
+                                                    <button
+                                                        id="action-save"
+                                                        className="btn btn-primary"
+                                                        type="submit"
+                                                        style={{ margin: "1%" }}
+                                                        onClick={deleteCommentHandler}
+                                                    > Yes
+                                                    </button>
+                                                    <button
+                                                        id="action-cancel"
+                                                        className="btn btn-primary"
+                                                        type="button"
+                                                        style={{ margin: "1%" }}
+                                                        onClick={() => changeAction(null, false, false)}
+                                                    > No
+                                                    </button>
                                                 </header>
                                             </div>
                                         </div>
@@ -230,10 +256,10 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
                         ?
                         <>
                             <a href="#!" style={{ margin: "0 0 3% 10%", textDecoration: 'none' }}>
-                                <span className="extra-large" onClick={clickEditBtn}>&#9998;</span>
+                                <span className="extra-large" onClick={() => changeAction('edit', true, false)}>&#9998;</span>
                             </a>
                             <a href="#!" style={{ margin: "0 0 3% 2%", textDecoration: 'none' }}>
-                                <span className="extra-large" onClick={clickDeleteBtn}>&#10060;</span>
+                                <span className="extra-large" onClick={() => changeAction('delete', true, false)}>&#10060;</span>
                             </a>
                             <a href="#!" style={{ margin: "0 0 3% 2%", textDecoration: 'none' }}>
                                 <span className="extra-large" >&#x1F44D; {data.likes.length || 0}</span>
@@ -241,11 +267,11 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
                         </>
                         :
                         <>
-                        <a href="#!" style={{ margin: "0 0 3% 10%", textDecoration: 'none' }}>
-                            <span className="extra-large" onClick={likeCommentHandler}>&#x1F44D; {data?.likes?.length || 0}</span>
-                        </a>
-                    </>
-            }
+                            <a href="#!" style={{ margin: "0 0 3% 10%", textDecoration: 'none' }}>
+                                <span className="extra-large" onClick={likeCommentHandler}>&#x1F44D; {data?.likes?.length || 0}</span>
+                            </a>
+                        </>
+                    }
                 </div>
             }
         </div >
