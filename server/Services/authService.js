@@ -36,7 +36,9 @@ const addNewItemToUser = async (userId, productId, nameOfProduct, token) => {
     user.ownProducts.push(productId)
     user.messages.push(createNewItemMessage(productId, nameOfProduct))
 
-    return await User.findByIdAndUpdate(userId, { ownProducts: user.ownProducts, messages: user.messages })
+    user.save()
+
+    return user
 }
 
 const addNewLikeToUser = async ({ userId, token, productId }) => {
@@ -50,15 +52,16 @@ const addNewLikeToUser = async ({ userId, token, productId }) => {
         return isValidToken
     }
 
-    let user = await User.findById(userId).lean()
+    let user = await User.findById(userId)
 
     if (!user) {
         return { message: "User doesn't exist!" }
     }
 
     user.likedProducts.push(productId)
+    user.save()
 
-    return await User.findByIdAndUpdate(userId, { likedProducts: user.likedProducts })
+    return user
 }
 
 const removeLikeFromUser = async ({ userId, token, productId }) => {
@@ -79,8 +82,9 @@ const removeLikeFromUser = async ({ userId, token, productId }) => {
     }
 
     user.likedProducts = user.likedProducts.filter(x => x != productId)
+    user.save()
 
-    return await User.findByIdAndUpdate(userId, { likedProducts: user.likedProducts })
+    return user
 }
 
 const removeItemFromUser = async (userId, data) => {
@@ -234,15 +238,16 @@ const addMessageAfterEditing = async (userId, data) => {
             return isValidToken
         }
 
-        let user = await User.findById(userId).lean()
+        let user = await User.findById(userId)
 
         if (!user) {
             return { message: "User not found!" }
         }
 
         user.messages.push(newMessageAfterEditing(product._id, product.title))
+        user.save()
 
-        return await User.findByIdAndUpdate(userId, {messages: user.messages})
+        return user
     } catch (error) {
         return error
     }
@@ -332,15 +337,16 @@ const updatePicture = async(data) => {
             return isValidToken
         }
 
-        let user = await User.findById(cookie._id).lean()
+        let user = await User.findById(cookie._id)
 
         if (!user) {
             return { message: "User not found!" }
         }
 
         user.image = image
+        user.save()
 
-        return await User.findByIdAndUpdate(cookie._id, {image: user.image})
+        return user
     } catch (error) {
         return error
     }

@@ -35,7 +35,7 @@ const addReplyCommentService = async (commentValue, isCommentExist, cookie) => {
 
     isCommentExist.nestedComments.push(newComment._id.toString())
 
-    await Comment.findByIdAndUpdate(isCommentExist._id, { nestedComments: isCommentExist.nestedComments })
+    isCommentExist.save()
 
     return newComment
 
@@ -49,7 +49,7 @@ const editCommentService = async (commentValue, isCommentExist) => {
     isCommentExist.date = 'Edited ' + date
     isCommentExist.title = commentValue
 
-    let editedComment = await Comment.findByIdAndUpdate(isCommentExist._id, { date: isCommentExist.date, title: isCommentExist.title })
+    isCommentExist.save()
 
     return isCommentExist
 }

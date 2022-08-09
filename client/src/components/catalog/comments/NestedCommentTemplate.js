@@ -127,7 +127,7 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
             setAction(({ type: null, model: false, emoji: false }))
             setErrors('')
 
-            productService.editNestedComment(value, data._id, cookies)
+            productService.editComment(value, data._id, cookies)
                 .then(result => {
                     if (result.message) {
                         if (result.message.startsWith('Invalid access')) {

@@ -159,7 +159,7 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, 
             setAction(({ type: null, model: false, emoji: false }))
             setErrors('')
 
-            productService.editComment(value, data, cookies)
+            productService.editComment(value, data._id, cookies)
                 .then(result => {
                     if (result.message) {
                         if (result.message.startsWith('Invalid access')) {
@@ -170,7 +170,16 @@ export const CommentTemplateSection = ({ cookies, data, setCookies, setProduct, 
                     } else {
                         setProduct(state => ({
                             ...state,
-                            ['comments']: state.comments.map(x => x._id === data._id ? result : x)
+                            ['comments']: state.comments.map(x => {
+                                if(x._id === data._id) {
+                                    x.title = result.title
+                                    x.date = result.date
+
+                                    return x
+                                } else {
+                                    return x
+                                }
+                            })
                         }))
                     }
                 })

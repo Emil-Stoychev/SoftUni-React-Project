@@ -24,7 +24,10 @@ const productSchema = new mongoose.Schema({
     author: String,
     email: String,
     likes: Array,
-    comments: Array,
+    comments: {
+        type: Array,
+        ref: 'comments'
+    },
     visible: Boolean
 })
 

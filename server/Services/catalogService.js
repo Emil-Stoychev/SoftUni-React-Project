@@ -16,7 +16,7 @@ const getAll = async () => {
 
 const getById = async (productId) => {
     try {
-        let product = await Product.findById(productId).lean() || { message: "404 Not found!" }
+        let product = await Product.findById(productId) || { message: "404 Not found!" }
 
         let comments = await Comment.find().lean()
 
@@ -64,11 +64,11 @@ const addComment = async (data) => {
 
         let newComment = await addCommentService(email, title, authorId, productId)
 
-        let product = await Product.findById(productId).lean()
+        let product = await Product.findById(productId)
 
         product.comments.push(newComment._id.toString())
 
-        await Product.findByIdAndUpdate(productId, { comments: product.comments })
+        product.save()
 
         return newComment
     } catch (error) {
@@ -77,38 +77,6 @@ const addComment = async (data) => {
 }
 
 const editComment = async (data) => {
-    let { commentValue, commentData, cookie } = data
-
-    try {
-        if (cookie.token.message) {
-            return { message: "Invalid access token!" }
-        }
-
-        let token = await authMiddleware(cookie.token)
-
-        if (token.message) {
-            return token
-        }
-
-        let isCommentExist = await Comment.findById(commentData._id)
-
-        if (!isCommentExist) {
-            return { message: "This comment doesn't exist!" }
-        }
-
-        if (commentData.authorId != cookie._id) {
-            return { message: "You cannot change this comment!" }
-        }
-
-        let editedComment = await editCommentService(commentValue, isCommentExist)
-
-        return editedComment
-    } catch (error) {
-        return error
-    }
-}
-
-const editNestedComment = async (data) => {
     let { commentValue, commentId, cookie } = data
 
     try {
@@ -195,13 +163,13 @@ const likeComment = async (data) => {
         if (isCommentExist.likes.includes(cookie._id)) {
             isCommentExist.likes = isCommentExist.likes.filter(x => x != cookie._id)
 
-            await Comment.findByIdAndUpdate(commentId, { likes: isCommentExist.likes })
+            isCommentExist.save()
 
             isCommentExist = 'unlike'
         } else {
             isCommentExist.likes.push(cookie._id)
 
-            await Comment.findByIdAndUpdate(commentId, { likes: isCommentExist.likes })
+            isCommentExist.save()
 
             isCommentExist = 'like'
         }
@@ -240,11 +208,11 @@ const deleteComment = async (data) => {
 
         await Comment.deleteMany({ _id: isCommentExist.nestedComments })
 
-        let product = await Product.findById(isCommentExist.productId).lean()
+        let product = await Product.findById(isCommentExist.productId)
 
         product.comments = product.comments.filter(x => x != commentId)
 
-        await Product.findByIdAndUpdate(product._id, { comments: product.comments })
+        product.save()
 
         return deletedComment
     } catch (error) {
@@ -278,11 +246,11 @@ const deleteNestedComment = async (data) => {
 
         let deletedComment = await Comment.findByIdAndDelete(nestedCommentId)
 
-        let parentComment = await Comment.findById(parentId).lean()
+        let parentComment = await Comment.findById(parentId)
 
         parentComment.nestedComments = parentComment.nestedComments.filter(x => x != nestedCommentId)
 
-        await Comment.findByIdAndUpdate(parentId, { nestedComments: parentComment.nestedComments })
+        parentComment.save()
 
         return deletedComment
     } catch (error) {
@@ -312,7 +280,7 @@ const changeProductAuthor = async (data) => {
             return { message: "Product owner doesn't exist!" }
         }
 
-        let product = await Product.findById(productId).lean()
+        let product = await Product.findById(productId)
 
         if (!product) {
             return { message: "Product not found" }
@@ -323,11 +291,7 @@ const changeProductAuthor = async (data) => {
         product.likes = product.likes.filter(x => x != user._id)
         product.visible = false
 
-        let updatedProduct = await Product.findByIdAndUpdate(productId, product)
-
-        if (!updatedProduct) {
-            return { message: "Error" }
-        }
+        product.save()
 
         return product
     } catch (error) {
@@ -348,9 +312,12 @@ const changeProductStatus = async (productId, data) => {
             return token
         }
 
-        let product = await Product.findById(productId).lean()
+        let product = await Product.findById(productId)
 
-        return await Product.findByIdAndUpdate(productId, { visible: !product.visible })
+        product.visible = !product.visible
+        product.save()
+
+        return product
     } catch (error) {
         return error
     }
@@ -445,8 +412,9 @@ const addLikes = async (productId, data) => {
         }
 
         product.likes.push(data.userId)
+        product.save()
 
-        return await Product.findByIdAndUpdate(productId, { likes: product.likes })
+        return product
     } catch (error) {
         console.error(error)
         return error
@@ -482,8 +450,9 @@ const removeLikes = async (productId, data) => {
         }
 
         product.likes = product.likes.filter(x => x != data.userId)
+        product.save()
 
-        return await Product.findByIdAndUpdate(productId, { likes: product.likes })
+        return product
     } catch (error) {
         console.error(error)
         return error
@@ -547,5 +516,4 @@ module.exports = {
     likeComment,
     addReplyComment,
     deleteNestedComment,
-    editNestedComment
 }

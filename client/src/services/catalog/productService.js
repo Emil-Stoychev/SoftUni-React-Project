@@ -123,31 +123,14 @@ export const addComment = (product, user, title) => {
         .then(res => res.json())
 }
 
-export const editComment = (commentValue, commentData, cookie) => {
-    let data = {
-        commentValue,
-        cookie,
-        commentData
-    }
-
-    return fetch(`${URL}/editComment/${data._id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-        .then(res => res.json())
-}
-
-export const editNestedComment = (commentValue, commentId, cookie) => {
+export const editComment = (commentValue, commentId, cookie) => {
     let data = {
         commentValue,
         cookie,
         commentId
     }
 
-    return fetch(`${URL}/editNestedComment/${data._id}`, {
+    return fetch(`${URL}/editComment/${data._id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
