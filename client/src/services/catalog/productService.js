@@ -27,7 +27,6 @@ export const updateStatus = (productId, cookie) => {
 
 export const deleteProduct = (product, cookie) => {
     let data = {
-        product,
         cookie
     }
 
@@ -44,7 +43,6 @@ export const deleteProduct = (product, cookie) => {
 export const changeProductAuthor = (cookie, product) => {
     let data = {
         cookie,
-        product
     }
 
     return fetch(`${URL}/changeProductAuthor/${product._id}`, {
@@ -163,8 +161,7 @@ export const addReplyComment = (commentId, cookie, commentValue) => {
 
 export const likeComment = (commentId, cookie) => {
     let data = {
-        cookie,
-        commentId
+        cookie
     }
 
     return fetch(`${URL}/likeComment/${commentId}`, {
@@ -177,26 +174,9 @@ export const likeComment = (commentId, cookie) => {
         .then(res => res.json())
 }
 
-export const likeNestedComment = (commentId, cookie) => {
-    let data = {
-        cookie,
-        commentId
-    }
-
-    return fetch(`${URL}/likeNestedComment/${commentId}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-        .then(res => res.json())
-}
-
 export const deleteComment = (commentId, cookie) => {
     let data = {
         cookie,
-        commentId
     }
 
     return fetch(`${URL}/deleteComment/${commentId}`, {
@@ -228,7 +208,7 @@ export const deleteNestedComment = (nestedCommentId, cookie, parentId) => {
 
 export const create = (data, cookie) => {
     data.author = cookie._id
-    data.token = cookie.token
+    data.cookie = cookie
     data.email = cookie.email
 
     return fetch(`${URL}/create`, {

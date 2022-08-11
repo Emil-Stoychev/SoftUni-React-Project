@@ -72,23 +72,6 @@ export const login = (data) => {
         .then(res => res.json())
 }
 
-export const updateUserOwnProducts = (cookie, productId, nameOfProduct) => {
-    let data = {
-        token: cookie.token,
-        productId,
-        nameOfProduct
-    }
-
-    return fetch(`${URL}/addItem/${cookie._id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-        .then(res => res.json())
-}
-
 export const getUserById = (id) => {
     return fetch(`${URL}/${id}`)
         .then(res => res.json())

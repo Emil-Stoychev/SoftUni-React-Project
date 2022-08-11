@@ -24,7 +24,7 @@ const NestedCommentsTemplate = ({ data, cookies, setCookies, setProduct, product
 
     const likeCommentHandler = () => {
         if (cookies._id != data.authorId) {
-            productService.likeNestedComment(data._id, cookies)
+            productService.likeComment(data._id, cookies)
                 .then(result => {
                     if (result.message) {
                         if (result.message.startsWith('Invalid access')) {

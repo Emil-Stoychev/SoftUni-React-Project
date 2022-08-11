@@ -15,12 +15,6 @@ router.get('/:userId', async (req, res) => {
     res.json(await authService.getUserById(req.params.userId))
 })
 
-router.put('/addItem/:userId', async (req, res) => {
-    let user = await authService.addNewItemToUser(req.params.userId, req.body.productId, req.body.nameOfProduct, req.body.token)
-
-    res.json(user)
-})
-
 router.get('/ownProducts/:userId', async (req, res) => {
     let user = await authService.getUserById(req.params.userId)
 

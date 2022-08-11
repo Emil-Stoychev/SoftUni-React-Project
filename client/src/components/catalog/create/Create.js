@@ -44,6 +44,9 @@ export const CreateSection = () => {
 
         let cookie = getCookie('sessionStorage')
 
+        console.log(values);
+        console.log(cookie);
+
         productService.create(values, cookie)
             .then(result => {
                 if (result.message) {
@@ -53,21 +56,7 @@ export const CreateSection = () => {
                         setErrors(result.message)
                     }
                 } else {
-                    let productId = result._id
-                    let nameOfProduct = result.title
-
-                    updateUserOwnProducts(cookie, result._id, nameOfProduct)
-                        .then(result => {
-                            if (result.message) {
-                                if (result.message === "User doesn't exist!" || result.message.startsWith('Invalid access')) {
-                                    isInvalidTokenThenRedirect(navigate, result.message, setCookies, null, setErrors, errors)
-                                } else {
-                                    setErrors(result.message)
-                                }
-                            } else {
-                                navigate(`/catalog/details/${productId}`)
-                            }
-                        })
+                    navigate(`/catalog/details/${result._id}`)
                 }
             })
     }

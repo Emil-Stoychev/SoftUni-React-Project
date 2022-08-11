@@ -32,12 +32,6 @@ router.put('/editComment/:commentId', async (req, res) => {
     res.json(editedComment)
 })
 
-router.put('/editNestedComment/:commentId', async (req, res) => {
-    let editedComment = await productService.editNestedComment(req.body) || { message: "404 Not found!" }
-
-    res.json(editedComment)
-})
-
 router.put('/addReplyComment/:commentId', async (req, res) => {
     let editedComment = await productService.addReplyComment(req.body) || { message: "404 Not found!" }
 
@@ -45,19 +39,13 @@ router.put('/addReplyComment/:commentId', async (req, res) => {
 })
 
 router.put('/likeComment/:commentId', async (req, res) => {
-    let editedComment = await productService.likeComment(req.body) || { message: "404 Not found!" }
-
-    res.json(editedComment)
-})
-
-router.put('/likeNestedComment/:commentId', async (req, res) => {
-    let editedComment = await productService.likeComment(req.body) || { message: "404 Not found!" }
+    let editedComment = await productService.likeComment(req.params.commentId, req.body) || { message: "404 Not found!" }
 
     res.json(editedComment)
 })
 
 router.delete('/deleteComment/:commentId', async (req, res) => {
-    let deletedComment = await productService.deleteComment(req.body) || { message: "404 Not found!" }
+    let deletedComment = await productService.deleteComment(req.params.commentId, req.body) || { message: "404 Not found!" }
 
     res.json(deletedComment)
 })
