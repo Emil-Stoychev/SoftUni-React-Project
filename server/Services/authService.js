@@ -7,123 +7,142 @@ const { Product } = require('../Models/Product')
 const { messageToOwner, messageToBuyer, createNewItemMessage, newMessageAfterEditing, newMessageAfterDelete } = require('../utils/MessageEngine')
 const { userValidator } = require('../utils/userValidator')
 
-const getUserById = async(userId) => {
-    let user = await User.findOne({ _id: userId })
+const getUserById = async (userId) => {
+    try {
+        let user = await User.findOne({ _id: userId })
 
-    if (!user) {
-        return { message: "User doesn't exist!" }
+        if (!user) {
+            return { message: "User doesn't exist!" }
+        }
+
+        return user
+    } catch (error) {
+        return error
     }
-
-    return user
 }
 
-const addNewItemToUser = async(userId, productId, nameOfProduct, token) => {
+const addNewItemToUser = async (userId, productId, nameOfProduct, token) => {
+    try {
+        if (token.message) {
+            return { message: "Invalid access token!" }
+        }
 
-    if (token.message) {
-        return { message: "Invalid access token!" }
+        let isValidToken = await authMiddleware(token)
+
+        if (isValidToken.message) {
+            return res.json(isValidToken)
+        }
+
+        let user = await User.findOne({ _id: userId })
+
+        if (!user) {
+            return { message: "User doesn't exist!" }
+        }
+
+        user.ownProducts.push(productId)
+        user.messages.push(createNewItemMessage(productId, nameOfProduct))
+
+        user.save()
+
+        return user
+    } catch (error) {
+        return error
     }
-
-    let isValidToken = await authMiddleware(token)
-
-    if (isValidToken.message) {
-        return res.json(isValidToken)
-    }
-
-    let user = await User.findOne({ _id: userId })
-
-    if (!user) {
-        return { message: "User doesn't exist!" }
-    }
-
-    user.ownProducts.push(productId)
-    user.messages.push(createNewItemMessage(productId, nameOfProduct))
-
-    user.save()
-
-    return user
 }
 
-const addNewLikeToUser = async({ userId, token, productId }) => {
-    if (token.message) {
-        return { message: "Invalid access token!" }
+const addNewLikeToUser = async ({ userId, token, productId }) => {
+    try {
+        if (token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let isValidToken = await authMiddleware(token)
+
+        if (isValidToken.message) {
+            return isValidToken
+        }
+
+        let user = await User.findById(userId)
+
+        if (!user) {
+            return { message: "User doesn't exist!" }
+        }
+
+        user.likedProducts.push(productId)
+        user.save()
+
+        return user
+    } catch (error) {
+        return error
     }
-
-    let isValidToken = await authMiddleware(token)
-
-    if (isValidToken.message) {
-        return isValidToken
-    }
-
-    let user = await User.findById(userId)
-
-    if (!user) {
-        return { message: "User doesn't exist!" }
-    }
-
-    user.likedProducts.push(productId)
-    user.save()
-
-    return user
 }
 
-const removeLikeFromUser = async({ userId, token, productId }) => {
-    if (token.message) {
-        return { message: "Invalid access token!" }
+const removeLikeFromUser = async ({ userId, token, productId }) => {
+    try {
+        if (token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let isValidToken = await authMiddleware(token)
+
+        if (isValidToken.message) {
+            return isValidToken
+        }
+
+        let user = await User.findById(userId)
+
+        if (!user) {
+            return { message: "User doesn't exist!" }
+        }
+
+        user.likedProducts = user.likedProducts.filter(x => x != productId)
+        user.save()
+
+        return user
+    } catch (error) {
+        return error
     }
-
-    let isValidToken = await authMiddleware(token)
-
-    if (isValidToken.message) {
-        return isValidToken
-    }
-
-    let user = await User.findById(userId)
-
-    if (!user) {
-        return { message: "User doesn't exist!" }
-    }
-
-    user.likedProducts = user.likedProducts.filter(x => x != productId)
-    user.save()
-
-    return user
 }
 
-const removeItemFromUser = async(userId, data) => {
+const removeItemFromUser = async (userId, data) => {
     let { token, productId, nameOfProduct } = data
 
-    if (token.message) {
-        return { message: "Invalid access token!" }
+    try {
+        if (token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let isValidToken = await authMiddleware(token)
+
+        if (isValidToken.message) {
+            return isValidToken
+        }
+
+        let user = await User.findOne({ _id: userId })
+
+        if (!user) {
+            return { message: "User doesn't exist!" }
+        }
+
+        let newOwnProducts = user.ownProducts.filter(x => x != productId)
+        let newLikedProducts = user.likedProducts.filter(x => x != productId)
+        user.messages.push(newMessageAfterDelete(productId, nameOfProduct))
+
+        let updatedUser = await User.findByIdAndUpdate(userId, { ownProducts: newOwnProducts, likedProducts: newLikedProducts, messages: user.messages })
+
+        if (!updatedUser.email) {
+            return { message: "Error with update, please try again later!" }
+        }
+
+        await removeLikesFromUserAfterDeleteItem(productId)
+
+        return updatedUser
+    } catch (error) {
+        return error
     }
-
-    let isValidToken = await authMiddleware(token)
-
-    if (isValidToken.message) {
-        return isValidToken
-    }
-
-    let user = await User.findOne({ _id: userId })
-
-    if (!user) {
-        return { message: "User doesn't exist!" }
-    }
-
-    let newOwnProducts = user.ownProducts.filter(x => x != productId)
-    let newLikedProducts = user.likedProducts.filter(x => x != productId)
-    user.messages.push(newMessageAfterDelete(productId, nameOfProduct))
-
-    let updatedUser = await User.findByIdAndUpdate(userId, { ownProducts: newOwnProducts, likedProducts: newLikedProducts, messages: user.messages })
-
-    if (!updatedUser.email) {
-        return { message: "Error with update, please try again later!" }
-    }
-
-    await removeLikesFromUserAfterDeleteItem(productId)
-
-    return updatedUser
 }
 
-const updateUserAfterBuyNewProduct = async(userId, data) => {
+const updateUserAfterBuyNewProduct = async (userId, data) => {
     try {
         if (data.cookie.token.message) {
             return { message: "Invalid access token!" }
@@ -166,7 +185,7 @@ const updateUserAfterBuyNewProduct = async(userId, data) => {
     }
 }
 
-const checkUserExisting = async(email) => {
+const checkUserExisting = async (email) => {
     try {
         return await User.findOne({ email })
     } catch (error) {
@@ -174,7 +193,7 @@ const checkUserExisting = async(email) => {
     }
 }
 
-const getAllMessages = async(userId) => {
+const getAllMessages = async (userId) => {
     try {
         let user = await User.findById(userId)
 
@@ -190,7 +209,7 @@ const getAllMessages = async(userId) => {
     }
 }
 
-const changeMessageStatus = async(userId, data) => {
+const changeMessageStatus = async (userId, data) => {
     try {
         let { messageId, token } = data
 
@@ -226,7 +245,7 @@ const changeMessageStatus = async(userId, data) => {
     }
 }
 
-const addMessageAfterEditing = async(userId, data) => {
+const addMessageAfterEditing = async (userId, data) => {
     try {
         let { product, token } = data
 
@@ -255,7 +274,7 @@ const addMessageAfterEditing = async(userId, data) => {
     }
 }
 
-const removeLikesFromUserAfterDeleteItem = async(productId) => {
+const removeLikesFromUserAfterDeleteItem = async (productId) => {
     try {
         let allUsers = await User.find()
 
@@ -263,7 +282,7 @@ const removeLikesFromUserAfterDeleteItem = async(productId) => {
             return { message: "No users found!" }
         }
 
-        allUsers.forEach(async(x) => {
+        allUsers.forEach(async (x) => {
             if (x.likedProducts.includes(productId)) {
                 let currUser = await User.findById(x._id)
 
@@ -278,54 +297,62 @@ const removeLikesFromUserAfterDeleteItem = async(productId) => {
     }
 }
 
-const getAll = async() => {
+const getAll = async () => {
     return await User.find()
 }
 
-const login = async(data) => {
-    let { email, password } = data
+const login = async (data) => {
+    try {
+        let { email, password } = data
 
-    let user = await User.findOne({ email })
+        let user = await User.findOne({ email })
 
-    if (!user) {
-        return { message: "Email or password don't match!" }
-    }
+        if (!user) {
+            return { message: "Email or password don't match!" }
+        }
 
-    let isValidPassword = await bcrypt.compare(password, user.password)
+        let isValidPassword = await bcrypt.compare(password, user.password)
 
-    if (!isValidPassword) {
-        return { message: "Email or password don't match!" }
-    }
+        if (!isValidPassword) {
+            return { message: "Email or password don't match!" }
+        }
 
-    return user
-}
-
-const register = async(data) => {
-    let user = userValidator(data, 'register')
-
-    if (user.message) {
         return user
+    } catch (error) {
+        return error
     }
-
-    let isExist = await User.findOne({ email: user.email })
-
-    if (isExist) {
-        return { message: "Email already exist!" }
-    }
-
-    let hashedPassword = await bcrypt.hash(user.password, 10)
-
-    let createdUser = {
-        email: user.email,
-        password: hashedPassword,
-        image: user.image,
-        money: 100
-    }
-
-    return await User.create(createdUser)
 }
 
-const updatePicture = async(data) => {
+const register = async (data) => {
+    try {
+        let user = userValidator(data, 'register')
+
+        if (user.message) {
+            return user
+        }
+
+        let isExist = await User.findOne({ email: user.email })
+
+        if (isExist) {
+            return { message: "Email already exist!" }
+        }
+
+        let hashedPassword = await bcrypt.hash(user.password, 10)
+
+        let createdUser = {
+            email: user.email,
+            password: hashedPassword,
+            image: user.image,
+            money: 100
+        }
+
+        return await User.create(createdUser)
+    } catch (error) {
+        return error
+    }
+}
+
+const updatePicture = async (data) => {
     try {
         let { cookie, image } = data
 
@@ -354,7 +381,7 @@ const updatePicture = async(data) => {
     }
 }
 
-const deleteAccount = async(data) => {
+const deleteAccount = async (data) => {
     try {
         if (data.cookie.token.message) {
             return { message: "Invalid access token!" }
