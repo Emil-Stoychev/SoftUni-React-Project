@@ -15,7 +15,7 @@ router.post('/create', async (req, res) => {
 })
 
 router.put('/edit/:productId', async (req, res) => {
-    let editedProduct = await productService.edit(req.params.productId, req.body) || { message: "404 Not found!" }
+    let editedProduct = await productService.edit(req.body) || { message: "404 Not found!" }
 
     res.json(editedProduct)
 })

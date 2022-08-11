@@ -16,17 +16,10 @@ export const LikeAction = ({ product, user, setProduct, setCookies, setUser, set
                 if (result.message) {
                     isInvalidTokenThenRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
                 } else {
-                    authService.addLikeToUser(user, product._id)
-                        .then(result => {
-                            if (result.message) {
-                                isInvalidTokenThenRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
-                            } else {
-                                setProduct(state => ({
-                                    ...state,
-                                    ["likes"]: [...state.likes, result._id],
-                                }))
-                            }
-                        })
+                    setProduct(state => ({
+                        ...state,
+                        ["likes"]: [...state.likes, user._id],
+                    }))
                 }
             })
     }

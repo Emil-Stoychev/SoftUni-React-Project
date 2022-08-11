@@ -15,30 +15,10 @@ router.get('/:userId', async (req, res) => {
     res.json(await authService.getUserById(req.params.userId))
 })
 
-router.put('/deleteItem/:userId', async (req, res) => {
-    res.json(await authService.removeItemFromUser(req.params.userId, req.body))
-})
-
-router.put('/changeUserAfterBuyProduct/:userId', async (req, res) => {
-    res.json(await authService.updateUserAfterBuyNewProduct(req.params.userId, req.body))
-})
-
 router.put('/addItem/:userId', async (req, res) => {
     let user = await authService.addNewItemToUser(req.params.userId, req.body.productId, req.body.nameOfProduct, req.body.token)
 
     res.json(user)
-})
-
-router.put('/addLikes/:userId', async (req, res) => {
-    let addLikeToUser = await authService.addNewLikeToUser(req.body)
-
-    res.json(addLikeToUser)
-})
-
-router.put('/removeLikes/:userId', async (req, res) => {
-    let removeLikeFromUser = await authService.removeLikeFromUser(req.body)
-
-    res.json(removeLikeFromUser)
 })
 
 router.get('/ownProducts/:userId', async (req, res) => {
@@ -67,12 +47,6 @@ router.put('/messages/:userId/changeStatus', async (req, res) => {
     let editedMessage = await authService.changeMessageStatus(req.params.userId, req.body)
 
     res.json(editedMessage)
-})
-
-router.post('/messages/:userId/addMessageAfterEditing', async (req, res) => {
-    let editedMessage = await authService.addMessageAfterEditing(req.params.userId, req.body)
-
-    editedMessage.email ? res.json(editedMessage.messages) : res.json({ message: "Error!" })
 })
 
 router.post('/login', async (req, res) => {

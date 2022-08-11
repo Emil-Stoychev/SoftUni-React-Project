@@ -25,13 +25,13 @@ export const updateStatus = (productId, cookie) => {
         .then(res => res.json())
 }
 
-export const deleteProduct = (productId, cookie) => {
+export const deleteProduct = (product, cookie) => {
     let data = {
-        productId,
+        product,
         cookie
     }
 
-    return fetch(`${URL}/delete/${productId}`, {
+    return fetch(`${URL}/delete/${product._id}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
@@ -41,22 +41,26 @@ export const deleteProduct = (productId, cookie) => {
         .then(res => res.json())
 }
 
-export const changeProductAuthor = (user, productId, productEmail) => {
+export const changeProductAuthor = (cookie, product) => {
+    let data = {
+        cookie,
+        product
+    }
 
-    return fetch(`${URL}/changeProductAuthor/${productId}`, {
+    return fetch(`${URL}/changeProductAuthor/${product._id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ user, productEmail, productId })
+        body: JSON.stringify(data)
     })
         .then(res => res.json())
 }
 
-export const edit = (productId, product, cookie) => {
+export const edit = (productId, productValues, cookie) => {
     let data = {
         productId,
-        product,
+        productValues,
         cookie
     }
 

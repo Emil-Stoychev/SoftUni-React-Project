@@ -10,7 +10,7 @@ export const DeleteOrBuyAction = ({ onDeleteClickHandler, product, options, setP
     const deleteHandler = () => {
         let cookie = getCookie('sessionStorage')
 
-        productService.deleteProduct(product._id, cookie)
+        productService.deleteProduct(product, cookie)
             .then(result => {
                 if (result.message) {
                     if (result.message.startsWith('Invalid access')) {
@@ -19,18 +19,7 @@ export const DeleteOrBuyAction = ({ onDeleteClickHandler, product, options, setP
                         setErrors(result.message)
                     }
                 } else {
-                    authService.deleteProductFromUser(cookie, product)
-                        .then(result => {
-                            if (result.message) {
-                                if (result.message.startsWith('Invalid access')) {
-                                    isInvalidTokenThenRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
-                                } else {
-                                    setErrors(result.message)
-                                }
-                            } else {
-                                navigate('/ownProducts')
-                            }
-                        })
+                    navigate('/ownProducts')
                 }
             })
     }
@@ -38,7 +27,7 @@ export const DeleteOrBuyAction = ({ onDeleteClickHandler, product, options, setP
     const buyHandler = () => {
         let cookie = getCookie('sessionStorage')
 
-        productService.changeProductAuthor(cookie, product._id, product.email)
+        productService.changeProductAuthor(cookie, product)
             .then(result => {
                 if (result.message) {
                     if (result.message.startsWith('Invalid access')) {
@@ -47,31 +36,20 @@ export const DeleteOrBuyAction = ({ onDeleteClickHandler, product, options, setP
                         setErrors(result.message)
                     }
                 } else {
-                    let updatedProduct = result
                     let sessionCookie = cookie
+                    let updatedProduct = result
 
-                    authService.updateUserAfterBuy(sessionCookie, product)
-                        .then(result => {
-                            if (result.message) {
-                                if (result.message.startsWith('Invalid access')) {
-                                    isInvalidTokenThenRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
-                                } else {
-                                    setErrors(result.message)
-                                }
-                            } else {
-                                sessionCookie.money = Number(sessionCookie.money) - Number(updatedProduct.price)
+                    sessionCookie.money = Number(sessionCookie.money) - Number(updatedProduct.price)
 
-                                setOptions({ type: '', action: false })
-                                setCookies(sessionCookie)
+                    setOptions({ type: '', action: false })
+                    setCookies(sessionCookie)
 
-                                setProduct(state => ({
-                                    ...state,
-                                    ['email']: sessionCookie.email,
-                                    ['author']: sessionCookie._id,
-                                    ['visible']: false
-                                }))
-                            }
-                        })
+                    setProduct(state => ({
+                        ...state,
+                        ['email']: sessionCookie.email,
+                        ['author']: sessionCookie._id,
+                        ['visible']: false
+                    }))
                 }
             })
     }

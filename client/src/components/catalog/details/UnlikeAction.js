@@ -16,17 +16,10 @@ export const UnlikeAction = ({ product, user, setProduct, setCookies, setUser, s
                 if (result.message) {
                     isInvalidTokenThenRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
                 } else {
-                    authService.removeLikeFromUser(user, product._id)
-                        .then(result => {
-                            if (result.message) {
-                                isInvalidTokenThenRedirect(navigate, result.message, setCookies, setUser, setErrors, errors)
-                            } else {
-                                setProduct(state => ({
-                                    ...state,
-                                    ["likes"]: state.likes.filter(x => x != result._id),
-                                }))
-                            }
-                        })
+                    setProduct(state => ({
+                        ...state,
+                        ["likes"]: state.likes.filter(x => x != user._id),
+                    }))
                 }
             })
     }

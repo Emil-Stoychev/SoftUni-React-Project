@@ -34,22 +34,6 @@ export const changeMessageStatus = (userId, messageId, token) => {
         .then(res => res.json())
 }
 
-export const updateUserAfterBuy = (cookie, product) => {
-    let data = {
-        cookie,
-        product
-    }
-
-    return fetch(`${URL}/changeUserAfterBuyProduct/${cookie._id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-        .then(res => res.json())
-}
-
 export const updateUserPicture = (cookie, image) => {
     let data = {
         cookie,
@@ -96,73 +80,6 @@ export const updateUserOwnProducts = (cookie, productId, nameOfProduct) => {
     }
 
     return fetch(`${URL}/addItem/${cookie._id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-        .then(res => res.json())
-}
-
-export const addMessageAfterEditing = (userId, product, token) => {
-    let data = {
-        product,
-        token
-    }
-
-    return fetch(`${URL}/messages/${userId}/addMessageAfterEditing`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-        .then(res => res.json())
-}
-
-export const addLikeToUser = (user, productId) => {
-    let data = {
-        token: user.token,
-        productId,
-        userId: user._id
-    }
-
-    return fetch(`${URL}/addLikes/${user._id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-        .then(res => res.json())
-}
-
-export const removeLikeFromUser = (user, productId) => {
-    let data = {
-        token: user.token,
-        productId,
-        userId: user._id
-    }
-
-    return fetch(`${URL}/removeLikes/${user._id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-        .then(res => res.json())
-}
-
-export const deleteProductFromUser = (cookie, product) => {
-    let data = {
-        token: cookie.token,
-        productId: product._id,
-        nameOfProduct: product.title
-    }
-
-    return fetch(`${URL}/deleteItem/${cookie._id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"

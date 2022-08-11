@@ -65,8 +65,7 @@ export const EditSection = () => {
                         setErrors(result.message)
                     }
                 } else {
-                    authService.addMessageAfterEditing(cookie._id, result, cookie.token)
-                        .then(navigate(`/catalog/details/${productId}`))
+                    navigate(`/catalog/details/${productId}`)
                 }
             })
     }
