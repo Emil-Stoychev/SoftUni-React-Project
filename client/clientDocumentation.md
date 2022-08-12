@@ -1,4 +1,4 @@
-## Client API Documentation
+# Client API Documentation
 This is the API documentation where you will be able to find information on all information about the "*Online Shop*" project.
 
 ## Used dependencies:
