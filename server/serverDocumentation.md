@@ -1,4 +1,4 @@
-## Backend API Documentation
+# Backend API Documentation
 This is the API documentation where you will be able to find information on all the endpoints for the "*Online Shop*" project.
 For data base i used [MongoDB](https://www.mongodb.com/) 
 
