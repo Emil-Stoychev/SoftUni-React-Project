@@ -48,6 +48,7 @@ export const DeleteOrBuyAction = ({ onDeleteClickHandler, product, options, setP
                         ...state,
                         ['email']: sessionCookie.email,
                         ['author']: sessionCookie._id,
+                        ['likes']: state.likes.filter(x => x != cookie._id),
                         ['visible']: false
                     }))
                 }

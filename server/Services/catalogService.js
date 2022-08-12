@@ -262,9 +262,7 @@ const deleteNestedComment = async (data) => {
     }
 }
 
-const changeProductAuthor = async (productId, data) => {
-    let { cookie } = data
-
+const changeProductAuthor = async (productId, cookie) => {
     try {
         if (cookie.token.message) {
             return { message: "Invalid access token!" }

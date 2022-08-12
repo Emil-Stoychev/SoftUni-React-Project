@@ -50,7 +50,7 @@ const addNewItemToUser = async (userId, productId, nameOfProduct, token) => {
     }
 }
 
-const addNewLikeToUser = async ({ userId, token, productId }) => {
+const addNewLikeToUser = async (userId, token, productId ) => {
     try {
         if (token.message) {
             return { message: "Invalid access token!" }
@@ -77,7 +77,7 @@ const addNewLikeToUser = async ({ userId, token, productId }) => {
     }
 }
 
-const removeLikeFromUser = async ({ userId, token, productId }) => {
+const removeLikeFromUser = async ( userId, token, productId ) => {
     try {
         if (token.message) {
             return { message: "Invalid access token!" }
@@ -376,6 +376,18 @@ const deleteAccount = async (data) => {
 
         await Comment.deleteMany({ productId: user.ownProducts })
         await Product.deleteMany({ _id: user.ownProducts })
+
+        let allUsersLikedThisProduct = await User.find({likedProducts: user.ownProducts})
+
+        allUsersLikedThisProduct.forEach(async (x) => {
+            x.likedProducts = x.likedProducts.filter(x => {
+                if(!user.ownProducts.includes(x)) {
+                    return x
+                }
+            })
+
+            await User.findByIdAndUpdate(x._id, {likedProducts: x.likedProducts})
+        })
 
         return await User.findByIdAndDelete(data.cookie._id)
     } catch (error) {

@@ -42,7 +42,7 @@ export const deleteProduct = (product, cookie) => {
 
 export const changeProductAuthor = (cookie, product) => {
     let data = {
-        cookie,
+        cookie
     }
 
     return fetch(`${URL}/changeProductAuthor/${product._id}`, {

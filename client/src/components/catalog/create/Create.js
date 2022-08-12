@@ -44,9 +44,6 @@ export const CreateSection = () => {
 
         let cookie = getCookie('sessionStorage')
 
-        console.log(values);
-        console.log(cookie);
-
         productService.create(values, cookie)
             .then(result => {
                 if (result.message) {

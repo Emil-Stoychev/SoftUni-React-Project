@@ -69,7 +69,7 @@ router.put('/removeProductLikes/:productId', async (req, res) => {
 })
 
 router.put('/changeProductAuthor/:productId', async (req, res) => {
-    let editedProduct = await productService.changeProductAuthor(req.body) || { message: "404 Not found!" }
+    let editedProduct = await productService.changeProductAuthor(req.params.productId, req.body.cookie) || { message: "404 Not found!" }
 
     res.json(editedProduct)
 })
