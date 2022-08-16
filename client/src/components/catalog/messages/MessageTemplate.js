@@ -30,7 +30,7 @@ export const MessageTemplate = ({ data, cookie, setMessages, navigate, setCookie
             })
     }
 
-    let word = data.title.includes('deleted') ? 'DELETED PRODUCT' : data.title.includes('edited') ? 'EDITED PRODUCT' : data.title.includes('created') ? 'CREATED PRODUCT' : data.title.includes('have purchased') ? 'PURCHASED NEW PRODUCT' : data.title.includes('was purchased') ? 'PRODUCT SOLD' : ''
+    let word = data.title.includes('deleted') ? 'DELETED PRODUCT' : data.title.includes('edited') ? 'EDITED PRODUCT' : data.title.includes('created') ? 'CREATED PRODUCT' : data.title.includes('have purchased') ? 'PURCHASED NEW PRODUCT' : data.title.includes('was purchased') ? 'PRODUCT SOLD' : data.title.includes('surprice from Daily Wheel') ? "DAILY WHEEL" : ''
 
     return (
         <>

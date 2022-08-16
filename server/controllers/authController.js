@@ -71,6 +71,18 @@ router.put('/changePicture/:userId', async (req, res) => {
     res.json(updatedUser)
 })
 
+router.get('/getWheelStatus/:userId', async (req, res) => {
+    let updatedUser = await authService.getWheelStatus(req.params.userId)
+
+    res.json(updatedUser)
+})
+
+router.put('/changeWheelStatus/:userId', async (req, res) => {
+    let updatedUser = await authService.changeWheelStatus(req.body)
+
+    res.json(updatedUser)
+})
+
 router.post('/register', async (req, res) => {
     let registereduser = await authService.register(req.body)
 

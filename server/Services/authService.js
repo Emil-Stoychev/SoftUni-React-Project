@@ -4,8 +4,9 @@ const { authMiddleware } = require('../Middlewares/authMiddleware')
 const { User } = require('../Models/User')
 const { Comment } = require('../Models/Comment')
 const { Product } = require('../Models/Product')
-const { messageToOwner, messageToBuyer, createNewItemMessage, newMessageAfterEditing, newMessageAfterDelete } = require('../utils/MessageEngine')
+const { messageToOwner, messageToBuyer, createNewItemMessage, newMessageAfterEditing, newMessageAfterDelete, wheelSurpriseMessage } = require('../utils/MessageEngine')
 const { userValidator } = require('../utils/userValidator')
+const { getWheelSurprise } = require('../utils/getWheelSurprise')
 
 const getUserById = async (userId) => {
     try {
@@ -50,7 +51,7 @@ const addNewItemToUser = async (userId, productId, nameOfProduct, token) => {
     }
 }
 
-const addNewLikeToUser = async (userId, token, productId ) => {
+const addNewLikeToUser = async (userId, token, productId) => {
     try {
         if (token.message) {
             return { message: "Invalid access token!" }
@@ -77,7 +78,7 @@ const addNewLikeToUser = async (userId, token, productId ) => {
     }
 }
 
-const removeLikeFromUser = async ( userId, token, productId ) => {
+const removeLikeFromUser = async (userId, token, productId) => {
     try {
         if (token.message) {
             return { message: "Invalid access token!" }
@@ -113,7 +114,7 @@ const updateUserAfterDeleteProduct = async (userId, product) => {
         user.messages.push(newMessageAfterDelete(product._id, product.title))
 
         let updatedUser = await User.findByIdAndUpdate(user._id, { ownProducts: newOwnProducts, likedProducts: newLikedProducts, messages: user.messages })
-        
+
         if (!updatedUser.email) {
             return { message: "Error with update, please try again later!" }
         }
@@ -268,6 +269,65 @@ const removeLikesFromUserAfterDeleteItem = async (productId) => {
     }
 }
 
+const getWheelStatus = async (userId) => {
+    try {
+        let user = await User.findById(userId)
+
+        if (!user) {
+            return { message: "User not found!" }
+        }
+
+        let newDate = new Date()
+        let date = newDate.toLocaleString()
+
+        if (date.split(" г.")[0] != user.wheel.date) {
+            user.wheel.option = true
+        }
+
+        return user.wheel
+    } catch (error) {
+        return error
+    }
+}
+
+const changeWheelStatus = async (data) => {
+    let { cookie, wheelResult } = data
+
+    try {
+        if (cookie.token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let isValidToken = await authMiddleware(cookie.token)
+
+        if (isValidToken.message) {
+            return isValidToken
+        }
+
+        let user = await User.findById(cookie._id)
+
+        if (!user) {
+            return { message: "User not found!" }
+        }
+
+        let newDate = new Date()
+        let date = newDate.toLocaleString()
+
+        let surprise = getWheelSurprise(wheelResult)
+
+        user.wheel.option = false
+        user.wheel.date = date.split(" г.")[0]
+        user.money = Number(user.money) + Number(surprise) 
+        user.messages.push(wheelSurpriseMessage(cookie._id, wheelResult, surprise))
+
+        await User.findByIdAndUpdate(cookie._id, { wheel: { option: false, date: date.split(" г.")[0] }, money: user.money, messages: user.messages })
+
+        return user
+    } catch (error) {
+        return error
+    }
+}
+
 const getAll = async () => {
     return await User.find()
 }
@@ -286,6 +346,15 @@ const login = async (data) => {
 
         if (!isValidPassword) {
             return { message: "Email or password don't match!" }
+        }
+
+        let newDate = new Date()
+        let date = newDate.toLocaleString()
+
+        if (user.wheel.date == date.split(" г.")[0]) {
+            user.wheel.option = false
+        } else {
+            user.wheel.option = true
         }
 
         return user
@@ -310,11 +379,18 @@ const register = async (data) => {
 
         let hashedPassword = await bcrypt.hash(user.password, 10)
 
+        let newDate = new Date()
+        let date = newDate.toLocaleString()
+
         let createdUser = {
             email: user.email,
             password: hashedPassword,
             image: user.image,
-            money: 100
+            money: 100,
+            wheel: {
+                option: true,
+                date: date.split(" г.")[0],
+            }
         }
 
         return await User.create(createdUser)
@@ -377,16 +453,16 @@ const deleteAccount = async (data) => {
         await Comment.deleteMany({ productId: user.ownProducts })
         await Product.deleteMany({ _id: user.ownProducts })
 
-        let allUsersLikedThisProduct = await User.find({likedProducts: user.ownProducts})
+        let allUsersLikedThisProduct = await User.find({ likedProducts: user.ownProducts })
 
         allUsersLikedThisProduct.forEach(async (x) => {
             x.likedProducts = x.likedProducts.filter(x => {
-                if(!user.ownProducts.includes(x)) {
+                if (!user.ownProducts.includes(x)) {
                     return x
                 }
             })
 
-            await User.findByIdAndUpdate(x._id, {likedProducts: x.likedProducts})
+            await User.findByIdAndUpdate(x._id, { likedProducts: x.likedProducts })
         })
 
         return await User.findByIdAndDelete(data.cookie._id)
@@ -411,5 +487,7 @@ module.exports = {
     checkUserExisting,
     updatePicture,
     deleteAccount,
-    updateUserAfterDeleteProduct
+    updateUserAfterDeleteProduct,
+    changeWheelStatus,
+    getWheelStatus
 }

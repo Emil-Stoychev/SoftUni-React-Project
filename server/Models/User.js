@@ -14,7 +14,8 @@ const userSchema = new mongoose.Schema({
     ownProducts: Array,
     likedProducts: Array,
     messages: Array,
-    money: Number
+    money: Number,
+    wheel: Object
 })
 
 const User = mongoose.model('User', userSchema)

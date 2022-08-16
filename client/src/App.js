@@ -21,6 +21,7 @@ import { Footer } from "./components/footer/Footer";
 import PrivateRoutes from "./routerGuard/PrivateRoutes";
 import GuestRoutes from "./routerGuard/GuestRoutes";
 import { AuthContextProvider } from "./contexts/AuthContext";
+import { DailyWheel } from "./components/wheel/Wheel";
 
 function App() {
   return (
@@ -49,6 +50,8 @@ function App() {
               <Route path="/messages" element={<Messages />} />
 
               <Route path="/profile" element={<ProfileSection />} />
+
+              <Route path="/dailyWheel" element={<DailyWheel />} />
 
             </Route>
 

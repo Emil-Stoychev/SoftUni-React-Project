@@ -77,6 +77,27 @@ export const getUserById = (id) => {
         .then(res => res.json())
 }
 
+export const changeWheelStatus = (cookie, wheelResult) => {
+    let data = {
+        cookie,
+        wheelResult
+    }
+
+    return fetch(`${URL}/changeWheelStatus/${data._id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+        .then(res => res.json())
+}
+
+export const getWheelStatus = (data) => {
+    return fetch(`${URL}/getWheelStatus/${data._id}`)
+        .then(res => res.json())
+}
+
 export const deleteAccount = (cookie) => {
     let data = { 
         cookie

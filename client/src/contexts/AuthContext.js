@@ -4,23 +4,21 @@ import getCookie from "../components/cookies/getCookie";
 export const AuthContext = createContext()
 
 export const AuthContextProvider = ({
-    children,
+  children,
 }) => {
-    const [cookies, setCookies] = useState('')
+  const [cookies, setCookies] = useState('')
 
-    useEffect(() => {
-      let cookie = getCookie('sessionStorage')
-  
-      if (cookie._id) {
-        setCookies(cookie)
-      }
-  
-    }, [])
+  useEffect(() => {
+    let cookie = getCookie('sessionStorage')
 
+    if (cookie._id) {
+      setCookies(cookie)
+    }
+  }, [])
 
-    return (
-        <AuthContext.Provider value={{cookies, setCookies}}>
-            {children}
-        </AuthContext.Provider>
-    )
+  return (
+    <AuthContext.Provider value={{ cookies, setCookies }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }

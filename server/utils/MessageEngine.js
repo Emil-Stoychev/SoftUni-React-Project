@@ -52,6 +52,24 @@ const createNewItemMessage = (id, nameOfProduct) => {
     }
 }
 
+const wheelSurpriseMessage = (id, word, money) => {
+    let randomNum1 = Math.ceil(Math.random() * 334112)
+    let randomNum2 = Math.ceil(Math.random() * 221434)
+
+    let _id = id + randomNum1 * randomNum2
+
+    let newDate = new Date()
+
+    let date = newDate.toLocaleString()
+
+    return {
+        _id,
+        title: `Congratulations, you received a surprice from Daily Wheel - "${word} - ${money}€". The money has been transferred to your account.`,
+        date,
+        read: false
+    }
+}
+
 const newMessageAfterEditing = (id, nameOfProduct) => {
     let randomNum1 = Math.ceil(Math.random() * 334112)
     let randomNum2 = Math.ceil(Math.random() * 221434)
@@ -93,5 +111,6 @@ module.exports =  {
     messageToBuyer,
     createNewItemMessage,
     newMessageAfterEditing,
-    newMessageAfterDelete
+    newMessageAfterDelete,
+    wheelSurpriseMessage
 }
