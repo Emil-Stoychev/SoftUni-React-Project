@@ -89,8 +89,9 @@ router.post('/register', async (req, res) => {
     res.json(registereduser)
 })
 
-router.get('/logout', (req, res) => {
+router.get('/logout/:token', (req, res) => {
     res.clearCookie(sessionName)
+    authService.logout(req.params.token)
 
     res.json({ message: "Successfully logout!" })
 })

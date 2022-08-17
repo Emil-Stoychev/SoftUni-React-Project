@@ -72,6 +72,11 @@ export const login = (data) => {
         .then(res => res.json())
 }
 
+export const logout = (token) => {
+    return fetch(`${URL}/logout/${token}`)
+        .then(res => res.json())
+}
+
 export const getUserById = (id) => {
     return fetch(`${URL}/${id}`)
         .then(res => res.json())

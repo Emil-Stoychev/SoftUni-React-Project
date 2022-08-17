@@ -8,6 +8,8 @@ const { messageToOwner, messageToBuyer, createNewItemMessage, newMessageAfterEdi
 const { userValidator } = require('../utils/userValidator')
 const { getWheelSurprise } = require('../utils/getWheelSurprise')
 
+let blackList = new Set()
+
 const getUserById = async (userId) => {
     try {
         let user = await User.findOne({ _id: userId })
@@ -32,6 +34,10 @@ const addNewItemToUser = async (userId, productId, nameOfProduct, token) => {
 
         if (isValidToken.message) {
             return res.json(isValidToken)
+        }
+
+        if(blackList.has(token)) {
+            return { message: "Invalid access token!" }
         }
 
         let user = await User.findOne({ _id: userId })
@@ -63,6 +69,10 @@ const addNewLikeToUser = async (userId, token, productId) => {
             return isValidToken
         }
 
+        if(blackList.has(token)) {
+            return { message: "Invalid access token!" }
+        }
+
         let user = await User.findById(userId)
 
         if (!user) {
@@ -88,6 +98,10 @@ const removeLikeFromUser = async (userId, token, productId) => {
 
         if (isValidToken.message) {
             return isValidToken
+        }
+
+        if(blackList.has(token)) {
+            return { message: "Invalid access token!" }
         }
 
         let user = await User.findById(userId)
@@ -197,6 +211,10 @@ const changeMessageStatus = async (userId, data) => {
             return isValidToken
         }
 
+        if(blackList.has(token)) {
+            return { message: "Invalid access token!" }
+        }
+
         let user = await User.findById(userId)
 
         if (!user) {
@@ -229,6 +247,10 @@ const addMessageAfterEditing = async (userId, product, token) => {
 
         if (isValidToken.message) {
             return isValidToken
+        }
+
+        if(blackList.has(token)) {
+            return { message: "Invalid access token!" }
         }
 
         let user = await User.findById(userId)
@@ -302,6 +324,10 @@ const changeWheelStatus = async (data) => {
 
         if (isValidToken.message) {
             return isValidToken
+        }
+
+        if(blackList.has(cookie.token)) {
+            return { message: "Invalid access token!" }
         }
 
         let user = await User.findById(cookie._id)
@@ -399,6 +425,10 @@ const register = async (data) => {
     }
 }
 
+const logout = async(token) => {
+    blackList.add(token)
+}
+
 const updatePicture = async (data) => {
     try {
         let { cookie, image } = data
@@ -411,6 +441,10 @@ const updatePicture = async (data) => {
 
         if (isValidToken.message) {
             return isValidToken
+        }
+
+        if(blackList.has(cookie.token)) {
+            return { message: "Invalid access token!" }
         }
 
         let user = await User.findById(cookie._id)
@@ -438,6 +472,10 @@ const deleteAccount = async (data) => {
 
         if (isValidToken.message) {
             return isValidToken
+        }
+
+        if(blackList.has(data.cookie.token)) {
+            return { message: "Invalid access token!" }
         }
 
         let user = await User.findById(data.cookie._id)
@@ -489,5 +527,7 @@ module.exports = {
     deleteAccount,
     updateUserAfterDeleteProduct,
     changeWheelStatus,
-    getWheelStatus
+    getWheelStatus,
+    logout,
+    blackList
 }

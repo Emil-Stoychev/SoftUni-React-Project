@@ -4,7 +4,7 @@ import { logout } from '../user/logout/Logout'
 
 import User from './User'
 import Guest from './Guest'
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../../contexts/AuthContext"
 
 export const Navigation = () => {
@@ -33,7 +33,7 @@ export const Navigation = () => {
                                     <Link className="nav-link disabled" style={{ color: "#f1ce99", userSelect: "none" }} to=''>{cookies?.email ? cookies?.email : ''}</Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link active" style={{ color: "white", userSelect: "none" }} aria-current="page" to='/user/login' onClick={() => logout(setCookies)}>Logout </Link>
+                                    <Link className="nav-link active" style={{ color: "white", userSelect: "none" }} aria-current="page" to='/user/login' onClick={() => logout(cookies, setCookies)}> Logout </Link>
                                 </li>
                             </ul>
                         </>

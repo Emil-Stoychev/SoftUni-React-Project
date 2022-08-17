@@ -3,7 +3,7 @@ const { Product } = require('../Models/Product')
 const { Comment } = require('../Models/Comment')
 const { addCommentService, editCommentService, addReplyCommentService } = require('../utils/CommentEngine')
 const { productValidator } = require('../utils/productValidator')
-const { checkUserExisting, getUserById, updateUserAfterDeleteProduct, updateUserAfterBuyNewProduct, addMessageAfterEditing, addNewLikeToUser, removeLikeFromUser, addNewItemToUser } = require('./authService')
+const { checkUserExisting, getUserById, updateUserAfterDeleteProduct, updateUserAfterBuyNewProduct, addMessageAfterEditing, addNewLikeToUser, removeLikeFromUser, addNewItemToUser, blackList } = require('./authService')
 
 const getAll = async () => {
     try {
@@ -56,6 +56,10 @@ const addComment = async (data) => {
             return isValidToken
         }
 
+        if(blackList.has(token)) {
+            return { message: "Invalid access token!" }
+        }
+
         let isUserExist = await checkUserExisting(email)
 
         if (!isUserExist.email) {
@@ -94,6 +98,10 @@ const editComment = async (data) => {
             return token
         }
 
+        if(blackList.has(cookie.token)) {
+            return { message: "Invalid access token!" }
+        }
+
         let isCommentExist = await Comment.findById(commentId)
 
         if (!isCommentExist) {
@@ -126,6 +134,10 @@ const addReplyComment = async (data) => {
             return token
         }
 
+        if(blackList.has(cookie.token)) {
+            return { message: "Invalid access token!" }
+        }
+
         let isCommentExist = await Comment.findById(commentId)
 
         if (!isCommentExist) {
@@ -152,6 +164,10 @@ const likeComment = async (commentId, data) => {
 
         if (token.message) {
             return token
+        }
+
+        if(blackList.has(cookie.token)) {
+            return { message: "Invalid access token!" }
         }
 
         let isCommentExist = await Comment.findById(commentId)
@@ -198,6 +214,10 @@ const deleteComment = async (commentId, data) => {
             return token
         }
 
+        if(blackList.has(cookie.token)) {
+            return { message: "Invalid access token!" }
+        }
+
         let isCommentExist = await Comment.findById(commentId)
 
         if (!isCommentExist) {
@@ -238,6 +258,10 @@ const deleteNestedComment = async (data) => {
             return token
         }
 
+        if(blackList.has(cookie.token)) {
+            return { message: "Invalid access token!" }
+        }
+
         let isCommentExist = await Comment.findById(nestedCommentId)
 
         if (!isCommentExist) {
@@ -272,6 +296,10 @@ const changeProductAuthor = async (productId, cookie) => {
 
         if (token.message) {
             return token
+        }
+
+        if(blackList.has(cookie.token)) {
+            return { message: "Invalid access token!" }
         }
 
         let user = await getUserById(cookie._id)
@@ -322,6 +350,10 @@ const changeProductStatus = async (productId, data) => {
             return token
         }
 
+        if(blackList.has(data.token)) {
+            return { message: "Invalid access token!" }
+        }
+
         let product = await Product.findById(productId)
 
         product.visible = !product.visible
@@ -343,6 +375,10 @@ const create = async (data) => {
 
         if (token.message) {
             return token
+        }
+
+        if(blackList.has(data.cookie.token)) {
+            return { message: "Invalid access token!" }
         }
 
         let user = await getUserById(data.author)
@@ -384,6 +420,10 @@ const edit = async (data) => {
 
         if (token.message) {
             return token
+        }
+
+        if(blackList.has(cookie.token)) {
+            return { message: "Invalid access token!" }
         }
 
         let user = await getUserById(cookie._id)
@@ -437,6 +477,10 @@ const addLikes = async (productId, data) => {
             return token
         }
 
+        if(blackList.has(data.token)) {
+            return { message: "Invalid access token!" }
+        }
+
         let product = await Product.findById(productId)
 
         if (!product) {
@@ -479,6 +523,10 @@ const removeLikes = async (productId, data) => {
 
         if (token.message) {
             return token
+        }
+
+        if(blackList.has(data.token)) {
+            return { message: "Invalid access token!" }
         }
 
         let user = await getUserById(data.userId)
@@ -525,6 +573,10 @@ const del = async (productId, data) => {
 
         if (token.message) {
             return token
+        }
+
+        if(blackList.has(data.cookie.token)) {
+            return { message: "Invalid access token!" }
         }
 
         let user = getUserById(cookie._id)

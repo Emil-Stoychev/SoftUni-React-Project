@@ -41,6 +41,8 @@ export const DailyWheel = () => {
 
         let wheelResult = getWheelResult(deg)
 
+        let surprise = getWheelSurprise(wheelResult)
+
         let cookie = getCookie('sessionStorage')
 
         authService.changeWheelStatus(cookie, wheelResult)
@@ -74,8 +76,6 @@ export const DailyWheel = () => {
                 transform: `rotate(${deg}deg)`,
                 filter: "blur(0)"
             })
-
-            let surprise = getWheelSurprise(wheelResult)
 
             setSurprise(surprise)
         }, 10000)
