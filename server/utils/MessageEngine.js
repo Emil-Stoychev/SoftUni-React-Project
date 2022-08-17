@@ -64,7 +64,7 @@ const wheelSurpriseMessage = (id, word, money) => {
 
     return {
         _id,
-        title: `Congratulations, you received a surprice from Daily Wheel - "${word} - ${money}€". The money has been transferred to your account.`,
+        title: `Congratulations, you received a surprise from Daily Wheel - "${word} - ${money}€". The money has been transferred to your account.`,
         date,
         read: false
     }

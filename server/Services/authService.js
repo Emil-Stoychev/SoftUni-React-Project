@@ -164,7 +164,7 @@ const updateUserAfterBuyNewProduct = async (userId, product) => {
 
         user.likedProducts = user.likedProducts.filter(x => x != product._id)
         user.money = Number(user.money) - Number(product.price)
-        user.ownProducts.push(product._id)
+        user.ownProducts.push(product._id.toString())
         user.messages.push(messageToBuyer(product._id, product.title, product.price, userFromProduct.email))
 
         return await User.findByIdAndUpdate(user._id, { ownProducts: user.ownProducts, likedProducts: user.likedProducts, money: user.money, messages: user.messages })

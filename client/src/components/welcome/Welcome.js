@@ -14,7 +14,7 @@ export const WelcomeSection = () => {
 
   return (
     <>
-      <IntroduceSection products={products}/>
+      <IntroduceSection products={products} />
 
       {products.message || products.length === 0
         ? ''
