@@ -13,6 +13,7 @@ import { TextError } from '../../error/TextError'
 import { AuthContext } from '../../../contexts/AuthContext'
 import { CommentSection } from '../comments/Comment'
 import { isInvalidTokenThenRedirect } from '../../utils/errorRedirect'
+import { ChatMessageToUser } from '../messageToUser/ChatMessage'
 
 export const DetailsSection = () => {
     const [product, setProduct] = useState([])
@@ -217,6 +218,14 @@ export const DetailsSection = () => {
                     </div>
                 </>
                 : <h2 style={{ textAlign: "center", margin: "12% 0 31.9% 0", color: "navajowhite" }}>Loading...</h2>
+            }
+
+            {cookies.token && product.author !== cookies._id &&
+                <ChatMessageToUser
+                    cookies={cookies}
+                    setCookies={setCookies}
+                    product={product}
+                />
             }
 
             {product?._id &&

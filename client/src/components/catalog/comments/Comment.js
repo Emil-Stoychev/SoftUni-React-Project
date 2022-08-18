@@ -54,6 +54,8 @@ export const CommentSection = ({ setProduct, product, user, cookies, setCookies 
                 <div className="card shadow-0 border" style={{ backgroundColor: "#f0f2f5" }} >
                     <div className="card-body p-4" >
 
+
+
                         {/* COMMENT FORM */}
 
                         {cookies.token &&
