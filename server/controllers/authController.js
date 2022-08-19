@@ -71,6 +71,30 @@ router.put('/changePicture/:userId', async (req, res) => {
     res.json(updatedUser)
 })
 
+router.post('/addMessageToChat/:userId', async (req, res) => {
+    let updatedUser = await authService.addMessageToChat(req.body)
+
+    res.json(updatedUser)
+})
+
+router.post('/askUser/:userId', async (req, res) => {
+    let updatedUser = await authService.askUser(req.body)
+
+    res.json(updatedUser)
+})
+
+router.get('/getChatById/:chatId', async(req, res) => {
+    let userChats = await authService.getChatById(req.params.chatId)
+
+    res.json(userChats)
+})
+
+router.get('/getAllChats/:userId', async(req, res) => {
+    let userChats = await authService.getAllChats(req.params.userId)
+
+    res.json(userChats)
+})
+
 router.get('/getWheelStatus/:userId', async (req, res) => {
     let updatedUser = await authService.getWheelStatus(req.params.userId)
 

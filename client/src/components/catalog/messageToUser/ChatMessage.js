@@ -3,6 +3,8 @@ import Picker from 'emoji-picker-react'
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { TextError } from "../../error/TextError"
+import * as authService from '../../../services/user/authService'
+import { isInvalidTokenThenRedirect } from '../../utils/errorRedirect'
 
 export const ChatMessageToUser = ({ cookies, setCookies, product }) => {
     const [value, setValue] = useState('')
@@ -26,23 +28,19 @@ export const ChatMessageToUser = ({ cookies, setCookies, product }) => {
             }
         } else {
             setErrors('')
-            console.log(value);
-            //     productService.addComment(product, user, value)
-            //         .then(result => {
-            //             if (result.message) {
-            //                 if (result.message.startsWith('Invalid access')) {
-            //                     isInvalidTokenThenRedirect(navigate, result.message, setCookies, null, setErrors, errors)
-            //                 } else {
-            //                     setErrors(result)
-            //                 }
-            //             } else {
-            //                 setProduct(state => ({
-            //                     ...state,
-            //                     ['comments']: [...state.comments, result]
-            //                 }))
-            //                 setValue('')
-            //             }
-            //         })
+                authService.askUser(value, cookies, product.author, product._id)
+                    .then(result => {
+                        console.log(result);
+                        if (result.message) {
+                            if (result.message.startsWith('Invalid access')) {
+                                isInvalidTokenThenRedirect(navigate, result.message, setCookies, null, setErrors, errors)
+                            } else {
+                                setErrors(result)
+                            }
+                        } else {
+                            setValue('')
+                        }
+                    })
         }
     }
 
@@ -56,8 +54,6 @@ export const ChatMessageToUser = ({ cookies, setCookies, product }) => {
                             {cookies.token &&
                                 <div className="form-outline mb-4" >
                                     <div className="form-outline" >
-
-                                        {errors.includes('Invalid access') && <TextError message={errors} />}
 
                                         <input
                                             type="search"

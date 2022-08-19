@@ -77,6 +77,53 @@ export const logout = (token) => {
         .then(res => res.json())
 }
 
+export const addToChat = (value, cookie, parentChatId) => {
+    let data = {
+        parentChatId,
+        value,
+        fromEmail: cookie.email,
+        cookie
+    }
+
+    return fetch(`${URL}/addMessageToChat/${cookie._id}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+        .then(res => res.json())
+} 
+
+export const getChatById = (chatId) => {
+    return fetch(`${URL}/getChatById/${chatId}`)
+        .then(res => res.json())
+}
+
+export const askUser = (value, cookie, productAuthorId, productId) => {
+    let data = {
+        productAuthorId,
+        value,
+        fromEmail: cookie.email,
+        productId,
+        cookie
+    }
+
+    return fetch(`${URL}/askUser/${cookie._id}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+        .then(res => res.json())
+}
+
+export const getAllChats = (userId) => {
+    return fetch(`${URL}/getAllChats/${userId}`)
+        .then(res => res.json())
+}
+
 export const getUserById = (id) => {
     return fetch(`${URL}/${id}`)
         .then(res => res.json())

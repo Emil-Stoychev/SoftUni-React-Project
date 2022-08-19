@@ -19,6 +19,9 @@ const User = () => {
                 <li className="nav-item">
                     <Link className="nav-link active" style={{ color: "white" }} aria-current="page" to="/dailyWheel"> Daily wheel </Link>
                 </li>
+                <li className="nav-item">
+                    <Link className="nav-link active" style={{ color: "white" }} aria-current="page" to="/chat"> Chat </Link>
+                </li>
             </ul>
         </>
     )

@@ -99,8 +99,8 @@ export const DailyWheel = () => {
 
             <h1 style={{ textAlign: "center", margin: "5% 0 1% 0", fontFamily: "Copperplate Gothic", userSelect: "none", color: "navajowhite" }}>Possible prices</h1>
 
-            <div className="row" style={{margin: '1%', userSelect: "none"}}>
-                <div className="col-xl-4 col-lg-6 mb-4">
+            <div className="row" style={{margin: '2%', userSelect: "none"}}>
+                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">
@@ -118,7 +118,7 @@ export const DailyWheel = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-xl-4 col-lg-6 mb-4">
+                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">
@@ -136,7 +136,7 @@ export const DailyWheel = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-xl-4 col-lg-6 mb-4">
+                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">
@@ -154,7 +154,7 @@ export const DailyWheel = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-xl-4 col-lg-6 mb-4">
+                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">
@@ -172,7 +172,7 @@ export const DailyWheel = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-xl-4 col-lg-6 mb-4">
+                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">
@@ -190,7 +190,7 @@ export const DailyWheel = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-xl-4 col-lg-6 mb-4">
+                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">
@@ -208,7 +208,7 @@ export const DailyWheel = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-xl-4 col-lg-6 mb-4">
+                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">
@@ -226,7 +226,7 @@ export const DailyWheel = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-xl-4 col-lg-6 mb-4">
+                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">

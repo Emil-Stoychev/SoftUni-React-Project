@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
     image: String,
     ownProducts: Array,
     likedProducts: Array,
+    chat: Array,
     messages: Array,
     money: Number,
     wheel: Object

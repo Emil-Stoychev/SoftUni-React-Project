@@ -4,9 +4,11 @@ const { authMiddleware } = require('../Middlewares/authMiddleware')
 const { User } = require('../Models/User')
 const { Comment } = require('../Models/Comment')
 const { Product } = require('../Models/Product')
+const { Chat } = require('../Models/Chat')
 const { messageToOwner, messageToBuyer, createNewItemMessage, newMessageAfterEditing, newMessageAfterDelete, wheelSurpriseMessage } = require('../utils/MessageEngine')
 const { userValidator } = require('../utils/userValidator')
 const { getWheelSurprise } = require('../utils/getWheelSurprise')
+const { createChatMessage } = require('../utils/createChatMessage')
 
 let blackList = new Set()
 
@@ -33,10 +35,10 @@ const addNewItemToUser = async (userId, productId, nameOfProduct, token) => {
         let isValidToken = await authMiddleware(token)
 
         if (isValidToken.message) {
-            return res.json(isValidToken)
+            return isValidToken
         }
 
-        if(blackList.has(token)) {
+        if (blackList.has(token)) {
             return { message: "Invalid access token!" }
         }
 
@@ -69,7 +71,7 @@ const addNewLikeToUser = async (userId, token, productId) => {
             return isValidToken
         }
 
-        if(blackList.has(token)) {
+        if (blackList.has(token)) {
             return { message: "Invalid access token!" }
         }
 
@@ -100,7 +102,7 @@ const removeLikeFromUser = async (userId, token, productId) => {
             return isValidToken
         }
 
-        if(blackList.has(token)) {
+        if (blackList.has(token)) {
             return { message: "Invalid access token!" }
         }
 
@@ -211,7 +213,7 @@ const changeMessageStatus = async (userId, data) => {
             return isValidToken
         }
 
-        if(blackList.has(token)) {
+        if (blackList.has(token)) {
             return { message: "Invalid access token!" }
         }
 
@@ -249,7 +251,7 @@ const addMessageAfterEditing = async (userId, product, token) => {
             return isValidToken
         }
 
-        if(blackList.has(token)) {
+        if (blackList.has(token)) {
             return { message: "Invalid access token!" }
         }
 
@@ -326,7 +328,7 @@ const changeWheelStatus = async (data) => {
             return isValidToken
         }
 
-        if(blackList.has(cookie.token)) {
+        if (blackList.has(cookie.token)) {
             return { message: "Invalid access token!" }
         }
 
@@ -343,7 +345,7 @@ const changeWheelStatus = async (data) => {
 
         user.wheel.option = false
         user.wheel.date = date.split(" г.")[0]
-        user.money = Number(user.money) + Number(surprise) 
+        user.money = Number(user.money) + Number(surprise)
         user.messages.push(wheelSurpriseMessage(cookie._id, wheelResult, surprise))
 
         await User.findByIdAndUpdate(cookie._id, { wheel: { option: false, date: date.split(" г.")[0] }, money: user.money, messages: user.messages })
@@ -425,7 +427,7 @@ const register = async (data) => {
     }
 }
 
-const logout = async(token) => {
+const logout = async (token) => {
     blackList.add(token)
 }
 
@@ -443,7 +445,7 @@ const updatePicture = async (data) => {
             return isValidToken
         }
 
-        if(blackList.has(cookie.token)) {
+        if (blackList.has(cookie.token)) {
             return { message: "Invalid access token!" }
         }
 
@@ -462,6 +464,186 @@ const updatePicture = async (data) => {
     }
 }
 
+const addMessageToChat = async (data) => {
+    let { parentChatId, value, cookie } = data
+
+    try {
+        if (cookie.token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let isValidToken = await authMiddleware(cookie.token)
+
+        if (isValidToken.message) {
+            return isValidToken
+        }
+
+        if (blackList.has(cookie.token)) {
+            return { message: "Invalid access token!" }
+        }
+
+        let chat = await Chat.findById(parentChatId)
+
+        let authorUser = await User.findOne({ email: chat.author })
+        let fromUser = await User.findOne({ email: chat.fromEmail })
+
+        if (!authorUser || !fromUser) {
+            return { message: "User doesn't exist!" }
+        }
+
+        if (chat != null) {
+            let randomNum1 = Math.ceil(Math.random() * 334112)
+            let randomNum2 = Math.ceil(Math.random() * 221434)
+
+            let _id = chat.productId + randomNum1 * randomNum2
+
+            let newDate = new Date()
+
+            let date = newDate.toLocaleString()
+
+            let newMessage = {
+                _id,
+                author: cookie.email,
+                message: value,
+                productId: chat.productId,
+                productAuthor: authorUser.email,
+                parentChatId: chat._id,
+                date,
+            }
+
+            chat.messages.push(newMessage)
+
+            chat.save()
+
+            return newMessage
+        } else {
+            return { message: "Chat doesn't exist!" }
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+const askUser = async (data) => {
+    let { productAuthorId, value, fromEmail, cookie, productId } = data
+
+    try {
+        if (cookie.token.message) {
+            return { message: "Invalid access token!" }
+        }
+
+        let isValidToken = await authMiddleware(cookie.token)
+
+        if (isValidToken.message) {
+            return isValidToken
+        }
+
+        if (blackList.has(cookie.token)) {
+            return { message: "Invalid access token!" }
+        }
+
+        let authorUser = await User.findOne({ _id: productAuthorId })
+        let fromUser = await User.findOne({ email: fromEmail })
+
+        if (!authorUser || !fromUser) {
+            return { message: "User doesn't exist!" }
+        }
+
+        let isChatExist = await Chat.findOne({ $and: [{ author: authorUser.email }, { fromEmail: fromUser.email }, { productId }] })
+
+        if (isChatExist != null) {
+            let randomNum1 = Math.ceil(Math.random() * 334112)
+            let randomNum2 = Math.ceil(Math.random() * 221434)
+
+            let _id = productId + randomNum1 * randomNum2
+
+            let newDate = new Date()
+
+            let date = newDate.toLocaleString()
+
+            isChatExist.messages.push({
+                _id,
+                author: fromUser.email,
+                message: value,
+                productId,
+                productAuthor: authorUser.email,
+                parentChatId: isChatExist._id,
+                date,
+            })
+
+            isChatExist.save()
+
+            return isChatExist
+        }
+
+        let message = createChatMessage(authorUser, fromUser, productId)
+
+        let chatMessage = await Chat.create(message)
+
+        authorUser.chat.push(chatMessage._id.toString())
+        fromUser.chat.push(chatMessage._id.toString())
+
+        let randomNum1 = Math.ceil(Math.random() * 334112)
+        let randomNum2 = Math.ceil(Math.random() * 221434)
+    
+        let _id = productId + randomNum1 * randomNum2
+    
+        let newDate = new Date()
+    
+        let date = newDate.toLocaleString()
+
+        let currChat = await Chat.findById(chatMessage._id)
+
+        currChat.messages.push({
+            _id,
+            author: fromUser.email,
+            message: value,
+            productId,
+            productAuthor: authorUser.email,
+            parentChatId: currChat._id,
+            date,
+        })
+
+        authorUser.save()
+        fromUser.save()
+        currChat.save()
+
+        return currChat
+    } catch (error) {
+        return error
+    }
+}
+
+const getAllChats = async (userId) => {
+    try {
+        let user = await User.findById(userId)
+
+        if (!user._id) {
+            return { message: "User doesn't exist!" }
+        }
+
+        let allChats = await Chat.find({ _id: [...user.chat] })
+
+        return allChats
+    } catch (error) {
+        return error
+    }
+}
+
+const getChatById = async (chatId) => {
+    try {
+        let chat = await Chat.findById(chatId)
+
+        if (!chat._id) {
+            return { message: "Chat doesn't exist!" }
+        }
+
+        return chat
+    } catch (error) {
+        return error
+    }
+}
+
 const deleteAccount = async (data) => {
     try {
         if (data.cookie.token.message) {
@@ -474,7 +656,7 @@ const deleteAccount = async (data) => {
             return isValidToken
         }
 
-        if(blackList.has(data.cookie.token)) {
+        if (blackList.has(data.cookie.token)) {
             return { message: "Invalid access token!" }
         }
 
@@ -529,5 +711,9 @@ module.exports = {
     changeWheelStatus,
     getWheelStatus,
     logout,
-    blackList
+    blackList,
+    askUser,
+    getAllChats,
+    addMessageToChat,
+    getChatById
 }
