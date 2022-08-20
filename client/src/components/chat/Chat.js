@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import "./Chat.css"
 
 import * as authService from '../../services/user/authService'
@@ -13,9 +13,10 @@ export const ChatSection = () => {
     let [defaultChats, setDefaultChats] = useState([])
     let [leftSideChats, setLeftSideChats] = useState([])
     let [rightSideChats, setRightSideChats] = useState([])
-    let [chatRenderingId, setChatRenderingId] = useState('')
     let [errors, setErrors] = useState('')
     let navigate = useNavigate()
+
+    let mainChatDiv = useRef(null)
 
     let cookie = getCookie('sessionStorage')
     let { cookies, setCookies } = useContext(AuthContext)
@@ -31,6 +32,10 @@ export const ChatSection = () => {
     const onChangeSearchValueHandler = (e) => {
         setSearchValue(e.target.value)
     }
+
+    useEffect(() => {
+        mainChatDiv.current.scrollTo(0, mainChatDiv.current.scrollHeight)
+    }, [rightSideChats])
 
     useEffect(() => {
         if (searchValue.length == 0) {
@@ -164,7 +169,7 @@ export const ChatSection = () => {
                     {/* Chat Box*/}
                     <div className="col-7 px-0">
 
-                        <div className="px-4 py-4 chat-box bg-white" style={{ minHeight: "90%", maxHeight: "100%" }}>
+                        <div ref={mainChatDiv} className="px-4 py-4 chat-box bg-white" style={{ minHeight: "90%", maxHeight: "100%" }}>
 
                             {rightSideChats.length > 0
                                 ?
