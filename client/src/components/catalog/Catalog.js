@@ -13,6 +13,8 @@ export const CatalogSection = () => {
     const [type, setType] = useState(false)
     const navigate = useNavigate()
 
+    window.onload = window.scrollTo(0, 0)
+
     useEffect(() => {
         productService.getAll()
             .then(result => {

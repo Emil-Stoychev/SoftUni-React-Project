@@ -13,6 +13,8 @@ export const Messages = () => {
     const cookie = getCookie('sessionStorage')
     const navigate = useNavigate()
 
+    window.onload = window.scrollTo(0, 0)
+
     let { setCookies } = useContext(AuthContext)
 
     useEffect(() => {

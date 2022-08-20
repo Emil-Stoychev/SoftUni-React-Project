@@ -10,6 +10,8 @@ export const LikedProducts = () => {
     const cookie = getCookie('sessionStorage')
     const navigate = useNavigate()
 
+    window.onload = window.scrollTo(0, 0)
+
     useEffect(() => {
         authService.getLikedProducts(cookie?._id)
             .then(result => setProducts(result))

@@ -15,6 +15,8 @@ export const RegisterSection = () => {
         image: ''
     })
 
+    window.onload = window.scrollTo(0, 0)
+
     const navigate = useNavigate()
 
     const changeHandler = (e) => {

@@ -10,6 +10,8 @@ export const OwnProducts = () => {
     const cookie = getCookie('sessionStorage')
     const navigate = useNavigate()
 
+    window.onload = window.scrollTo(0, 0)
+
     useEffect(() => {
         authService.getOwnProducts(cookie?._id)
             .then(result => setProducts(result))

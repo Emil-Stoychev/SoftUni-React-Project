@@ -1,4 +1,6 @@
 export const ErrorSection = () => {
+    window.onload = window.scrollTo(0, 0)
+
     return (
         <>
             <div style={{ margin: "12%" }}>

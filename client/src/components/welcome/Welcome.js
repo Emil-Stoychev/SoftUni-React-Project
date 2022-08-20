@@ -7,6 +7,8 @@ import * as productService from '../../services/catalog/productService'
 export const WelcomeSection = () => {
   const [products, setProducts] = useState([])
 
+  window.onload = window.scrollTo(0, 0)
+
   useEffect(() => {
     productService.getAll()
       .then(result => setProducts(result.length > 0 ? result.slice(result.length - 3) : result))

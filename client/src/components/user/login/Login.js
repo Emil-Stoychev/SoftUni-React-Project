@@ -12,6 +12,8 @@ import { AuthContext } from "../../../contexts/AuthContext"
 export const LoginSection = () => {
     const [errors, setErrors] = useState('')
 
+    window.onload = window.scrollTo(0, 0)
+
     let { setCookies } = useContext(AuthContext)
 
     const [values, setValues] = useState({

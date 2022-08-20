@@ -19,6 +19,8 @@ export const CreateSection = () => {
         price: ""
     })
 
+    window.onload = window.scrollTo(0, 0)
+
     let { setCookies } = useContext(AuthContext)
     let navigate = useNavigate()
 

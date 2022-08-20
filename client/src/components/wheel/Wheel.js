@@ -24,6 +24,8 @@ export const DailyWheel = () => {
     let [wheelOption, setWheelOption] = useState(false)
     let [surprise, setSurprise] = useState('')
 
+    window.onload = window.scrollTo(0, 0)
+
     let { cookies, setCookies } = useContext(AuthContext)
     let cookie = getCookie('sessionStorage')
 
