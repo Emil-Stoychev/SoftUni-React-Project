@@ -1,4 +1,4 @@
-const createChatMessage = (authorUser, fromUser, productId) => {
+const createChatMessage = (authorUser, fromUser, productId, productTitle) => {
     let newDate = new Date()
 
     let date = newDate.toLocaleString()
@@ -8,7 +8,8 @@ const createChatMessage = (authorUser, fromUser, productId) => {
         author: authorUser.email,
         messages: [],
         date,
-        productId
+        productId,
+        productTitle
     }
 }
 

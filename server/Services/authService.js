@@ -525,7 +525,7 @@ const addMessageToChat = async (data) => {
 }
 
 const askUser = async (data) => {
-    let { productAuthorId, value, fromEmail, cookie, productId } = data
+    let { productAuthorId, value, fromEmail, cookie, productId, productTitle } = data
 
     try {
         if (cookie.token.message) {
@@ -576,7 +576,7 @@ const askUser = async (data) => {
             return isChatExist
         }
 
-        let message = createChatMessage(authorUser, fromUser, productId)
+        let message = createChatMessage(authorUser, fromUser, productId, productTitle)
 
         let chatMessage = await Chat.create(message)
 
@@ -585,11 +585,11 @@ const askUser = async (data) => {
 
         let randomNum1 = Math.ceil(Math.random() * 334112)
         let randomNum2 = Math.ceil(Math.random() * 221434)
-    
+
         let _id = productId + randomNum1 * randomNum2
-    
+
         let newDate = new Date()
-    
+
         let date = newDate.toLocaleString()
 
         let currChat = await Chat.findById(chatMessage._id)

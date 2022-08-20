@@ -100,13 +100,14 @@ export const getChatById = (chatId) => {
         .then(res => res.json())
 }
 
-export const askUser = (value, cookie, productAuthorId, productId) => {
+export const askUser = (value, cookie, productAuthorId, productId, productTitle) => {
     let data = {
         productAuthorId,
         value,
         fromEmail: cookie.email,
         productId,
-        cookie
+        cookie,
+        productTitle
     }
 
     return fetch(`${URL}/askUser/${cookie._id}`, {

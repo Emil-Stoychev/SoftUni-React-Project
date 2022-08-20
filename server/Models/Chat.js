@@ -6,6 +6,7 @@ const chatSchema = new mongoose.Schema({
     messages: Array,
     date: String,
     productId: String,
+    productTitle: String,
 })
 
 const Chat = mongoose.model('Chat', chatSchema)
