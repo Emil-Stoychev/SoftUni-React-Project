@@ -22,10 +22,13 @@ export const ChatSection = () => {
         productId: "",
     })
     const [action, setAction] = useState(false)
+    const [intervalId, setIntervalId] = useState('')
     const [errors, setErrors] = useState('')
     let navigate = useNavigate()
 
-    window.onload = window.scrollTo(0, 0)
+    useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
+    }, [])
 
     let mainChatDiv = useRef(null)
 
@@ -53,6 +56,13 @@ export const ChatSection = () => {
     }, [rightSideChats])
 
     useEffect(() => {
+        setRightSideChats([])
+        setProductInfo({
+            productTitle: "",
+            productId: "",
+        })
+        clearInterval(intervalId)
+
         if (searchValue.length == 0) {
             setLeftSideChats(defaultChats)
         } else {
@@ -74,6 +84,10 @@ export const ChatSection = () => {
             productId: chat.productId
         })
         setRightSideChats(chat.messages)
+
+        clearInterval(intervalId)
+
+        start(chat._id)
     }
 
     const onTypeMessageHandler = (e) => {
@@ -104,22 +118,28 @@ export const ChatSection = () => {
     }
 
 
-    // function start(chatId) {
-    //     if (window.location.pathname != '/chat') {
-    //         return
-    //     }
+    function start(chatId) {
+        if (window.location.pathname != '/chat') {
+            return
+        }
 
-    // console.log(chatRenderingId);
+        let id = setTimeout(function () {
+            authService.getChatById(chatId)
+                .then(result => {
+                    setRightSideChats(state => {
+                        if (state?.length == result?.messages?.length) {
+                            return state
+                        } else {
+                            return result.messages
+                        }
+                    });
+                })
 
-    //     setTimeout(function () {
-    //         authService.getChatById(chatId)
-    //             .then(result => {
-    //                 setRightSideChats(result.messages);
-    //             })
+            start(chatId);
+        }, 3500);
 
-    //         start(chatId);
-    //     }, 3500);
-    // }
+        setIntervalId(id)
+    }
 
     return (
         <>
