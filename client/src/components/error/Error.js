@@ -1,5 +1,10 @@
+import { useEffect } from "react"
+
 export const ErrorSection = () => {
-    window.onload = window.scrollTo(0, 0)
+
+    useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
+    }, [])
 
     return (
         <>

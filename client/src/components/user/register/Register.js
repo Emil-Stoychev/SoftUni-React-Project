@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import * as userService from '../../../services/user/authService'
@@ -15,7 +15,9 @@ export const RegisterSection = () => {
         image: ''
     })
 
-    window.onload = window.scrollTo(0, 0)
+    useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
+    }, [])
 
     const navigate = useNavigate()
 

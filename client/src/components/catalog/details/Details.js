@@ -24,7 +24,9 @@ export const DetailsSection = () => {
     const { productId } = useParams()
     const navigate = useNavigate()
 
-    window.onload = window.scrollTo(0, 0)
+    useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
+    }, [])
 
     let { cookies, setCookies } = useContext(AuthContext)
 

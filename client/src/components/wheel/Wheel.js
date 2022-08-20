@@ -1,17 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import './styles.css'
 
-import markerImage from './images/marker.png'
-import wheelImage from './images/wheel.png'
-import buttonImage from './images/button.png'
-import cloudImage from './images/cloud.png'
-import heartImage from './images/heart.png'
-import hipnosaImage from './images/hipnosa.png'
-import kissImage from './images/kiss.png'
-import lollipopImage from './images/lollipop.png'
-import moonImage from './images/moon.png'
-import rainbowImage from './images/rainbow.png'
-import starImage from './images/star.png'
+import { markerImage, wheelImage, buttonImage, cloudImage, heartImage, hipnosaImage, kissImage, lollipopImage, moonImage, rainbowImage, starImage } from './images/allImages'
 
 import * as authService from '../../services/user/authService'
 import { AuthContext } from '../../contexts/AuthContext'
@@ -24,7 +14,10 @@ export const DailyWheel = () => {
     let [wheelOption, setWheelOption] = useState(false)
     let [surprise, setSurprise] = useState('')
 
-    window.onload = window.scrollTo(0, 0)
+    useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
+    }, [])
+
 
     let { cookies, setCookies } = useContext(AuthContext)
     let cookie = getCookie('sessionStorage')
@@ -101,8 +94,8 @@ export const DailyWheel = () => {
 
             <h1 style={{ textAlign: "center", margin: "5% 0 1% 0", fontFamily: "Copperplate Gothic", userSelect: "none", color: "navajowhite" }}>Possible prices</h1>
 
-            <div className="row" style={{margin: '2%', userSelect: "none"}}>
-                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
+            <div className="row" style={{ margin: '2%', userSelect: "none" }}>
+                <div className="col-xl-5 col-lg-6 mb-4" style={{ marginLeft: "auto", marginRight: "auto" }}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">
@@ -120,7 +113,7 @@ export const DailyWheel = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
+                <div className="col-xl-5 col-lg-6 mb-4" style={{ marginLeft: "auto", marginRight: "auto" }}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">
@@ -138,7 +131,7 @@ export const DailyWheel = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
+                <div className="col-xl-5 col-lg-6 mb-4" style={{ marginLeft: "auto", marginRight: "auto" }}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">
@@ -156,7 +149,7 @@ export const DailyWheel = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
+                <div className="col-xl-5 col-lg-6 mb-4" style={{ marginLeft: "auto", marginRight: "auto" }}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">
@@ -174,7 +167,7 @@ export const DailyWheel = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
+                <div className="col-xl-5 col-lg-6 mb-4" style={{ marginLeft: "auto", marginRight: "auto" }}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">
@@ -192,7 +185,7 @@ export const DailyWheel = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
+                <div className="col-xl-5 col-lg-6 mb-4" style={{ marginLeft: "auto", marginRight: "auto" }}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">
@@ -210,7 +203,7 @@ export const DailyWheel = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
+                <div className="col-xl-5 col-lg-6 mb-4" style={{ marginLeft: "auto", marginRight: "auto" }}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">
@@ -228,7 +221,7 @@ export const DailyWheel = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-xl-5 col-lg-6 mb-4" style={{marginLeft: "auto", marginRight: "auto"}}>
+                <div className="col-xl-5 col-lg-6 mb-4" style={{ marginLeft: "auto", marginRight: "auto" }}>
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex align-items-center">

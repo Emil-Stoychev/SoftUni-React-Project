@@ -10,7 +10,9 @@ export const LikedProducts = () => {
     const cookie = getCookie('sessionStorage')
     const navigate = useNavigate()
 
-    window.onload = window.scrollTo(0, 0)
+    useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
+    }, [])
 
     useEffect(() => {
         authService.getLikedProducts(cookie?._id)
@@ -19,7 +21,7 @@ export const LikedProducts = () => {
 
     return (
         <>
-            <h1 style={{ textAlign: "center", margin: "2% 0 0 0" , fontFamily: "Copperplate Gothic" , userSelect: "none" , color: "navajowhite" }}>Liked products</h1>
+            <h1 style={{ textAlign: "center", margin: "2% 0 0 0", fontFamily: "Copperplate Gothic", userSelect: "none", color: "navajowhite" }}>Liked products</h1>
 
             {products.length > 0
                 ?
@@ -30,10 +32,10 @@ export const LikedProducts = () => {
                 products.message
                     ?
                     <>
-                        <h2 style={{ textAlign: "center", margin: "12% 0 0 0" , userSelect: "none" , color: "navajowhite"}}>You don't have liked products yet!</h2>
+                        <h2 style={{ textAlign: "center", margin: "12% 0 0 0", userSelect: "none", color: "navajowhite" }}>You don't have liked products yet!</h2>
                         <button className="btn btn-primary" style={{ margin: "1% 46% 20%" }} onClick={() => navigate('/catalog')}>Go to Catalog</button>
                     </>
-                    : <h2 style={{ textAlign: "center", margin: "12% 0 23% 0" , userSelect: "none" , color: "navajowhite"}}>Loading...</h2>
+                    : <h2 style={{ textAlign: "center", margin: "12% 0 23% 0", userSelect: "none", color: "navajowhite" }}>Loading...</h2>
             }
         </>
     );

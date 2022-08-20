@@ -23,7 +23,9 @@ export const EditSection = () => {
     const navigate = useNavigate()
     const { setCookies } = useContext(AuthContext)
 
-    window.onload = window.scrollTo(0, 0)
+    useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
+    }, [])
 
     useEffect(() => {
         productService.getById(productId)

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import SetCookie from '../../cookies/setCookie'
@@ -12,7 +12,9 @@ import { AuthContext } from "../../../contexts/AuthContext"
 export const LoginSection = () => {
     const [errors, setErrors] = useState('')
 
-    window.onload = window.scrollTo(0, 0)
+    useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
+    }, [])
 
     let { setCookies } = useContext(AuthContext)
 

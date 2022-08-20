@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { TextError } from "../../error/TextError"
 import { productValidator } from "../../utils/ProductValidator"
 import * as productService from '../../../services/catalog/productService'
@@ -19,7 +19,9 @@ export const CreateSection = () => {
         price: ""
     })
 
-    window.onload = window.scrollTo(0, 0)
+    useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
+    }, [])
 
     let { setCookies } = useContext(AuthContext)
     let navigate = useNavigate()

@@ -15,7 +15,9 @@ export const ProfileSection = () => {
     const [deleteAcc, setDeleteAcc] = useState({ action: false, value: '' })
     const navigate = useNavigate()
 
-    window.onload = window.scrollTo(0, 0)
+    useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
+    }, [])
 
     const cookie = getCookie('sessionStorage')
 
