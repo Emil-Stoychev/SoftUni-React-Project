@@ -71,7 +71,8 @@ export const CommentSection = ({ setProduct, product, user, cookies, setCookies 
                                         className="form-control"
                                         placeholder="Type a comment..."
                                         onClick={() => setAction(false)}
-                                        value={value} onChange={(e) => setValue(e.target.value)}
+                                        value={value}
+                                        onChange={(e) => setValue(e.target.value)}
                                         style={errors.includes('Cannot add empty comment!') ? { borderWidth: "1.2px", borderColor: "red" } : {}}
                                     />
                                     <label className="form-label" htmlFor="form1"></label>
